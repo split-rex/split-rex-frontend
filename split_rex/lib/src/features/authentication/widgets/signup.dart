@@ -7,9 +7,32 @@ final Widget svg = SvgPicture.asset(
   semanticsLabel: 'Acme Logo'
 );
 
+Widget mainJumbotron = Container(
+  margin: const EdgeInsets.only(left: 20, right: 20, top: 50),
+  child: const Text(
+      "Sign Up",
+      style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w900,
+      ),
+    ),
+);
+
+Widget subJumbotron = Container(
+  margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
+  child: const Text(
+      "Enter the fields below to get started.",
+      style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+      ),
+    ),
+);
+
 Widget logoWidget = Container(
-    // margin: const EdgeInsets.only(left: 20, right: 20, top: 70),
-    child: svg,
+    margin: const EdgeInsets.only(left: 20, right: 20, top: 60),
+    child: Image.asset('assets/Logo.png'),
+    
     // child: SvgPicture.asset(
     //   'assets/LogoSVG.svg',
     //   semanticsLabel: 'Acme Logo',
@@ -74,7 +97,7 @@ Widget fillName = Container(
           Icons.email,
           color: Color(0xFF59C4B0),
         ),
-        hintText: "E-maijjj",
+        hintText: "E-mail",
         enabledBorder: InputBorder.none,
         focusedBorder: InputBorder.none,
       ),
@@ -99,6 +122,8 @@ Widget fillPassword = Container(
   ),
   child: const TextField(
     cursorColor: Color(0xFF59C4B0),
+    textInputAction: TextInputAction.done,
+    obscureText: true,
     decoration: InputDecoration(
       focusColor: Color(0xFF59C4B0),
       icon: Icon(
@@ -110,6 +135,18 @@ Widget fillPassword = Container(
       focusedBorder: InputBorder.none,
     ),
   ),
+
+  // TextFormField(
+  //             textInputAction: TextInputAction.done,
+  //             obscureText: true,
+  //             cursorColor: kPrimaryColor,
+  //             decoration: InputDecoration(
+  //               hintText: "Your password",
+  //               prefixIcon: Padding(
+  //                 padding: const EdgeInsets.all(defaultPadding),
+  //                 child: Icon(Icons.lock),
+  //               ),
+
 );
 
 Widget fillConfirmationPassword = Container(

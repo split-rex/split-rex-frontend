@@ -7,9 +7,34 @@ final Widget svg = SvgPicture.asset(
   semanticsLabel: 'Acme Logo'
 );
 
+Widget mainJumbotron = Container(
+  margin: const EdgeInsets.only(left: 20, right: 20, top: 50),
+  child: const Text(
+      "Sign In",
+      style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w900,
+      ),
+    ),
+);
+
+Widget subJumbotron = Container(
+  margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
+  child: const Text(
+      "We’re happy to see you again. To use your account, you should sign in first.",
+      textAlign: TextAlign.center,
+      style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          
+      ),
+    ),
+);
+
 Widget logoWidget = Container(
-    // margin: const EdgeInsets.only(left: 20, right: 20, top: 70),
-    child: svg,
+    margin: const EdgeInsets.only(left: 20, right: 20, top: 60),
+    child: Image.asset('assets/Logo.png'),
+    
     // child: SvgPicture.asset(
     //   'assets/LogoSVG.svg',
     //   semanticsLabel: 'Acme Logo',
@@ -44,7 +69,7 @@ Widget logoWidget = Container(
           Icons.email,
           color: Color(0xFF59C4B0),
         ),
-        hintText: "E-maijjj",
+        hintText: "E-mail",
         enabledBorder: InputBorder.none,
         focusedBorder: InputBorder.none,
       ),

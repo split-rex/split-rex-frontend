@@ -19,6 +19,8 @@ class InitState extends State<SignUpScreen> {
   
               children: [
                 logoWidget,
+                mainJumbotron,
+                subJumbotron,
                 fillName,
                 fillEmail,
                 fillPassword,

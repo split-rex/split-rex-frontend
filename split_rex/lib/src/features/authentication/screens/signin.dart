@@ -18,6 +18,9 @@ class InitState extends State<SignInScreen> {
             child: Column(
 
               children: [
+                logoWidget,
+                mainJumbotron,
+                subJumbotron,
                 fillEmail,
                 fillPassword,
                 signInBtn,

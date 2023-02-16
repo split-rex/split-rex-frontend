@@ -8,9 +8,10 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        homeHeader,
-        Expanded(child: 
-          homeFooter
+        HomeHeader(),
+        Expanded(
+          child: 
+            HomeFooter()
         )
       ],
     );

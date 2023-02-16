@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:split_rex/src/features/authentication/screens/signup.dart';
 import '../widgets/signin.dart';
 
 
@@ -16,11 +17,8 @@ class InitState extends State<SignInScreen> {
     return Scaffold(
         body: SingleChildScrollView(
             child: Column(
-
               children: [
-                fillEmail,
-                fillPassword,
-                signInBtn,
+                const SignInForm(),
                 Container(
                   margin: const EdgeInsets.only(top: 10, bottom: 10),
                   child: Row(
@@ -36,7 +34,9 @@ class InitState extends State<SignInScreen> {
                         ),
                         onTap: () {
                           // Write Tap Code Here.
-                          Navigator.pop(context);
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const SignUpScreen()
+                          ));
                         },
                       )
                     ],

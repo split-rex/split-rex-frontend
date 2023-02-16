@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:split_rex/src/features/authentication/screens/signup.dart';
-import 'package:split_rex/src/features/authentication/screens/signin.dart';
-import './src/features/home/screens/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,8 +16,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         textTheme: GoogleFonts.manropeTextTheme().apply(
-          bodyColor: Color(0xFF4F4F4F),
-          displayColor: Color(0xFF4F4F4F),
+          bodyColor: const Color(0xFF4F4F4F),
+          displayColor: const Color(0xFF4F4F4F),
         ),
       ),
       home: const Scaffold(

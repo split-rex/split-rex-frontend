@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:split_rex/src/features/authentication/screens/signup.dart';
+import 'package:split_rex/src/features/authentication/screens/signin.dart';
 import './src/features/home/screens/home.dart';
 
 void main() {
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const Scaffold(
-        body: Home()
+        body: SignUpScreen()
       ),
     );
   }

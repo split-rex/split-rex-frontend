@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:split_rex/src/features/home/screens/home.dart';
 
 import '../services/auth.dart';
-import '../screens/signin.dart';
 
 const String assetName = 'assets/LogoSVG.svg';
 final Widget svg = SvgPicture.asset(
@@ -309,17 +309,19 @@ class SignUpBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         // Write Click Listener Code Here.
-        ApiServices().postRegister(
+        final resp = await ApiServices().postRegister(
           nameController.text,
           usernameController.text,
           emailController.text,
           passController.text,
         );
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const SignInScreen()
-        ));
+        if (resp) {
+          navigateHome(context);
+        } else {
+          // make error toast
+        }
       },
       child: Container(
         alignment: Alignment.center,
@@ -356,4 +358,10 @@ class SignUpBtn extends StatelessWidget {
       ),
     );
   }
+}
+
+navigateHome(context) {
+  Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) => const Home()
+  ));
 }

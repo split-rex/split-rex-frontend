@@ -26,7 +26,7 @@ class ApiServices {
     }
   }
 
-  postLogin(email, pass) async {
+  Future<bool>postLogin(email, pass) async {
     Response resp = await post(
       Uri.parse("$endpoint/login"),
       headers: <String, String>{
@@ -38,7 +38,6 @@ class ApiServices {
       })
     );
     if (resp.statusCode == 202) {
-      print("sabi");
       return true;
     } else {
       throw Exception(resp.reasonPhrase);

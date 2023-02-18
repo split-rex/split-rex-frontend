@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../services/auth.dart';
 import './signup.dart';
+import '../../home/screens/home.dart';
 
 const String assetName = 'assets/LogoSVG.svg';
 final Widget svg = SvgPicture.asset(
@@ -113,11 +112,15 @@ class SignInBtn extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         // Write Click Listener Code Here.
-        print("testos");
-        await ApiServices().postLogin(
+        final resp = await ApiServices().postLogin(
           emailController.text,
           passController.text
         );
+        if (resp) {
+          navigateHome(context);
+        } else {
+          // make error toast
+        }
       },
       child: Container(
         alignment: Alignment.center,

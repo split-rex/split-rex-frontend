@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class UserDetail extends StatelessWidget {
+  const UserDetail({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -45,6 +47,8 @@ class UserDetail extends StatelessWidget {
 }
 
 class FriendRequest extends StatelessWidget {
+  const FriendRequest({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -103,6 +107,8 @@ class FriendRequest extends StatelessWidget {
 }
 
 class HomeHeader extends StatelessWidget {
+  const HomeHeader({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -119,9 +125,9 @@ class HomeHeader extends StatelessWidget {
       padding: const EdgeInsets.only(top: 72.0, right: 28.0, left: 28.0, bottom: 40.0),
       child: 
       Column(
-        children: [
+        children: const [
           UserDetail(),
-          const SizedBox(
+          SizedBox(
             height: 16
           ),
           FriendRequest()
@@ -132,6 +138,8 @@ class HomeHeader extends StatelessWidget {
 }
 
 class HomeFooter extends StatelessWidget {
+  const HomeFooter({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -152,7 +160,7 @@ class HomeFooter extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               color: Color(0XFFF9F7F7),
-              borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+              borderRadius: BorderRadius.all(Radius.circular(24.0)),
             ),
             padding: const EdgeInsets.all(10.0),
             child: Row(children: [
@@ -167,7 +175,7 @@ class HomeFooter extends StatelessWidget {
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0XFF4F4F4F).withOpacity(0.1),
+                        color: const Color(0XFF4F4F4F).withOpacity(0.1),
                         spreadRadius: 0.0,
                         blurRadius: 5.0,
                         offset: Offset.zero
@@ -189,7 +197,7 @@ class HomeFooter extends StatelessWidget {
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(8.0),
                   decoration: const BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(24.0)),
                     // color: Colors.white,
                     // boxShadow: [
                     //   BoxShadow(
@@ -231,13 +239,13 @@ class HomeFooter extends StatelessWidget {
                   flex: 2,
                   child: Container(
                     alignment: Alignment.center,
-                    margin: EdgeInsets.only(left: 16.0),
+                    margin: const EdgeInsets.only(left: 16.0),
                     decoration: const BoxDecoration(
                       color: Color.fromARGB(255, 246, 246, 246),
-                      borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(24.0)),
                     ),
                     padding: const EdgeInsets.all(12.0),
-                    child: Icon(Icons.filter_alt, color: Colors.grey)
+                    child: const Icon(Icons.filter_alt, color: Colors.grey)
                   )
                 ),
               ],)

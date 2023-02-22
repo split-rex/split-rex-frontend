@@ -7,20 +7,14 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    return MaterialApp(
-      title: 'Flutter Demo',
-      home: Scaffold(
-        body: Column(
-          children: [
+    return Column(
+          children: const [
             HomeHeader(),
             Expanded(
               child: 
                 HomeFooter()
             )
           ],
-        )
-      ),
-    );
+        );
   }
 }

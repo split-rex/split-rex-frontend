@@ -1,3 +1,5 @@
+
+// contoh
 class UserModel {
   final int id;
   final String email;

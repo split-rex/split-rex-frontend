@@ -6,7 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ApiServices {
   String endpoint = 'http://10.0.2.2:8080';
 
-  Future<bool> postRegister(name, username, email, pass) async {
+  Future<bool> postRegister(name, username, email, pass, confPass) async {
+    if (confPass != pass) {
+      throw Exception();
+    }
     Response resp = await post(
       Uri.parse("$endpoint/register"),
       headers: <String, String>{
@@ -33,8 +36,8 @@ class ApiServices {
         'Content-Type': 'application/json'
       },
       body: jsonEncode(<String, String>{
-        "email": "samuel@gmail.com",
-        "password": "sem"
+        "email": email,
+        "password": pass
       })
     );
     if (resp.statusCode == 202) {

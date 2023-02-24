@@ -3,11 +3,17 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ApiServices {
-  String endpoint = 'http://10.0.2.2:8080';
+import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/providers/auth.dart';
+import 'package:split_rex/src/providers/error.dart';
+import 'package:split_rex/src/model/auth.dart';
 
-  Future<bool> postRegister(name, username, email, pass, confPass) async {
-    if (confPass != pass) {
+class ApiServices {
+  String endpoint = "http://10.0.2.2:8080";
+
+  Future<void> postRegister(WidgetRef ref) async {
+    SignUpModel signUpData = ref.watch(authProvider).signUpData;
+    if (signUpData.confPass != signUpData.pass) {
       throw Exception();
     }
     Response resp = await post(
@@ -16,39 +22,40 @@ class ApiServices {
         'Content-Type': 'application/json'
       },
       body: jsonEncode(<String, String>{
-        "name": name,
-        "email": email,
-        "username": username,
-        "password": pass
+        "name": signUpData.name,
+        "email": signUpData.email,
+        "username": signUpData.username,
+        "password": signUpData.pass
       })
     );
-    if (resp.statusCode == 202) {
-      return true;
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      ref.watch(routeProvider).changeLogged();
+      ref.watch(routeProvider).currentPage = "home";
     } else {
-      throw Exception(resp.reasonPhrase);
+      ref.watch(errorProvider).changeError(data["message"]);
     }
   }
-
-  Future<bool>postLogin(email, pass) async {
+  
+  Future<void> postLogin(WidgetRef ref) async {
+    SignInModel signInData = ref.watch(authProvider).signInData;
     Response resp = await post(
       Uri.parse("$endpoint/login"),
       headers: <String, String>{
         'Content-Type': 'application/json'
       },
       body: jsonEncode(<String, String>{
-        "email": email,
-        "password": pass
+        "email": signInData.email,
+        "password": signInData.pass
       })
     );
-    if (resp.statusCode == 202) {
-      return true;
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      ref.watch(routeProvider).changeLogged();
+      ref.watch(routeProvider).currentPage = "home";
     } else {
-      throw Exception(resp.reasonPhrase);
+      ref.watch(errorProvider).changeError(data["message"]);
     }
   }
 }
 
-final userProvider = Provider<ApiServices>((ref) => ApiServices());
-final userDataProvider = FutureProvider((ref) async {
-  return ref.watch(userProvider);
-});

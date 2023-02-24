@@ -7,17 +7,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:split_rex/src/widgets/navbar.dart';
 import 'package:split_rex/src/routes/routes.dart';
 
-
+import 'package:split_rex/src/providers/routes.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'Split-rex',
       theme: ThemeData(
@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
           displayColor: const Color(0xFF4F4F4F),
         ),
       ),
-      home: const Scaffold(
-        bottomNavigationBar: Navbar(),
-        body: PageRouting(),
+      home: Scaffold(
+        bottomNavigationBar: ref.watch(routeProvider).isLogged ? const Navbar() : null,
+        body: const PageRouting(),
       ),
     );
   }

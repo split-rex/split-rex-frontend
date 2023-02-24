@@ -2,6 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/screens/account.dart';
+import 'package:split_rex/src/screens/activity.dart';
+import 'package:split_rex/src/screens/group_list.dart';
 
 import 'package:split_rex/src/screens/home.dart';
 import 'package:split_rex/src/screens/sign_in.dart';
@@ -21,6 +24,12 @@ class PageRouting extends ConsumerWidget {
         return const SignInScreen();
       case "home":
         return const Home();
+      case "group_list":
+        return const GroupList();
+      case "activity":
+        return const Activity();
+      case "account":
+        return const Account();
       default:
         return const Home();
     }

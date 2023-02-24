@@ -24,11 +24,16 @@ class Navbar extends ConsumerWidget {
         icon: Icon(Icons.group),
         label: 'Group'),
       BottomNavigationBarItem(
+        icon: Expanded(child: Icon(Icons.add_circle, color: Color(0XFF6DC7BD), size: 35)),
+        label: '',
+      ),
+      BottomNavigationBarItem(
         icon: Icon(Icons.show_chart),
         label: 'Activity'),
       BottomNavigationBarItem(
         icon: Icon(Icons.person),
         label: 'Account'),
-  ]);
+      ],
+    );
   }
 }

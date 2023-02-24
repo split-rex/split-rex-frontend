@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/providers/auth.dart';
 
 import '../services/auth.dart';
 
@@ -69,6 +69,7 @@ class _SignInFormState extends State<SignInForm> {
           icon: Icons.email,
           placeholderText: "E-mail",
         ),
+
         PasswordField(
           key: UniqueKey(), 
           controller: passController, 
@@ -180,25 +181,21 @@ class SubmitBtn extends ConsumerWidget {
     return GestureDetector(
       onTap: () async {
         // Write Click Listener Code Here.
-        final bool resp;
         if (type == "signin") {
-          resp = await ApiServices().postLogin(
+          ref.watch(authProvider).changeSignInData(
             emailController.text,
             passController.text
           );
+          ApiServices().postLogin(ref);
         } else {
-          resp = await ApiServices().postRegister(
+          ref.watch(authProvider).changeSignUpData(
             nameController!.text,
             usernameController!.text,
             emailController.text,
             passController.text,
             confController!.text
           );
-        }
-        if (resp) {
-          ref.watch(routeProvider).changePage("home");
-        } else {
-          // make error toast
+          ApiServices().postRegister(ref);
         }
       },
       child: Container(
@@ -310,6 +307,7 @@ class PasswordFieldState extends State<PasswordField> {
       padding: const EdgeInsets.only(left: 20, right: 20),
       height: 54,
       decoration: BoxDecoration(
+        
         borderRadius: BorderRadius.circular(12),
         color: Colors.grey[200],
         boxShadow: const [

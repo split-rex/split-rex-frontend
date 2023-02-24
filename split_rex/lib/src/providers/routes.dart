@@ -23,7 +23,7 @@ class RouteProvider extends ChangeNotifier {
         changePage("home");
         break;
       case 1:
-        changePage("group");
+        changePage("group_list");
         break;
       case 3:
         changePage("activity");

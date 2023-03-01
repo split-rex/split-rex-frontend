@@ -9,6 +9,8 @@ import 'package:split_rex/src/screens/group_list.dart';
 import 'package:split_rex/src/screens/home.dart';
 import 'package:split_rex/src/screens/sign_in.dart';
 import 'package:split_rex/src/screens/sign_up.dart';
+import 'package:split_rex/src/screens/add_expense.dart';
+
 
 class PageRouting extends ConsumerWidget {
   const PageRouting({super.key});
@@ -30,6 +32,8 @@ class PageRouting extends ConsumerWidget {
         return const Activity();
       case "account":
         return const Account();
+      case "add_expense":
+        return const AddExpense();
       default:
         return const Home();
     }

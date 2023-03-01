@@ -30,10 +30,10 @@ class ApiServices {
     );
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-      ref.watch(routeProvider).changeLogged();
-      ref.watch(routeProvider).currentPage = "home";
+      ref.read(routeProvider).changeLogged();
+      ref.read(routeProvider).currentPage = "home";
     } else {
-      ref.watch(errorProvider).changeError(data["message"]);
+      ref.read(errorProvider).changeError(data["message"]);
     }
   }
   
@@ -51,10 +51,10 @@ class ApiServices {
     );
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-      ref.watch(routeProvider).changeLogged();
-      ref.watch(routeProvider).currentPage = "home";
+      ref.read(routeProvider).changeLogged();
+      ref.read(routeProvider).currentPage = "home";
     } else {
-      ref.watch(errorProvider).changeError(data["message"]);
+      ref.read(errorProvider).changeError(data["message"]);
     }
   }
 }

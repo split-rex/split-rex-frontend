@@ -180,15 +180,14 @@ class SubmitBtn extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () async {
-        // Write Click Listener Code Here.
         if (type == "signin") {
-          ref.watch(authProvider).changeSignInData(
+          ref.read(authProvider).changeSignInData(
             emailController.text,
             passController.text
           );
           ApiServices().postLogin(ref);
         } else {
-          ref.watch(authProvider).changeSignUpData(
+          ref.read(authProvider).changeSignUpData(
             nameController!.text,
             usernameController!.text,
             emailController.text,
@@ -212,9 +211,7 @@ class SubmitBtn extends ConsumerWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
-          
           borderRadius: BorderRadius.circular(12),
-          
           boxShadow: const [
             BoxShadow(
                 offset: Offset(0, 10),

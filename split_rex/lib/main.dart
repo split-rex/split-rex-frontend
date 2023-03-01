@@ -27,7 +27,8 @@ class MyApp extends ConsumerWidget {
         ),
       ),
       home: Scaffold(
-        bottomNavigationBar: ref.watch(routeProvider).isLogged ? const Navbar() : null,
+        bottomNavigationBar: 
+          ref.watch(routeProvider).isLogged && ref.watch(routeProvider).currentPage != "add_expense" ? const Navbar() : null,
         body: const PageRouting(),
       ),
     );

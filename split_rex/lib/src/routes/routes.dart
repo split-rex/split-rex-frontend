@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/screens/account.dart';
 import 'package:split_rex/src/screens/activity.dart';
+import 'package:split_rex/src/screens/friend_request.dart';
 import 'package:split_rex/src/screens/group_list.dart';
 
 import 'package:split_rex/src/screens/home.dart';
@@ -30,6 +31,11 @@ class PageRouting extends ConsumerWidget {
         return const Activity();
       case "account":
         return const Account();
+  
+      // friends
+      case "friend_requests":
+        return const FriendRequests();
+
       default:
         return const Home();
     }

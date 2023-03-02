@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:split_rex/src/providers/auth.dart';
 
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import '../services/auth.dart';
 
 const String assetName = 'assets/LogoSVG.svg';
@@ -81,7 +82,23 @@ class _SignInFormState extends State<SignInForm> {
           emailController: emailController, 
           passController: passController,
           type: "signin",
-        )  
+        ),
+
+        const SizedBox(height: 30),
+
+        SignInButton(Buttons.Google,
+          onPressed: () {
+            // sign in google
+        }),
+
+        const SizedBox(height: 5),
+
+        SignInButton(Buttons.Facebook,
+          onPressed: () {
+            //  sign in facebook
+        }),
+
+        const SizedBox(height: 10),
       ]
     )
   );
@@ -152,7 +169,23 @@ class _SignUpFormState extends State<SignUpForm> {
           passController: passController,
           confController: confPassController,
           type: "signup",
-        )
+        ),
+
+        const SizedBox(height: 30),
+
+        SignInButton(Buttons.Google,
+          onPressed: () {
+            // sign up google
+        }),
+
+        const SizedBox(height: 5),
+
+        SignInButton(Buttons.Facebook,
+          onPressed: () {
+            //  sign up facebook
+        }),
+
+        const SizedBox(height: 10),
       ]
     )
   );}
@@ -199,7 +232,7 @@ class SubmitBtn extends ConsumerWidget {
       },
       child: Container(
         alignment: Alignment.center,
-        margin: const EdgeInsets.only(left: 20, right: 20, top: 70),
+        margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
         padding: const EdgeInsets.only(left: 20, right: 20),
         height: 54,
         decoration: BoxDecoration(

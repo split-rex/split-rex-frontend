@@ -38,6 +38,7 @@ dependencies:
   flutter_svg: ^2.0.1
   http: ^0.13.4
   flutter_riverpod: ^2.2.0
+  flutter_signin_button: ^2.0.0
 
 dev_dependencies:
   flutter_test:

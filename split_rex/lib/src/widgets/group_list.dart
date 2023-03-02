@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:split_rex/src/providers/group_list.dart';
+import 'package:split_rex/src/screens/group_detail.dart';
 import 'package:split_rex/src/services/auth.dart';
 
 import '../common/profile_picture.dart';
@@ -54,7 +55,13 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
                   key: ValueKey(ref.watch(groupListProvider).groups[index].id),
-                  child: Row(
+                  child: InkWell(
+                    onTap: (){
+                      Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => GroupDetail(group: ref.watch(groupListProvider).groups[index]),));
+                    },
+                    child:  Row(
+                      
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -106,44 +113,46 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                 ),
                               ),
                               Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.centerRight,
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: CircleAvatar(
-                radius: 18,
-                backgroundColor: Colors.red,
-                child: profilePicture("Pak Fitra"), // Provide your custom image
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: CircleAvatar(
-                radius: 18,
-                backgroundColor: Colors.red,
-                child: profilePicture("Michael Jordan"), // Provide your custom image
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: CircleAvatar(
-                radius: 18,
-                backgroundColor: Colors.red,
-                child: profilePicture("John Doe"), // Provide your custom image
-              ),
-            ),
-          ),
-        ],
-      ),
+                                children: <Widget>[
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      child: CircleAvatar(
+                                        radius: 18,
+                                        backgroundColor: Colors.red,
+                                        child: profilePicture("Pak Fitra"), // Provide your custom image
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      child: CircleAvatar(
+                                        radius: 18,
+                                        backgroundColor: Colors.red,
+                                        child: profilePicture("Michael Jordan"), // Provide your custom image
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      child: CircleAvatar(
+                                        radius: 18,
+                                        backgroundColor: Colors.red,
+                                        child: profilePicture("John Doe"), // Provide your custom image
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ]),
-                      ]));
+                      ]) ,)
+                  
+                 );
             },
           ),
         ))

@@ -1,74 +1,31 @@
 {
-    "groups": [
-      {
-        "id": 1,
-        "name": "Trip1",
-        "member_id": [1,2,3,4,5,6],
-        "start_date": "01-01-2023",
-        "end_date": "02-02-2023",
-        "type": "owed",
-        "total_unpaid": 20.00,
-        "total_expense": 52.53
-      },
-      {
-        "id": 2,
-        "name": "Trip2",
-        "member_id": [1,2,3,4,5,6],
-        "start_date": "01-01-2023",
-        "end_date": "02-02-2023",
-        "type": "owed",
-        "total_unpaid": 20.000,
-        "total_expense": 52.53
-      },
-      {
-        "id": 3,
-        "name": "Trip3",
-        "member_id": [1,2,3,4,5,6],
-        "start_date": "01-01-2023",
-        "end_date": "02-02-2023",
-        "type": "lent",
-        "total_unpaid": 20.00,
-        "total_expense": 52.53
-      },
-      {
-        "id": 4,
-        "name": "Trip4",
-        "member_id": [1,2,3,4,5,6],
-        "start_date": "01-01-2023",
-        "end_date": "02-02-2023",
-        "type": "owed",
-        "total_unpaid": 20.00,
-        "total_expense": 52.53
-      },
-      {
-        "id": 5,
-        "name": "Trip5",
-        "member_id": [1,2,3,4,5,6],
-        "start_date": "01-01-2023",
-        "end_date": "02-02-2023",
-        "type": "lent",
-        "total_unpaid": 20.00,
-        "total_expense": 52.53
-      },
-      {
-        "id": 6,
-        "name": "Trip6",
-        "member_id": [1,2,3,4,5,6],
-        "start_date": "01-01-2023",
-        "end_date": "02-02-2023",
-        "type": "owed",
-        "total_unpaid": 20.00,
-        "total_expense": 52.53
-      },
-      {
-        "id": 7,
-        "name": "Trip7",
-        "member_id": [1,2,3,4,5,6],
-        "start_date": "01-01-2023",
-        "end_date": "02-02-2023",
-        "type": "owed",
-        "total_unpaid": 20.00,
-        "total_expense": 52.53
-      }
-    ]
+  "message": "SUCCESS",
+  "data": [
+    {
+    "group_id": "6e8a496b-0c95-42a3-9bc3-3696d8e131c9",
+    "name": "Edited 3",
+    "member_id": [
+      "6251ac85-e43d-4b88-8779-588099df5008",
+      "183e04d7-c653-4c7d-aa66-3d751d4d7358"
+    ],
+    "start_date": "2023-03-01T23:19:20.968831+07:00",
+    "end_date": "2023-03-01T20:19:20.968831+07:00",
+    "type": "HARDCODED",
+    "total_unpaid": 0,
+    "total_expense": 0
+    },
+    {
+    "group_id": "0b865d7f-e40e-4440-905e-eccf2caaa6ed",
+    "name": "New Group Yeay",
+    "member_id": [
+      "6251ac85-e43d-4b88-8779-588099df5008",
+      "183e04d7-c653-4c7d-aa66-3d751d4d7358"
+    ],
+    "start_date": "2023-03-01T17:19:20.968831+07:00",
+    "end_date": "2023-03-01T19:19:20.968831+07:00",
+    "type": "HARDCODED",
+    "total_unpaid": 0,
+    "total_expense": 0
+    }
+  ]
   }

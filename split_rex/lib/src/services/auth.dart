@@ -11,7 +11,7 @@ import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/model/auth.dart';
 
 class ApiServices {
-  String endpoint = "http://192.168.1.11:8080";
+  String endpoint = "http://10.10.75.234:8080";
 
   Future<void> postRegister(WidgetRef ref) async {
     SignUpModel signUpData = ref.watch(authProvider).signUpData;
@@ -57,7 +57,7 @@ class ApiServices {
         await rootBundle.loadString('assets/groups.json');
 
     var data = await json.decode(response);
-    ref.read(groupListProvider).loadGroupData(data["groups"]);
+    ref.read(groupListProvider).loadGroupData(data["data"]);
     // setState(() {
     //   _items = data["items"];
     //   print("..number of items ${_items.length}");

@@ -19,7 +19,7 @@ class GroupInfo extends ConsumerWidget {
   final String title;
   final String startDate;
   final String endDate;
-  final double totalExpense;
+  final int totalExpense;
   final List<dynamic> memberId;
 
   @override
@@ -105,7 +105,7 @@ class GroupInfo extends ConsumerWidget {
 
 class BalanceInfo extends ConsumerWidget {
   const BalanceInfo({super.key, required this.totalUnpaid});
-  final double totalUnpaid;
+  final int totalUnpaid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

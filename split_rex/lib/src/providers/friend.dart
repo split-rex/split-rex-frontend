@@ -34,7 +34,7 @@ class FriendProvider extends ChangeNotifier {
         name: friend["fullname"],
       );
 
-      friendList.add(friendObj);
+      friendReceivedList.add(friendObj);
     }
 
     notifyListeners();
@@ -50,7 +50,7 @@ class FriendProvider extends ChangeNotifier {
         name: friend["fullname"],
       );
 
-      friendList.add(friendObj);
+      friendSentList.add(friendObj);
     }
 
     notifyListeners();

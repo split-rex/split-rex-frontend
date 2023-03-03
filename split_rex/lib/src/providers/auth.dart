@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:split_rex/src/model/auth.dart';
+import 'package:split_rex/src/model/user.dart';
 
 class AuthProvider extends ChangeNotifier {
   SignUpModel signUpData = SignUpModel();
   SignInModel signInData = SignInModel();
+  User userData = User();
+
   String jwtToken = "";
 
   void changeSignUpData(name, username, email, pass, confPass){
@@ -23,6 +26,12 @@ class AuthProvider extends ChangeNotifier {
   
   void changeJwtToken(jwt) {
     jwtToken = jwt;
+  }
+
+  void loadUserData(data) {
+    userData.name = data["fullname"];
+    userData.username = data["username"];
+    userData.userId = data["user_id"];
   }
 }
 

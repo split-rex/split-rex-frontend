@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 
 import 'package:split_rex/src/providers/auth.dart';
@@ -40,7 +41,7 @@ class FriendServices {
       throw Exception();
     }
     Response resp = await get(
-      Uri.parse("$endpoint/friendRequestSent"),
+      Uri.parse("$endpoint/friendRequestReceived"),
       headers: <String, String>{
         'Content-Type': 'application/json',
         "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
@@ -60,7 +61,7 @@ class FriendServices {
       throw Exception();
     }
     Response resp = await get(
-      Uri.parse("$endpoint/friendRequestReceived"),
+      Uri.parse("$endpoint/friendRequestSent"),
       headers: <String, String>{
         'Content-Type': 'application/json',
         "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
@@ -69,8 +70,7 @@ class FriendServices {
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       ref.read(friendProvider).changeUserSentList(data["data"]);
-    } 
-    else {
+    } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
   }

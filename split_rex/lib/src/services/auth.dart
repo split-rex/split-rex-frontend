@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 
 import 'package:split_rex/src/providers/routes.dart';
@@ -12,6 +13,24 @@ import 'package:split_rex/src/model/auth.dart';
 
 class ApiServices {
   String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
+
+  Future<void> getProfile(WidgetRef ref) async {
+    Response resp =
+        await get(Uri.parse("$endpoint/profile"), headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+    });
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      ref.read(authProvider).loadUserData(data["data"]);
+      var logger = Logger();
+      logger.d(ref.watch(authProvider).userData);
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+      var logger = Logger();
+      logger.d(data);
+    }
+  }
 
   Future<void> postRegister(WidgetRef ref) async {
     SignUpModel signUpData = ref.watch(authProvider).signUpData;
@@ -29,6 +48,7 @@ class ApiServices {
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       ref.read(authProvider).changeJwtToken(data["data"]);
+      await getProfile(ref);
       ref.read(routeProvider).changePage("home");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
@@ -46,6 +66,7 @@ class ApiServices {
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       ref.read(authProvider).changeJwtToken(data["data"]);
+      await getProfile(ref);
       ref.read(routeProvider).changePage("home");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
@@ -53,8 +74,7 @@ class ApiServices {
   }
 
   Future<void> readJson(WidgetRef ref) async {
-    final String response =
-        await rootBundle.loadString('assets/groups.json');
+    final String response = await rootBundle.loadString('assets/groups.json');
 
     var data = await json.decode(response);
     ref.read(groupListProvider).loadGroupData(data["groups"]);
@@ -62,6 +82,5 @@ class ApiServices {
     //   _items = data["items"];
     //   print("..number of items ${_items.length}");
     // });
-  
   }
 }

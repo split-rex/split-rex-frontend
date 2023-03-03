@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/services/friend.dart';
 import '../../providers/friend.dart';
 import '../../providers/routes.dart';
 import 'friends.dart';
@@ -156,7 +157,7 @@ class FriendRequestsBody extends ConsumerWidget {
                     child: const Text("You don't have any friend requests",
                         style: TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.w500,
                             color: Color(0xFF4F4F4F))),
                   )
                 : ListView.separated(
@@ -169,7 +170,11 @@ class FriendRequestsBody extends ConsumerWidget {
                           name: ref
                               .watch(friendProvider)
                               .friendReceivedList[index]
-                              .name);
+                              .name,
+                          userId: ref
+                              .watch(friendProvider)
+                              .friendReceivedList[index]
+                              .userId);
                     },
                     separatorBuilder: (context, index) => const Divider(
                       thickness: 1,
@@ -177,19 +182,17 @@ class FriendRequestsBody extends ConsumerWidget {
                       color: Color(0xFFE1F3F2),
                     ),
                   )
-
             : (ref.watch(friendProvider).friendSentList.isEmpty)
                 ? Container(
                     padding: const EdgeInsets.all(10),
                     child: const Text("You don't have any friend requests",
                         style: TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.w500,
                             color: Color(0xFF4F4F4F))),
                   )
                 : ListView.separated(
-                    itemCount:
-                        ref.watch(friendProvider).friendSentList.length,
+                    itemCount: ref.watch(friendProvider).friendSentList.length,
                     shrinkWrap: true,
                     padding: const EdgeInsets.only(left: 15, top: 12),
                     itemBuilder: (context, index) {
@@ -209,9 +212,11 @@ class FriendRequestsBody extends ConsumerWidget {
 }
 
 class FriendRequestDetail extends ConsumerWidget {
-  const FriendRequestDetail({super.key, required this.name});
+  const FriendRequestDetail(
+      {super.key, required this.name, required this.userId});
 
   final String name;
+  final String userId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -243,6 +248,7 @@ class FriendRequestDetail extends ConsumerWidget {
                 const SizedBox(height: 8),
                 Row(children: [
                   InkWell(
+                    onTap: () async => await FriendServices().rejectFriendRequest(ref, userId),
                     child: Container(
                       alignment: Alignment.center,
                       width: 117,
@@ -263,6 +269,7 @@ class FriendRequestDetail extends ConsumerWidget {
                   ),
                   const SizedBox(width: 12),
                   InkWell(
+                    onTap: () async => await FriendServices().acceptFriendRequest(ref, userId),
                     child: Container(
                       alignment: Alignment.center,
                       width: 117,

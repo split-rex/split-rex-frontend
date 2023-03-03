@@ -81,11 +81,12 @@ class FriendRequestSection extends ConsumerWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               (ref.watch(friendProvider).friendReceivedList.isEmpty)
-                  ? const Text("You don't have any friend requests",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w800,
-                      ))
+                  ? const Expanded(
+                      child: Text("You don't have any friend requests",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          )))
                   : Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

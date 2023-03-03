@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:split_rex/src/screens/add_friends.dart';
-import 'package:split_rex/src/widgets/home.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../common/header.dart';
 import '../widgets/friends/friends.dart';
 
-class Friends extends StatelessWidget {
+class Friends extends ConsumerWidget {
   const Friends({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children:  const [
-        FriendsHeader(),
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    return header(
+      context, 
+      ref, 
+      "Friends",
+      "group_list",
+      Column(children: const [
         SizedBox(height: 15),
         AddFriendsSection(),
         SizedBox(height: 15),
@@ -19,6 +23,7 @@ class Friends extends StatelessWidget {
         SizedBox(height: 15),
         // TODO: sort for friends
         FriendsSection()
-    ]);
+      ],)
+    );
   }
 }

@@ -2,46 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/routes.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
-
-class AddFriendHeader extends ConsumerWidget {
-  const AddFriendHeader({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return DefaultTabController(
-        length: 1,
-        child: AppBar(
-          bottomOpacity: 0.0,
-          elevation: 0.0,
-          backgroundColor: Colors.transparent,
-          title: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                onPressed: () {
-                  ref.watch(routeProvider).changePage("home");
-                },
-                color: const Color(0xFF4F4F4F),
-              ),
-              const Center(
-                widthFactor: 3,
-                child: Text(
-                  "Add Friend",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xFF4F4F4F),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ));
-  }
-}
 
 class AddFriendSearchSection extends StatefulWidget {
   const AddFriendSearchSection({super.key});

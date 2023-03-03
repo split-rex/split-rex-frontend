@@ -3,44 +3,6 @@ import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/routes.dart';
 
-class FriendRequestsHeader extends ConsumerWidget {
-  const FriendRequestsHeader({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return DefaultTabController(
-        length: 1,
-        child: AppBar(
-          bottomOpacity: 0.0,
-          elevation: 0.0,
-          backgroundColor: Colors.transparent,
-          title: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                onPressed: () {
-                  ref.watch(routeProvider).changePage("home");
-                },
-                color: const Color(0xFF4F4F4F),
-              ),
-              const Center(
-                widthFactor: 2,
-                child: Text(
-                  "Friend Requests",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xFF4F4F4F),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ));
-  }
-}
-
 class FriendRequestSelector extends ConsumerWidget {
   const FriendRequestSelector({super.key});
   

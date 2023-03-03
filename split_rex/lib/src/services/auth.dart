@@ -11,7 +11,7 @@ import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/model/auth.dart';
 
 class ApiServices {
-  String endpoint = "http://192.168.1.11:8080";
+  String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
 
   Future<void> postRegister(WidgetRef ref) async {
     SignUpModel signUpData = ref.watch(authProvider).signUpData;

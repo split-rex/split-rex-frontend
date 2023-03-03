@@ -12,7 +12,9 @@ class AddExpense extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return header(
       context, 
+      ref,
       "Add Expense",
+      "home",
           Container(
             padding: const EdgeInsets.only(top: 8.0),
             child: 

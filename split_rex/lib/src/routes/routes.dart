@@ -4,12 +4,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/screens/account.dart';
 import 'package:split_rex/src/screens/activity.dart';
+import 'package:split_rex/src/screens/add_friends.dart';
+import 'package:split_rex/src/screens/friend_requests.dart';
 import 'package:split_rex/src/screens/group_list.dart';
 
 import 'package:split_rex/src/screens/home.dart';
 import 'package:split_rex/src/screens/sign_in.dart';
 import 'package:split_rex/src/screens/sign_up.dart';
 import 'package:split_rex/src/screens/add_expense.dart';
+import 'package:split_rex/src/widgets/friends/friends.dart';
+
+import '../screens/friends.dart';
 
 
 class PageRouting extends ConsumerWidget {
@@ -32,6 +37,16 @@ class PageRouting extends ConsumerWidget {
         return const Activity();
       case "account":
         return const Account();
+  
+      // friends
+      case "friend_requests":
+        return const FriendRequests();
+      case "friends":
+        return const Friends();
+      case "add_friends":
+        return const AddFriends();
+
+      // expense
       case "add_expense":
         return const AddExpense();
       default:

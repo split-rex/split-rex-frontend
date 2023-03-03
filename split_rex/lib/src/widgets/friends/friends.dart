@@ -129,9 +129,8 @@ class _FriendsSection extends State<FriendsSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 72,
       width: 348,
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+      padding: const EdgeInsets.only(top: 15, bottom: 15, left: 15, right: 30),
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(12)),
       child: Column(
@@ -146,8 +145,51 @@ class _FriendsSection extends State<FriendsSection> {
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            // TODO: FriendsSSSSS @sam
+            children: const [
+              FriendList(),
+              Divider(
+                thickness: 1,
+                indent: 20,
+                color: Color(0xFFE1F3F2),
+              ),
+              FriendList(),
+              Divider(
+                thickness: 1,
+                indent: 20,
+                color: Color(0xFFE1F3F2),
+              ),
+              FriendList()
+            ],
           )
+        ],
+      ),
+    );
+  }
+}
+
+class FriendList extends StatefulWidget {
+  const FriendList({super.key});
+
+  @override
+  State<FriendList> createState() => _FriendList();
+}
+
+class _FriendList extends State<FriendList> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 10, bottom: 10),
+      child: Row(
+        children:  [
+          const Initicon(text: "Francesco Parrino", size: 40),
+          Container(
+            margin: const EdgeInsets.only(left: 20),
+            child: const Text("Francesco Parrino",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF4F4F4F)))
+                  ),
         ],
       ),
     );

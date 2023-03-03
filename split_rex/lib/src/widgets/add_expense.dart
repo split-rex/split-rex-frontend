@@ -5,6 +5,8 @@ import 'package:split_rex/src/providers/routes.dart';
 
 import 'package:split_rex/src/common/profile_picture.dart';
 
+import '../providers/friend.dart';
+
 Widget searchBar() => Container(
   margin: const EdgeInsets.only(left: 18.0, right: 18.0),
   decoration: BoxDecoration(
@@ -45,7 +47,7 @@ Widget addExistingGroup(BuildContext context, WidgetRef ref) {
         ),
         Expanded(child: 
           Container(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(top: 0, left: 4.0, right: 4.0, bottom: 16.0),
             margin: const EdgeInsets.only(top: 8.0),
             alignment: Alignment.center,
             decoration: const BoxDecoration(
@@ -109,7 +111,7 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
             child: ListView.separated(
               shrinkWrap: true,
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              itemCount: ref.watch(addExpenseProvider).friends.length,
+              itemCount: ref.watch(friendProvider).friendList.length,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
@@ -121,10 +123,10 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
                   children: [
                     Row(
                       children: [
-                        profilePicture(ref.watch(addExpenseProvider).friends[index], 24.0),
+                        profilePicture(ref.watch(friendProvider).friendList[index].name, 24.0),
                         const SizedBox(width: 16),
                         Text(
-                          ref.watch(addExpenseProvider).friends[index], 
+                          ref.watch(friendProvider).friendList[index].name, 
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 16,

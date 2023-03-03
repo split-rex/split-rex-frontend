@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:split_rex/src/providers/routes.dart';
 
+import '../services/add_expense.dart';
+
 Widget splitButton(WidgetRef ref) => GestureDetector(
-  onTap: () {
+  onTap: () async {
+    await FriendServices().createGroup(ref);
     ref.watch(routeProvider).changePage("home");
   },
   child: Container(

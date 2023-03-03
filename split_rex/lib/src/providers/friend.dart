@@ -37,7 +37,6 @@ class FriendProvider extends ChangeNotifier {
 
       friendReceivedList.add(friendObj);
     }
-
     notifyListeners();
   }
 

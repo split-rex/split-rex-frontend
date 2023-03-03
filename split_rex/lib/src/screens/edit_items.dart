@@ -43,6 +43,10 @@ class EditItems extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             TextField(
+                              onChanged: (val) {
+                                ref.read(addExpenseProvider).changeStartDate(DateTime.now().toUtc().toIso8601String());
+                                ref.read(addExpenseProvider).changeEndDate(DateTime.now().toUtc().toIso8601String());
+                              },
                               style: const TextStyle(
                                 fontWeight: FontWeight.w900,
                               ),

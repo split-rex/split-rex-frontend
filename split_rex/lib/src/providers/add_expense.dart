@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/model/add_expense.dart';
 
 class AddExpenseProvider extends ChangeNotifier {
   List<String> groups = <String>['Singapore Trip', 'GKUB', 'Anjay geming'];
-  List<String> friends = <String>['Gres Klaudia', 'Eppy', 'Kwen XOTK', 'Petoriko', 'Sam well', 'Nan dough', 'Ubye'];
   List<String> itemsName = ["Ayam", "Bebek Aji Anom"];
   List<int> itemsQty = [1, 2];
   List<int> itemsPrice = [50000, 70000];
+
   bool checkedFriends = false;
   bool checkedGroups = false;
-
   List<int> selectedFriendsIdx = [];
   int selectedGroupIdx = -1;
+
+  NewGroup newGroup = NewGroup();
+
+  clearExpense() {
+    itemsName.clear();
+    itemsQty.clear();
+    itemsPrice.clear();
+    checkedFriends = false;
+    checkedGroups = false;
+    selectedFriendsIdx.clear();
+    selectedGroupIdx = -1;
+    newGroup = NewGroup();
+    notifyListeners();
+  }
 
   addItemName(index, String val) {
     itemsName.insert(index, val);
@@ -42,6 +56,21 @@ class AddExpenseProvider extends ChangeNotifier {
       selectedFriendsIdx.add(val);
     }
     checkedFriends = selectedFriendsIdx.isEmpty ? false : true;
+    notifyListeners();
+  }
+
+  changeBillName(val) {
+    newGroup.name = val;
+    notifyListeners();
+  }
+
+  changeStartDate(val) {
+    newGroup.startDate = val;
+    notifyListeners();
+  }
+
+  changeEndDate(val) {
+    newGroup.endDate = val;
     notifyListeners();
   }
 }

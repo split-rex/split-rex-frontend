@@ -28,9 +28,8 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                 onTap: () => ref
                                     .watch(routeProvider)
                                     .changePage(prevPage),
-                                child: const Positioned(
-                                    child: Icon(Icons.navigate_before,
-                                        color: Color(0XFF4F4F4F), size: 35)),
+                                child: Icon(Icons.navigate_before,
+                                        color: Color(0XFF4F4F4F), size: 35),
                               )
                             : const SizedBox(width: 0),
                         Container(

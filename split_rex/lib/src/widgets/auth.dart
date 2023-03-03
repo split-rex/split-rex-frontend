@@ -224,7 +224,7 @@ class SubmitBtn extends ConsumerWidget {
             emailController.text,
             passController.text
           );
-          ApiServices().postLogin(ref);
+          await ApiServices().postLogin(ref);
         } else {
           ref.read(authProvider).changeSignUpData(
             nameController!.text,
@@ -233,7 +233,7 @@ class SubmitBtn extends ConsumerWidget {
             passController.text,
             confController!.text
           );
-          ApiServices().postRegister(ref);
+          await ApiServices().postRegister(ref);
         }
       },
       child: Container(

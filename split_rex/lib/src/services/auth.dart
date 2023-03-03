@@ -11,6 +11,8 @@ import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/model/auth.dart';
 
+import 'friend.dart';
+
 class ApiServices {
   String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
 
@@ -49,6 +51,9 @@ class ApiServices {
     if (data["message"] == "SUCCESS") {
       ref.read(authProvider).changeJwtToken(data["data"]);
       await getProfile(ref);
+      await FriendServices().userFriendList(ref);
+      await FriendServices().friendRequestReceivedList(ref);
+      await FriendServices().friendRequestSentList(ref);
       ref.read(routeProvider).changePage("home");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
@@ -67,6 +72,9 @@ class ApiServices {
     if (data["message"] == "SUCCESS") {
       ref.read(authProvider).changeJwtToken(data["data"]);
       await getProfile(ref);
+      await FriendServices().userFriendList(ref);
+      await FriendServices().friendRequestReceivedList(ref);
+      await FriendServices().friendRequestSentList(ref);
       ref.read(routeProvider).changePage("home");
     } else {
       ref.read(errorProvider).changeError(data["message"]);

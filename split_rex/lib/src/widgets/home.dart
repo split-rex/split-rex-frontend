@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/friend.dart';
 
-import '../common/profile_picture.dart';
 import '../providers/routes.dart';
 import '../services/friend.dart';
 
@@ -14,7 +14,7 @@ class UserDetail extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        profilePicture(ref.watch(authProvider).userData.name, 28),
+        Initicon(text: ref.watch(authProvider).userData.name, size: 55),
         const SizedBox(width: 12),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Text(
@@ -100,6 +100,7 @@ class FriendRequest extends ConsumerWidget {
             onTap: () async {
               await FriendServices().friendRequestReceivedList(ref);
               await FriendServices().friendRequestSentList(ref);
+              await FriendServices().userFriendList(ref);
 
               ref.watch(routeProvider).changePage("friend_requests");
             },

@@ -3,6 +3,7 @@ import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/friend.dart';
 import '../../providers/routes.dart';
+import 'friends.dart';
 
 class FriendRequestSelector extends ConsumerWidget {
   const FriendRequestSelector({super.key});
@@ -63,29 +64,67 @@ class FriendRequestSectionPicker extends ConsumerWidget {
             ),
           ],
         ),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Container(
-            decoration: const BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-              color: Color(0xFF4F9A99),
-              width: 3.0,
-            ))),
-            child: const Text(
-              "Received",
-              style: TextStyle(
-                  fontSize: 15,
-                  color: Color(0xFF4F9A99),
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(width: 14),
-          const Text("Sent",
-              style: TextStyle(
-                  fontSize: 15,
-                  color: Color(0xFF4F4F4F),
-                  fontWeight: FontWeight.w500)),
-        ]));
+        child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              (ref.watch(friendProvider).isReceived)
+                  ? InkWell(
+                      onTap: () =>
+                          ref.watch(friendProvider).changeIsReceived(true),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                          color: Color(0xFF4F9A99),
+                          width: 3.0,
+                        ))),
+                        child: const Text(
+                          "Received",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Color(0xFF4F9A99),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () =>
+                          ref.watch(friendProvider).changeIsReceived(true),
+                      child: const Text("Received",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Color(0xFF4F4F4F),
+                              fontWeight: FontWeight.w500))),
+              (!ref.watch(friendProvider).isReceived)
+                  ? InkWell(
+                      onTap: () =>
+                          ref.watch(friendProvider).changeIsReceived(false),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                          color: Color(0xFF4F9A99),
+                          width: 3.0,
+                        ))),
+                        child: const Text(
+                          "Sent",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Color(0xFF4F9A99),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () =>
+                          ref.watch(friendProvider).changeIsReceived(false),
+                      child: const Text("Sent",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Color(0xFF4F4F4F),
+                              fontWeight: FontWeight.w500))),
+            ]));
   }
 }
 
@@ -110,32 +149,62 @@ class FriendRequestsBody extends ConsumerWidget {
             ),
           ],
         ),
-        child: (ref.watch(friendProvider).friendReceivedList.isEmpty)
-            ? Container(
-                padding: const EdgeInsets.all(10),
-                child: const Text("You don't have any friend requests",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xFF4F4F4F))),
-              )
-            : ListView.separated(
-                itemCount: ref.watch(friendProvider).friendReceivedList.length,
-                shrinkWrap: true,
-                padding: const EdgeInsets.only(top: 12),
-                itemBuilder: (context, index) {
-                  return FriendRequestDetail(
-                      name: ref
-                          .watch(friendProvider)
-                          .friendReceivedList[index]
-                          .name);
-                },
-                separatorBuilder: (context, index) => const Divider(
-                  thickness: 1,
-                  indent: 20,
-                  color: Color(0xFFE1F3F2),
-                ),
-              ));
+        child: (ref.watch(friendProvider).isReceived)
+            ? (ref.watch(friendProvider).friendReceivedList.isEmpty)
+                ? Container(
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("You don't have any friend requests",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xFF4F4F4F))),
+                  )
+                : ListView.separated(
+                    itemCount:
+                        ref.watch(friendProvider).friendReceivedList.length,
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(top: 12),
+                    itemBuilder: (context, index) {
+                      return FriendRequestDetail(
+                          name: ref
+                              .watch(friendProvider)
+                              .friendReceivedList[index]
+                              .name);
+                    },
+                    separatorBuilder: (context, index) => const Divider(
+                      thickness: 1,
+                      indent: 20,
+                      color: Color(0xFFE1F3F2),
+                    ),
+                  )
+
+            : (ref.watch(friendProvider).friendSentList.isEmpty)
+                ? Container(
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("You don't have any friend requests",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xFF4F4F4F))),
+                  )
+                : ListView.separated(
+                    itemCount:
+                        ref.watch(friendProvider).friendSentList.length,
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(left: 15, top: 12),
+                    itemBuilder: (context, index) {
+                      return FriendList(
+                          name: ref
+                              .watch(friendProvider)
+                              .friendSentList[index]
+                              .name);
+                    },
+                    separatorBuilder: (context, index) => const Divider(
+                      thickness: 1,
+                      indent: 20,
+                      color: Color(0xFFE1F3F2),
+                    ),
+                  ));
   }
 }
 

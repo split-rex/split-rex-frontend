@@ -45,8 +45,8 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                           ),
                         ),
                         ref.watch(routeProvider).currentPage == ("group_list")
-                            ? Align(
-                                widthFactor: 5.5,
+                            ? Container(
+                                width: MediaQuery.of(context).size.width - 20.0,
                                 alignment: Alignment.centerRight,
                                 child: GestureDetector(
                                     onTap: () async {

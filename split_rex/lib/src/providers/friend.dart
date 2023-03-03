@@ -7,6 +7,7 @@ class FriendProvider extends ChangeNotifier {
   List<Friend> friendList = <Friend>[];
   List<Friend> friendReceivedList = <Friend>[];
   List<Friend> friendSentList = <Friend>[];
+  bool isReceived = true;
 
   changeUserFriendList(val) {
     friendList.clear();
@@ -52,6 +53,12 @@ class FriendProvider extends ChangeNotifier {
 
       friendSentList.add(friendObj);
     }
+
+    notifyListeners();
+  }
+
+  changeIsReceived(bool val) {
+    isReceived = val;
 
     notifyListeners();
   }

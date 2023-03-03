@@ -33,4 +33,45 @@ class FriendServices {
       ref.read(errorProvider).changeError(data["message"]);
     }
   }
+
+  Future<void> friendRequestReceivedList(WidgetRef ref) async {
+    SignUpModel signUpData = ref.watch(authProvider).signUpData;
+    if (signUpData.confPass != signUpData.pass) {
+      throw Exception();
+    }
+    Response resp = await get(
+      Uri.parse("$endpoint/friendRequestSent"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+    );
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      ref.read(friendProvider).changeUserReceivedList(data["data"]);
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> friendRequestSentList(WidgetRef ref) async {
+    SignUpModel signUpData = ref.watch(authProvider).signUpData;
+    if (signUpData.confPass != signUpData.pass) {
+      throw Exception();
+    }
+    Response resp = await get(
+      Uri.parse("$endpoint/friendRequestReceived"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+    );
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      ref.read(friendProvider).changeUserSentList(data["data"]);
+    } 
+    else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
 }

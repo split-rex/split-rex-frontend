@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/friend.dart';
 import '../../providers/routes.dart';
 
 class FriendRequestSelector extends ConsumerWidget {
   const FriendRequestSelector({super.key});
-  
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
@@ -50,31 +51,38 @@ class FriendRequestSectionPicker extends ConsumerWidget {
         margin: const EdgeInsets.only(left: 28.0, right: 28.0),
         width: 349,
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(0, 0), // Shadow position
+            ),
+          ],
         ),
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          // TODO: changeable received and set @samuelswandi
           Container(
             decoration: const BoxDecoration(
                 border: Border(
                     bottom: BorderSide(
               color: Color(0xFF4F9A99),
-              width: 3.0, // Underline thickness
+              width: 3.0,
             ))),
             child: const Text(
               "Received",
               style: TextStyle(
-                fontSize: 14,
-                  color: Color(0xFF4F9A99), fontWeight: FontWeight.bold),
+                  fontSize: 15,
+                  color: Color(0xFF4F9A99),
+                  fontWeight: FontWeight.bold),
             ),
           ),
-
           const SizedBox(width: 14),
           const Text("Sent",
               style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 15,
                   color: Color(0xFF4F4F4F),
                   fontWeight: FontWeight.w500)),
         ]));
@@ -88,71 +96,83 @@ class FriendRequestsBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
         margin: const EdgeInsets.only(left: 28.0, right: 28.0),
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 15.0),
-        decoration: const BoxDecoration(
+        width: 349,
+        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(0, 0), // Shadow position
+            ),
+          ],
         ),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
-              FriendRequestDetail(),
-              Divider(
-                thickness: 1,
-                indent: 20,
-                color: Color(0xFFE1F3F2),
-              ),
-              FriendRequestDetail(),
-              Divider(
-                thickness: 1,
-                indent: 20,
-                color: Color(0xFFE1F3F2),
-              ),
-              FriendRequestDetail(),
-            ]));
+        child: (ref.watch(friendProvider).friendReceivedList.isEmpty)
+            ? Container(
+                padding: const EdgeInsets.all(10),
+                child: const Text("You don't have any friend requests",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFF4F4F4F))),
+              )
+            : ListView.separated(
+                itemCount: ref.watch(friendProvider).friendReceivedList.length,
+                shrinkWrap: true,
+                padding: const EdgeInsets.only(top: 12),
+                itemBuilder: (context, index) {
+                  return FriendRequestDetail(
+                      name: ref
+                          .watch(friendProvider)
+                          .friendReceivedList[index]
+                          .name);
+                },
+                separatorBuilder: (context, index) => const Divider(
+                  thickness: 1,
+                  indent: 20,
+                  color: Color(0xFFE1F3F2),
+                ),
+              ));
   }
 }
 
-class FriendRequestDetail extends StatefulWidget {
-  const FriendRequestDetail({super.key});
+class FriendRequestDetail extends ConsumerWidget {
+  const FriendRequestDetail({super.key, required this.name});
+
+  final String name;
 
   @override
-  State<FriendRequestDetail> createState() => _FriendRequestDetail();
-}
-
-class _FriendRequestDetail extends State<FriendRequestDetail> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       width: 348,
       color: const Color(0xFFffffff),
       alignment: Alignment.center,
-      padding: const EdgeInsets.only(top: 8, bottom: 16),
+      padding: const EdgeInsets.only(bottom: 18),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.only(left: 5),
-              child: const Initicon(text: "Paulo Dybala"),
+              padding: const EdgeInsets.only(left: 15),
+              child: Initicon(text: name),
             ),
             const SizedBox(width: 18),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Paulo Dybala",
-                  style: TextStyle(
+                Text(
+                  name,
+                  style: const TextStyle(
                       fontSize: 19.0,
                       color: Color(0xFF4F4F4F),
                       fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 8),
-                Row(
-                  children: [
+                Row(children: [
                   InkWell(
                     child: Container(
                       alignment: Alignment.center,

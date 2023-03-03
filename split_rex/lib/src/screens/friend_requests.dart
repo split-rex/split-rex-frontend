@@ -21,12 +21,5 @@ class FriendRequests extends ConsumerWidget {
             FriendRequestsBody(),
           ],
         ));
-    // TODO: add received and sent section
-    // FriendRequestSelector(),
-    // const FriendRequestSectionPicker(), // change to appbar
-    // const SizedBox(height: 18),
-    // const FriendRequestsBody(),
-
-    
   }
 }

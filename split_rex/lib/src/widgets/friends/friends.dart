@@ -11,7 +11,6 @@ class AddFriendsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      // onTap: // change to add screen,
       onTap: () => ref.watch(routeProvider).changePage("add_friends"),
       child: Container(
         height: 60,
@@ -50,33 +49,47 @@ class FriendRequestSection extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                // TODO: make it dynamic
-                "Friend Requests (5)",
-                style: TextStyle(color: Color(0xFF4F4F4F), fontSize: 12),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    // TODO: make it dynamic
-                    "Francesco Parrino, Lorem, lorem...",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900,
+              (ref.watch(friendProvider).friendReceivedList.isEmpty)
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                          Text("You don't have any friend requests",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w800,
+                              )),
+                          Icon(Icons.arrow_forward_ios_rounded, size: 24),
+                        ])
+                  : Text(
+                      "Friend Requests (${ref.watch(friendProvider).friendReceivedList.length})",
+                      style: const TextStyle(
+                          color: Color(0xFF4F4F4F), fontSize: 12),
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.arrow_forward_ios_rounded, size: 24),
-                    constraints: const BoxConstraints(),
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
-                      // ref.watch(routeProvider).changePage("home");
-                    },
-                  ),
-                ],
-              )
+              (ref.watch(friendProvider).friendReceivedList.isEmpty)
+                  ? const SizedBox(height: 0)
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          // TODO
+                          "Francesco Parrino, Lorem, lorem...",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.arrow_forward_ios_rounded,
+                              size: 24),
+                          constraints: const BoxConstraints(),
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            // ref.watch(routeProvider).changePage("home");
+                          },
+                        ),
+                      ],
+                    ),
             ],
           )),
     );
@@ -96,23 +109,24 @@ class FriendsSection extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ref.watch(friendProvider).friendList.isEmpty ? 
-          const Text ("You dont have any friend at the moment") 
-          :
-          Text(
-            "Friends (${ref.watch(friendProvider).friendList.length})",
-            style: const TextStyle(
-              fontSize: 12,
-            ),
-          ),
+          ref.watch(friendProvider).friendList.isEmpty
+              ? const Text("You don't have any friend at the moment")
+              : Text(
+                  "Friends (${ref.watch(friendProvider).friendList.length})",
+                  style: const TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ListView.separated(
                 itemCount: ref.watch(friendProvider).friendList.length,
+                padding: const EdgeInsets.only(top: 12),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  return FriendList(name: ref.watch(friendProvider).friendList[index].name);
+                  return FriendList(
+                      name: ref.watch(friendProvider).friendList[index].name);
                 },
                 separatorBuilder: (context, index) => const Divider(
                   thickness: 1,

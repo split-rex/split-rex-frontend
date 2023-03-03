@@ -52,6 +52,10 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                     onTap: () async {
                                       await FriendServices()
                                           .userFriendList(ref);
+                                      await FriendServices()
+                                          .friendRequestReceivedList(ref);
+                                      await FriendServices()
+                                          .friendRequestSentList(ref);
                                       ref
                                           .watch(routeProvider)
                                           .changePage("friends");

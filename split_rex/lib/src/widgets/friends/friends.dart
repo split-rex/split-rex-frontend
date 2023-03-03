@@ -18,7 +18,17 @@ class AddFriendsSection extends ConsumerWidget {
         padding: const EdgeInsets.only(left: 20, right: 20),
         alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(12)),
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(0, 0), // Shadow position
+            ),
+          ],
+        ),
         child: const Text(
           "Add Friends",
           style: TextStyle(
@@ -36,6 +46,16 @@ class FriendRequestSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    String generateFriendRequests() {
+      List<String> friendRequestString = <String>[];
+
+      for (var friend in ref.watch(friendProvider).friendReceivedList) {
+        friendRequestString.add(friend.name);
+      }
+
+      return friendRequestString.join(", ");
+    }
+
     return InkWell(
       onTap: () => ref.watch(routeProvider).changePage("friend_requests"),
       child: Container(
@@ -44,52 +64,55 @@ class FriendRequestSection extends ConsumerWidget {
           padding:
               const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(12)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            color: Colors.white,
+            borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 1,
+                offset: const Offset(0, 0), // Shadow position
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
             children: [
               (ref.watch(friendProvider).friendReceivedList.isEmpty)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                          Text("You don't have any friend requests",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w800,
-                              )),
-                          Icon(Icons.arrow_forward_ios_rounded, size: 24),
-                        ])
-                  : Text(
-                      "Friend Requests (${ref.watch(friendProvider).friendReceivedList.length})",
-                      style: const TextStyle(
-                          color: Color(0xFF4F4F4F), fontSize: 12),
-                    ),
-              (ref.watch(friendProvider).friendReceivedList.isEmpty)
-                  ? const SizedBox(height: 0)
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          // TODO
-                          "Francesco Parrino, Lorem, lorem...",
-                          textAlign: TextAlign.center,
+                  ? const Expanded(
+                      child: Text("You don't have any friend requests",
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          )))
+                  : Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text(
+                            "Friend Requests (${ref.watch(friendProvider).friendReceivedList.length})",
+                            style: const TextStyle(
+                                color: Color(0xFF4F4F4F), fontSize: 12),
                           ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.arrow_forward_ios_rounded,
-                              size: 24),
-                          constraints: const BoxConstraints(),
-                          padding: EdgeInsets.zero,
-                          onPressed: () {
-                            // ref.watch(routeProvider).changePage("home");
-                          },
-                        ),
-                      ],
+                          Flexible(
+                            child: Text(
+                              generateFriendRequests(),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+              const Icon(Icons.arrow_forward_ios_rounded, size: 24),
             ],
           )),
     );
@@ -103,9 +126,19 @@ class FriendsSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       width: 348,
-      padding: const EdgeInsets.only(top: 15, bottom: 15, left: 15, right: 30),
+      padding: const EdgeInsets.only(top: 15, bottom: 5, left: 15, right: 30),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(12)),
+        color: Colors.white,
+        borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: const Offset(0, 0), // Shadow position
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -3,10 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/screens/group_detail.dart';
-import 'package:split_rex/src/services/auth.dart';
 
 import '../common/profile_picture.dart';
-import '../providers/add_expense.dart';
 
 Widget searchBar() => Container(
      margin: const EdgeInsets.only(left: 18.0, right: 18.0),

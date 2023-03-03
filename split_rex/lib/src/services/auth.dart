@@ -28,6 +28,7 @@ class ApiServices {
         }));
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
+      ref.read(authProvider).changeJwtToken(data["data"]);
       ref.read(routeProvider).changeLogged();
       ref.read(routeProvider).currentPage = "home";
     } else {
@@ -45,6 +46,7 @@ class ApiServices {
         }));
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
+      ref.read(authProvider).changeJwtToken(data["data"]);
       ref.read(routeProvider).changeLogged();
       ref.read(routeProvider).currentPage = "home";
     } else {

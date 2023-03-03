@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/providers/routes.dart';
 
+import '../../providers/friend.dart';
+
 class AddFriendsSection extends ConsumerWidget {
   const AddFriendsSection({super.key});
 
@@ -81,15 +83,11 @@ class FriendRequestSection extends ConsumerWidget {
   }
 }
 
-class FriendsSection extends StatefulWidget {
+class FriendsSection extends ConsumerWidget {
   const FriendsSection({super.key});
-  @override
-  _FriendsSection createState() => new _FriendsSection();
-}
 
-class _FriendsSection extends State<FriendsSection> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       width: 348,
       padding: const EdgeInsets.only(top: 15, bottom: 15, left: 15, right: 30),
@@ -98,29 +96,30 @@ class _FriendsSection extends State<FriendsSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            // TODO: make it dynamic
-            "Friends (5)",
-            style: TextStyle(
+          ref.watch(friendProvider).friendList.isEmpty ? 
+          const Text ("You dont have any friend at the moment") 
+          :
+          Text(
+            "Friends (${ref.watch(friendProvider).friendList.length})",
+            style: const TextStyle(
               fontSize: 12,
             ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
-              FriendList(),
-              Divider(
-                thickness: 1,
-                indent: 20,
-                color: Color(0xFFE1F3F2),
+            children: [
+              ListView.separated(
+                itemCount: ref.watch(friendProvider).friendList.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return FriendList(name: ref.watch(friendProvider).friendList[index].name);
+                },
+                separatorBuilder: (context, index) => const Divider(
+                  thickness: 1,
+                  indent: 20,
+                  color: Color(0xFFE1F3F2),
+                ),
               ),
-              FriendList(),
-              Divider(
-                thickness: 1,
-                indent: 20,
-                color: Color(0xFFE1F3F2),
-              ),
-              FriendList()
             ],
           )
         ],
@@ -129,25 +128,22 @@ class _FriendsSection extends State<FriendsSection> {
   }
 }
 
-class FriendList extends StatefulWidget {
-  const FriendList({super.key});
+class FriendList extends ConsumerWidget {
+  const FriendList({super.key, required this.name});
+
+  final String name;
 
   @override
-  State<FriendList> createState() => _FriendList();
-}
-
-class _FriendList extends State<FriendList> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      padding: const EdgeInsets.only(top: 10, bottom: 10),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
-          const Initicon(text: "Francesco Parrino", size: 40),
+          Initicon(text: name, size: 40),
           Container(
               margin: const EdgeInsets.only(left: 20),
-              child: const Text("Francesco Parrino",
-                  style: TextStyle(
+              child: Text(name,
+                  style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF4F4F4F)))),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/services/friend.dart';
 
 Widget header(BuildContext context, WidgetRef ref, String pagename,
         String prevPage, Widget widget) =>
@@ -11,7 +12,7 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
             Row(
               children: [
                 Container(
-                  height: 120,
+                    height: 120,
                     padding: const EdgeInsets.only(
                         top: 50.0, bottom: 10.0, left: 5.0, right: 5.0),
                     child: Stack(
@@ -23,8 +24,7 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                     ("activity") &&
                                 ref.watch(routeProvider).currentPage !=
                                     ("account")
-                            ?
-                             InkWell(
+                            ? InkWell(
                                 onTap: () => ref
                                     .watch(routeProvider)
                                     .changePage(prevPage),
@@ -49,10 +49,13 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                 widthFactor: 5.5,
                                 alignment: Alignment.centerRight,
                                 child: GestureDetector(
-                                    onTap: () => 
-                                    ref
-                                        .watch(routeProvider)
-                                        .changePage("friends"),
+                                    onTap: () async {
+                                      await FriendServices()
+                                          .userFriendList(ref);
+                                      ref
+                                          .watch(routeProvider)
+                                          .changePage("friends");
+                                    },
                                     child: const Text("All Friends",
                                         style: TextStyle(
                                           fontSize: 14,

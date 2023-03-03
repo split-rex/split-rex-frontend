@@ -17,7 +17,7 @@ class FriendRequestsHeader extends ConsumerWidget {
           title: Row(
             children: [
               IconButton(
-                icon: const Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back_ios_new_rounded),
                 onPressed: () {
                   ref.watch(routeProvider).changePage("home");
                 },
@@ -86,7 +86,7 @@ class FriendRequestSectionPicker extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
         margin: const EdgeInsets.only(left: 28.0, right: 28.0),
-        width: double.infinity,
+        width: 349,
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -104,7 +104,7 @@ class FriendRequestSectionPicker extends ConsumerWidget {
             child: const Text(
               "Received",
               style: TextStyle(
-                fontSize: 17,
+                fontSize: 14,
                   color: Color(0xFF4F9A99), fontWeight: FontWeight.bold),
             ),
           ),
@@ -112,7 +112,7 @@ class FriendRequestSectionPicker extends ConsumerWidget {
           const SizedBox(width: 14),
           const Text("Sent",
               style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 14,
                   color: Color(0xFF4F4F4F),
                   fontWeight: FontWeight.w500)),
         ]));

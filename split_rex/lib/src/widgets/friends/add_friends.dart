@@ -10,25 +10,35 @@ class AddFriendHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-        padding: const EdgeInsets.only(top: 55.0),
-        child: Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                ref.watch(routeProvider).changePage("home");
-              },
-            ),
-            const Text(
-              "Add Friends",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
+    return DefaultTabController(
+        length: 1,
+        child: AppBar(
+          bottomOpacity: 0.0,
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          title: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                onPressed: () {
+                  ref.watch(routeProvider).changePage("home");
+                },
+                color: const Color(0xFF4F4F4F),
               ),
-            ),
-          ],
+              const Center(
+                widthFactor: 3,
+                child: Text(
+                  "Add Friend",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF4F4F4F),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ));
   }
 }

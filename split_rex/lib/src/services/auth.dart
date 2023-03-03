@@ -29,8 +29,7 @@ class ApiServices {
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       ref.read(authProvider).changeJwtToken(data["data"]);
-      ref.read(routeProvider).changeLogged();
-      ref.read(routeProvider).currentPage = "home";
+      ref.read(routeProvider).changePage("home");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
@@ -47,8 +46,7 @@ class ApiServices {
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       ref.read(authProvider).changeJwtToken(data["data"]);
-      ref.read(routeProvider).changeLogged();
-      ref.read(routeProvider).currentPage = "home";
+      ref.read(routeProvider).changePage("home");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

@@ -4,16 +4,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class RouteProvider extends ChangeNotifier {
   String currentPage = "sign_up";
   int currentNavbarIdx = 0;
-  bool isLogged = false;
+  bool isNavbarRevealed = false;
+
+  final List<String> _pagesWithNavbar = [
+    "home",
+    "activity",
+    "group_list",
+    "account",
+  ];
 
   void changePage(value){
     currentPage = value;
-    notifyListeners();
-  }
-
-  void changeLogged() {
-    isLogged = !isLogged;
-    currentPage = "home";
+    if (_pagesWithNavbar.contains(value)) {
+      isNavbarRevealed = true;
+    } else {
+      isNavbarRevealed = false;
+    }
     notifyListeners();
   }
 

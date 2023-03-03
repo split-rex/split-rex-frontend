@@ -12,10 +12,10 @@ import 'package:split_rex/src/screens/home.dart';
 import 'package:split_rex/src/screens/sign_in.dart';
 import 'package:split_rex/src/screens/sign_up.dart';
 import 'package:split_rex/src/screens/add_expense.dart';
-import 'package:split_rex/src/widgets/friends/friends.dart';
-
 import '../screens/friends.dart';
 
+import 'package:split_rex/src/screens/edit_items.dart';
+import 'package:split_rex/src/screens/split_bill.dart';
 
 class PageRouting extends ConsumerWidget {
   const PageRouting({super.key});
@@ -49,6 +49,10 @@ class PageRouting extends ConsumerWidget {
       // expense
       case "add_expense":
         return const AddExpense();
+      case "edit_items":
+        return const EditItems();
+      case "split_bill":
+        return const SplitBill();
       default:
         return const Home();
     }

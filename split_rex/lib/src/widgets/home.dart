@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../common/profile_picture.dart';
 import '../providers/routes.dart';
 
 class UserDetail extends StatelessWidget {
@@ -10,14 +11,7 @@ class UserDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(24.0),
-          child: Image.network(
-              height: 48,
-              width: 48,
-              fit: BoxFit.cover,
-              "https://st3.depositphotos.com/6672868/13701/v/600/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"),
-        ),
+        profilePicture("Valentino Rossi", 28),
         const SizedBox(width: 12),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
           Text(
@@ -29,7 +23,7 @@ class UserDetail extends StatelessWidget {
             ),
           ),
           Text(
-            "Valentino",
+            "Valentino Rossi",
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 28,

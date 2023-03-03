@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/providers/friend.dart';
+import 'package:split_rex/src/services/friend.dart';
 
 import '../common/profile_picture.dart';
 import '../providers/routes.dart';
@@ -64,6 +66,7 @@ class FriendRequest extends ConsumerWidget {
                             color: Colors.white,
                             fontSize: 12,
                             fontWeight: FontWeight.w400),
+                            
                         // TOOD: connect to backend @samuelswandi
                         children: [
                           TextSpan(text: "You have "),
@@ -76,7 +79,10 @@ class FriendRequest extends ConsumerWidget {
                 ],
               )),
           InkWell(
-            onTap: () {
+            onTap: () async {
+              await FriendServices().friendRequestReceivedList(ref);
+              await FriendServices().friendRequestSentList(ref);
+
               ref.watch(routeProvider).changePage("friend_requests");
             },
             child: const Text("Review",

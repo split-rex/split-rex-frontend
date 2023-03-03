@@ -40,7 +40,7 @@ class FriendServices {
       throw Exception();
     }
     Response resp = await get(
-      Uri.parse("$endpoint/friendRequestSent"),
+      Uri.parse("$endpoint/friendRequestReceived"),
       headers: <String, String>{
         'Content-Type': 'application/json',
         "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
@@ -60,7 +60,7 @@ class FriendServices {
       throw Exception();
     }
     Response resp = await get(
-      Uri.parse("$endpoint/friendRequestReceived"),
+      Uri.parse("$endpoint/friendRequestSent"),
       headers: <String, String>{
         'Content-Type': 'application/json',
         "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"

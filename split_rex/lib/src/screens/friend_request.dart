@@ -9,11 +9,12 @@ class FriendRequests extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: const [
-        FriendRequestHeader(), 
+        FriendRequestsHeader(), 
         // TODO: add received and sent section
-        FriendRequestJumbotron(),
+        // FriendRequestSelector(),
+        FriendRequestSectionPicker(), // change to appbar
         SizedBox(height: 18),
-        FriendRequestBody(),
+        FriendRequestsBody(),
         ],
     );
   }

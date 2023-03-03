@@ -1,37 +1,86 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/routes.dart';
 
-class FriendRequestHeader extends ConsumerWidget {
-  const FriendRequestHeader({super.key});
+class FriendRequestsHeader extends ConsumerWidget {
+  const FriendRequestsHeader({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-        padding: const EdgeInsets.only(top: 55.0),
-        child: Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                ref.watch(routeProvider).changePage("home");
-              },
-            ),
-            const Text(
-              "Friend Requests",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
+    return DefaultTabController(
+        length: 1,
+        child: AppBar(
+          bottomOpacity: 0.0,
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          title: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  ref.watch(routeProvider).changePage("home");
+                },
+                color: const Color(0xFF4F4F4F),
               ),
-            ),
-          ],
+              const Center(
+                widthFactor: 2,
+                child: Text(
+                  "Friend Requests",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF4F4F4F),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ));
   }
 }
 
-class FriendRequestJumbotron extends ConsumerWidget {
-  const FriendRequestJumbotron({super.key});
+class FriendRequestSelector extends ConsumerWidget {
+  const FriendRequestSelector({super.key});
+  
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return DefaultTabController(
+        length: 1,
+        child: AppBar(
+          bottomOpacity: 0.0,
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          title: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  ref.watch(routeProvider).changePage("home");
+                },
+                color: const Color(0xFF4F4F4F),
+              ),
+              const Center(
+                widthFactor: 2,
+                child: Text(
+                  "Friend Requests",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF4F4F4F),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ));
+  }
+}
+
+class FriendRequestSectionPicker extends ConsumerWidget {
+  const FriendRequestSectionPicker({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -55,6 +104,7 @@ class FriendRequestJumbotron extends ConsumerWidget {
             child: const Text(
               "Received",
               style: TextStyle(
+                fontSize: 17,
                   color: Color(0xFF4F9A99), fontWeight: FontWeight.bold),
             ),
           ),
@@ -62,31 +112,15 @@ class FriendRequestJumbotron extends ConsumerWidget {
           const SizedBox(width: 14),
           const Text("Sent",
               style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 17,
                   color: Color(0xFF4F4F4F),
                   fontWeight: FontWeight.w500)),
         ]));
   }
 }
 
-class FriendRequestDetail extends StatelessWidget {
-  const FriendRequestDetail({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(crossAxisAlignment: CrossAxisAlignment.center, children: const [
-      Text("Received",
-          style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF4F9A99),
-              fontWeight: FontWeight.bold)),
-      SizedBox(width: 10),
-    ]);
-  }
-}
-
-class FriendRequestBody extends ConsumerWidget {
-  const FriendRequestBody({super.key});
+class FriendRequestsBody extends ConsumerWidget {
+  const FriendRequestsBody({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -98,10 +132,102 @@ class FriendRequestBody extends ConsumerWidget {
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
         ),
-        child:
-            Column(crossAxisAlignment: CrossAxisAlignment.center, children: const [
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
               FriendRequestDetail(),
-              FriendRequestDetail()
-        ]));
+              Divider(
+                height: 10,
+                thickness: 1,
+                indent: 20,
+                color: Color(0xFFE1F3F2),
+              ),
+              FriendRequestDetail(),
+              Divider(
+                height: 10,
+                thickness: 1,
+                indent: 20,
+                color: Color(0xFFE1F3F2),
+              ),
+              FriendRequestDetail(),
+            ]));
+  }
+}
+
+class FriendRequestDetail extends StatefulWidget {
+  const FriendRequestDetail({super.key});
+
+  @override
+  State<FriendRequestDetail> createState() => _FriendRequestDetail();
+}
+
+class _FriendRequestDetail extends State<FriendRequestDetail> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xFFffffff),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(top: 8, bottom: 16),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Initicon(text: "Paulo Dybala"),
+            const SizedBox(width: 18),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Paulo Dybala",
+                  style: TextStyle(
+                      fontSize: 19.0,
+                      color: Color(0xFF4F4F4F),
+                      fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 8),
+                Row(children: [
+                  InkWell(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40.0, vertical: 8.0),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFDFF2F0),
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      ),
+                      child: const Text(
+                        "Reject",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF2E9281),
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  InkWell(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40.0, vertical: 8.0),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF6DC7BD),
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      ),
+                      child: const Text(
+                        "Accept",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ),
+                ]),
+              ],
+            )
+          ]),
+    );
   }
 }

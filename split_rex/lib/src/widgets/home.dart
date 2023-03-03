@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logger/logger.dart';
 
 import '../providers/routes.dart';
 
@@ -84,7 +83,7 @@ class FriendRequest extends ConsumerWidget {
               )),
           InkWell(
             onTap: () {
-              ref.watch(routeProvider).changePage("friend_request");
+              ref.watch(routeProvider).changePage("friend_requests");
             },
             child: const Text("Review",
                 textAlign: TextAlign.end,

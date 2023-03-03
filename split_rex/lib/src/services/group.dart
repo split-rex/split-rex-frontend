@@ -33,5 +33,28 @@ class GroupServices {
   
   }
 
+  Future<void> getGroupDetail(WidgetRef ref, String groupId) async {
+    SignUpModel signUpData = ref.watch(authProvider).signUpData;
+    if (signUpData.confPass != signUpData.pass) {
+      throw Exception();
+    }
+    Response resp = await get(
+      Uri.parse("$endpoint/groupDetail?id=$groupId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+      
+    );
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      // userFriendList(ref);
+      // friendRequestReceivedList(ref);
+      // friendRequestSentList(ref);
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
 
 }

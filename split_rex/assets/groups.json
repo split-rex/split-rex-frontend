@@ -1,0 +1,74 @@
+{
+    "groups": [
+      {
+        "id": 1,
+        "name": "Trip1",
+        "member_id": [1,2,3,4,5,6],
+        "start_date": "01-01-2023",
+        "end_date": "02-02-2023",
+        "type": "owed",
+        "total_unpaid": 20.00,
+        "total_expense": 52.53
+      },
+      {
+        "id": 2,
+        "name": "Trip2",
+        "member_id": [1,2,3,4,5,6],
+        "start_date": "01-01-2023",
+        "end_date": "02-02-2023",
+        "type": "owed",
+        "total_unpaid": 20.000,
+        "total_expense": 52.53
+      },
+      {
+        "id": 3,
+        "name": "Trip3",
+        "member_id": [1,2,3,4,5,6],
+        "start_date": "01-01-2023",
+        "end_date": "02-02-2023",
+        "type": "lent",
+        "total_unpaid": 20.00,
+        "total_expense": 52.53
+      },
+      {
+        "id": 4,
+        "name": "Trip4",
+        "member_id": [1,2,3,4,5,6],
+        "start_date": "01-01-2023",
+        "end_date": "02-02-2023",
+        "type": "owed",
+        "total_unpaid": 20.00,
+        "total_expense": 52.53
+      },
+      {
+        "id": 5,
+        "name": "Trip5",
+        "member_id": [1,2,3,4,5,6],
+        "start_date": "01-01-2023",
+        "end_date": "02-02-2023",
+        "type": "lent",
+        "total_unpaid": 20.00,
+        "total_expense": 52.53
+      },
+      {
+        "id": 6,
+        "name": "Trip6",
+        "member_id": [1,2,3,4,5,6],
+        "start_date": "01-01-2023",
+        "end_date": "02-02-2023",
+        "type": "owed",
+        "total_unpaid": 20.00,
+        "total_expense": 52.53
+      },
+      {
+        "id": 7,
+        "name": "Trip7",
+        "member_id": [1,2,3,4,5,6],
+        "start_date": "01-01-2023",
+        "end_date": "02-02-2023",
+        "type": "owed",
+        "total_unpaid": 20.00,
+        "total_expense": 52.53
+      }
+    ]
+  }

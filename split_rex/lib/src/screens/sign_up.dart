@@ -26,7 +26,7 @@ class SignUpScreen extends ConsumerWidget {
                     ),
                   ),
                   onTap: () {
-                    ref.watch(routeProvider).changePage("sign_in");
+                    ref.read(routeProvider).changePage("sign_in");
                   },
                 )
               ],

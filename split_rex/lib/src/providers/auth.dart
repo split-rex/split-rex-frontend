@@ -19,6 +19,7 @@ class AuthProvider extends ChangeNotifier {
     signInData.email = email;
     signInData.pass = pass;
   }
+  
 }
 
 final authProvider = ChangeNotifierProvider((ref) => AuthProvider());

@@ -13,6 +13,7 @@ class RouteProvider extends ChangeNotifier {
 
   void changeLogged() {
     isLogged = !isLogged;
+    currentPage = "home";
     notifyListeners();
   }
 

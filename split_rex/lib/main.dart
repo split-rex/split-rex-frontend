@@ -3,9 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:split_rex/src/screens/friend_requests.dart';
-import 'package:split_rex/src/screens/friends.dart';
-import 'package:split_rex/src/widgets/home.dart';
 
 import 'package:split_rex/src/widgets/navbar.dart';
 import 'package:split_rex/src/routes/routes.dart';
@@ -30,9 +27,11 @@ class MyApp extends ConsumerWidget {
         ),
       ),
       home: Scaffold(
-        resizeToAvoidBottomInset : false,
-        bottomNavigationBar: ref.watch(routeProvider).isLogged ? const Navbar() : null,
-        body: const Friends(),
+        bottomNavigationBar: ref.watch(routeProvider).isLogged &&
+                ref.watch(routeProvider).currentPage != "add_expense"
+            ? const Navbar()
+            : null,
+        body: const PageRouting(),
       ),
     );
   }

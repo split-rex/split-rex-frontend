@@ -6,6 +6,7 @@ import 'package:split_rex/src/model/auth.dart';
 class AuthProvider extends ChangeNotifier {
   SignUpModel signUpData = SignUpModel();
   SignInModel signInData = SignInModel();
+  String jwtToken = "";
 
   void changeSignUpData(name, username, email, pass, confPass){
     signUpData.name = name;
@@ -20,6 +21,9 @@ class AuthProvider extends ChangeNotifier {
     signInData.pass = pass;
   }
   
+  void changeJwtToken(jwt) {
+    jwtToken = jwt;
+  }
 }
 
 final authProvider = ChangeNotifierProvider((ref) => AuthProvider());

@@ -12,6 +12,12 @@ class GroupListProvider extends ChangeNotifier {
     GroupListModel("1232424124", "Trip2", [1, 2, 3, 4, 5, 6], "01-01-2023",
         "02-02-2023", "owed", 20, 35)
   ];
+  GroupListModel currGroup = GroupListModel("1232424124", "Trip2",
+      [1, 2, 3, 4, 5, 6], "01-01-2023", "02-02-2023", "owed", 20, 35);
+
+  void changeCurrGroup(GroupListModel group) {
+    currGroup = group;
+  }
 
   void loadGroupData(dynamic modelList) {
     // List<GroupListModel> builder = groups;

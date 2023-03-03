@@ -3,7 +3,9 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/model/group_model.dart';
+import 'package:split_rex/src/providers/routes.dart';
 
 import '../common/profile_picture.dart';
 import '../providers/group_list.dart';
@@ -15,91 +17,109 @@ class GroupInfo extends ConsumerWidget {
       required this.startDate,
       required this.endDate,
       required this.totalExpense,
-      required this.memberId});
+      required this.memberId,
+      required this.prevPage});
   final String title;
   final String startDate;
   final String endDate;
   final int totalExpense;
   final List<dynamic> memberId;
+  final String prevPage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Material(
-      type: MaterialType.transparency,
-      child: Row(
-        children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 28,
-                color: Colors.white,
-              ),
-            ),
-            Text(
-              "$startDate-$endDate",
-              style: const TextStyle(
-                fontWeight: FontWeight.w400,
-                color: Colors.white,
-                fontSize: 12,
-              ),
-            ),
-          ]),
-          const SizedBox(width: 80),
-          Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            Text(
-              "Rp.$totalExpense",
-              style: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 20,
-                color: Colors.white,
-              ),
-            ),
-            Stack(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Colors.red,
-                      child: profilePicture(
-                          "Pak Fitra"), // Provide your custom image
+        type: MaterialType.transparency,
+        child: 
+            Row(
+              children: [
+                
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  InkWell(
+                  onTap: () => ref.watch(routeProvider).changePage(prevPage),
+                  child: const Positioned(
+                      top: 100,
+                      child: Icon(Icons.navigate_before,
+                          color: Colors.white, size: 35)),
+                ),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 28,
+                      color: Colors.white,
                     ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Colors.red,
-                      child: profilePicture(
-                          "Michael Jordan"), // Provide your custom image
+                  Text(
+                    convertDate(startDate) + "-" + convertDate(endDate),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                      fontSize: 12,
                     ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Colors.red,
-                      child: profilePicture(
-                          "John Doe"), // Provide your custom image
+                ]),
+                const Spacer(),
+                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                  Text(
+                    "Rp.$totalExpense",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20,
+                      color: Colors.white,
                     ),
                   ),
-                ),
+                  Stack(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: CircleAvatar(
+                            radius: 18,
+                            backgroundColor: Colors.red,
+                            child: profilePicture(
+                                "Pak Fitra", 16.0), // Provide your custom image
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: CircleAvatar(
+                            radius: 18,
+                            backgroundColor: Colors.red,
+                            child: profilePicture("Michael Jordan",
+                                16.0), // Provide your custom image
+                          ),
+                        ),
+                      ),
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: InkWell(
+                            onTap: () {
+                              ref
+                                  .read(routeProvider)
+                                  .changePage("choose_friend");
+                            },
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              child: CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.red,
+                                child: profilePicture("John Doe",
+                                    16.0), // Provide your custom image
+                              ),
+                            ),
+                          )),
+                    ],
+                  ),
+                ])
               ],
             ),
-          ])
-        ],
-      ),
-    );
+         
+        );
   }
 }
 
@@ -144,9 +164,10 @@ class BalanceInfo extends ConsumerWidget {
 }
 
 class GroupDetailHeader extends ConsumerWidget {
-  const GroupDetailHeader({super.key, required this.group});
+  const GroupDetailHeader({super.key, required this.group, required this.prevPage});
 
   final GroupListModel group;
+  final String prevPage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -169,6 +190,7 @@ class GroupDetailHeader extends ConsumerWidget {
             endDate: group.endDate,
             totalExpense: group.totalExpense,
             memberId: group.memberId,
+            prevPage: prevPage,
           ),
           const SizedBox(height: 16),
           BalanceInfo(
@@ -186,35 +208,34 @@ class GroupDetailContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Material(
-      type: MaterialType.transparency,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFFFFFFFF),
-                Color(0XFFE0F2F1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-             )
+        type: MaterialType.transparency,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+            colors: [
+              Color(0xFFFFFFFF),
+              Color(0XFFE0F2F1),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          )),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "February 2023",
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              Expanded(
+                  child: ListView.builder(
+                      itemCount: ref.watch(groupListProvider).groups.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return const TransactionItem();
+                      })),
+            ],
           ),
-        child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "February 2023",
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          Expanded(
-              child: ListView.builder(
-                  itemCount: ref.watch(groupListProvider).groups.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return const TransactionItem();
-                  })),
-        ],
-      ),
-    ));
+        ));
   }
 }
 
@@ -225,7 +246,6 @@ class TransactionItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
-        
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -241,7 +261,7 @@ class TransactionItem extends ConsumerWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Color(0XFF9A9AB0),
-                  fontSize: 20, 
+                  fontSize: 20,
                 ),
               ),
               Text(
@@ -249,7 +269,7 @@ class TransactionItem extends ConsumerWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   color: Color(0XFF9A9AB0),
-                  fontSize: 28, 
+                  fontSize: 28,
                 ),
               ),
             ],
@@ -264,7 +284,7 @@ class TransactionItem extends ConsumerWidget {
               ),
               height: 35,
               width: 35,
-              child: profilePicture("Muhammad Ali")),
+              child: profilePicture("Muhammad Ali", 16.0)),
           const SizedBox(
             width: 20,
           ),

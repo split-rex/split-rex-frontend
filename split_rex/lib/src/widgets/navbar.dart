@@ -1,54 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/services/group.dart';
 
 import '../services/auth.dart';
-
 
 class Navbar extends ConsumerWidget {
   const Navbar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-   return Stack(children: [
-    BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: const Color(0xFF4F4F4F),
-      unselectedItemColor: const Color(0XFF92949C),
-      currentIndex: ref.watch(routeProvider).currentNavbarIdx,
-      onTap: (value) {
-        if (value == 2) {
-          showDialog (
-            barrierColor: Colors.transparent,
-            context: context,
-            builder: (BuildContext dialogContext) {
-              return const _PopupExpense();
+    return Stack(children: [
+      BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color(0xFF4F4F4F),
+        unselectedItemColor: const Color(0XFF92949C),
+        currentIndex: ref.watch(routeProvider).currentNavbarIdx,
+        onTap: (value) {
+          if (value == 2) {
+            showDialog(
+                barrierColor: Colors.transparent,
+                context: context,
+                builder: (BuildContext dialogContext) {
+                  return const _PopupExpense();
+                });
+          } else {
+            if (value == 1) {
+              
+              GroupServices().userGroupList(ref);
             }
-          );
-        } else {
-          if (value == 1) {
-            ApiServices().readJson(ref);
+            ref.read(routeProvider).changeNavbarIdx(value);
           }
-          ref.read(routeProvider).changeNavbarIdx(value);
-        }
-      },
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home'),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.group),
-          label: 'Group'),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.add_circle, color: Color(0XFF6DC7BD), size: 40),
-          label: '',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.show_chart),
-          label: 'Activity'),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Account'),
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Group'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_circle, color: Color(0XFF6DC7BD), size: 40),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.show_chart), label: 'Activity'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
         ],
       ),
     ]);
@@ -60,62 +53,62 @@ class _PopupExpense extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Center(child: 
-      Container(
-        alignment: Alignment.bottomCenter,
-        padding: const EdgeInsets.only(bottom: 80),
-        child: Wrap(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromARGB(50, 0, 0, 0),
-                    blurRadius: 20.0,
+    return Center(
+      child: Container(
+          alignment: Alignment.bottomCenter,
+          padding: const EdgeInsets.only(bottom: 80),
+          child: Wrap(
+            children: [
+              Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromARGB(50, 0, 0, 0),
+                        blurRadius: 20.0,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              padding: const EdgeInsets.all(12.0),
-              child: IntrinsicWidth(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Divider(thickness: 0, height: 2, color: Colors.white),
-                    GestureDetector(
-                      onTap: () {
-                        ref.read(routeProvider).changePage("add_expense");
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Manual Input"),
-                    ),
-                    const Divider(thickness: 1, height: 24, color: Color(0XFFDCDCDC)),
-                    GestureDetector(
-                      onTap: () {
-                        // upload photo from library
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Upload from Photo Library\t\t\t\t\t\t\t\t"),
-                    ),
-                    const Divider(thickness: 1, height: 24, color: Color(0XFFDCDCDC)),
-                    GestureDetector(
-                      onTap: () {
-                        // take photo
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Take Photo"),
-                    ),
-                    const Divider(thickness: 0, height: 2, color: Colors.white)
-                  ]
-                )
-              ) 
-            ),
-          ],
-        ) 
-      ), 
+                  padding: const EdgeInsets.all(12.0),
+                  child: IntrinsicWidth(
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                        const Divider(
+                            thickness: 0, height: 2, color: Colors.white),
+                        GestureDetector(
+                          onTap: () {
+                            ref.read(routeProvider).changePage("add_expense");
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Manual Input"),
+                        ),
+                        const Divider(
+                            thickness: 1, height: 24, color: Color(0XFFDCDCDC)),
+                        GestureDetector(
+                          onTap: () {
+                            // upload photo from library
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                              "Upload from Photo Library\t\t\t\t\t\t\t\t"),
+                        ),
+                        const Divider(
+                            thickness: 1, height: 24, color: Color(0XFFDCDCDC)),
+                        GestureDetector(
+                          onTap: () {
+                            // take photo
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Take Photo"),
+                        ),
+                        const Divider(
+                            thickness: 0, height: 2, color: Colors.white)
+                      ]))),
+            ],
+          )),
     );
-    
-  } 
+  }
 }

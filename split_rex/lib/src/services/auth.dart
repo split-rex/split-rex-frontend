@@ -11,7 +11,7 @@ import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/model/auth.dart';
 
 class ApiServices {
-  String endpoint = "http://10.10.75.234:8080";
+  String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
 
   Future<void> postRegister(WidgetRef ref) async {
     SignUpModel signUpData = ref.watch(authProvider).signUpData;
@@ -28,8 +28,8 @@ class ApiServices {
         }));
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-      ref.read(routeProvider).changeLogged();
-      ref.read(routeProvider).currentPage = "home";
+      ref.read(authProvider).changeJwtToken(data["data"]);
+      ref.read(routeProvider).changePage("home");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
@@ -45,8 +45,8 @@ class ApiServices {
         }));
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-      ref.read(routeProvider).changeLogged();
-      ref.read(routeProvider).currentPage = "home";
+      ref.read(authProvider).changeJwtToken(data["data"]);
+      ref.read(routeProvider).changePage("home");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

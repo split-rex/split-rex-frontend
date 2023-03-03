@@ -12,12 +12,17 @@ class GroupDetail extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
-          children: [
-            GroupDetailHeader(group: group),
-            Expanded(
-              child: GroupDetailContent(group: group,),
-            )
-          ],
-        );
+      children: [
+        GroupDetailHeader(
+          group: group,
+          prevPage: "group_list",
+        ),
+        Expanded(
+          child: GroupDetailContent(
+            group: group,
+          ),
+        )
+      ],
+    );
   }
 }

@@ -5,6 +5,8 @@ import 'package:split_rex/src/services/auth.dart';
 
 import 'package:split_rex/src/widgets/group_list.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 class GroupList extends ConsumerWidget {
   const GroupList({super.key});
 
@@ -13,7 +15,9 @@ class GroupList extends ConsumerWidget {
     
     return header(
       context, 
+      ref,
       "Groups",
+      "home",
       Container(
 
         padding: const EdgeInsets.only(top: 8.0),

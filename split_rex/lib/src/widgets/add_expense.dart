@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
+import 'package:split_rex/src/providers/routes.dart';
 
 import 'package:split_rex/src/common/profile_picture.dart';
 
@@ -20,7 +21,7 @@ Widget searchBar() => Container(
       ),
       SizedBox(width: 8.0),
       Text(
-        "Search by name and username...", 
+        "Search by name...", 
         style: TextStyle(color: Color(0XFF9A9AB0))
       )
     ],
@@ -120,7 +121,7 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
                   children: [
                     Row(
                       children: [
-                        profilePicture(ref.watch(addExpenseProvider).friends[index]),
+                        profilePicture(ref.watch(addExpenseProvider).friends[index], 24.0),
                         const SizedBox(width: 16),
                         Text(
                           ref.watch(addExpenseProvider).friends[index], 
@@ -150,16 +151,17 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
   );
 }
 
-Widget addButton() => GestureDetector(
+Widget addButton(WidgetRef ref) => GestureDetector(
   onTap: () {
-    null;
+    ref.watch(addExpenseProvider).checkedFriends || ref.watch(addExpenseProvider).checkedGroups ?
+    ref.read(routeProvider).changePage("edit_items") 
+    : null;
   },
   child: Container(
     alignment: Alignment.bottomCenter,
-    height: double.infinity,
+    height: 72,
     child:
     Container(
-      height: 72,
       decoration: const BoxDecoration(
         boxShadow: [BoxShadow(
           offset: Offset(0, 5.0),
@@ -172,9 +174,10 @@ Widget addButton() => GestureDetector(
       child: Container(
         padding: const EdgeInsets.all(16.0),
         alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          color: Color(0XFF6DC7BD),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+          color: ref.watch(addExpenseProvider).checkedFriends || ref.watch(addExpenseProvider).checkedGroups ? 
+          const Color(0XFF6DC7BD) : Color.fromARGB(50, 79, 79, 79),
         ),
         child: const Text("Add", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700))
       )

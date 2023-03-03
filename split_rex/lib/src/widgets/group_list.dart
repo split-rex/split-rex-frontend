@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/functions.dart';
 
 import 'package:split_rex/src/providers/group_list.dart';
+import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/screens/group_detail.dart';
-import 'package:split_rex/src/services/auth.dart';
 
 import '../common/profile_picture.dart';
 
@@ -54,8 +54,6 @@ Widget searchBar(BuildContext context, WidgetRef ref) => Container(
     );
 
 Widget showGroups(BuildContext context, WidgetRef ref) {
-
- 
   return Container(
       padding: const EdgeInsets.only(left: 18.0, right: 18.0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -76,13 +74,16 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                     ref.watch(groupListProvider).groups[index].groupId),
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GroupDetail(
-                              group:
-                                  ref.watch(groupListProvider).groups[index]),
-                        ));
+                    ref.read(groupListProvider).changeCurrGroup(
+                        ref.watch(groupListProvider).groups[index]);
+                    ref.read(routeProvider).changePage("group_detail");
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => GroupDetail(
+                    //           group:
+                    //               ref.watch(groupListProvider).groups[index]),
+                    //     ));
                   },
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -153,8 +154,8 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                       child: CircleAvatar(
                                         radius: 18,
                                         backgroundColor: Colors.red,
-                                        child: profilePicture(
-                                            "Pak Fitra"), // Provide your custom image
+                                        child: profilePicture("Pak Fitra",
+                                            24.0), // Provide your custom image
                                       ),
                                     ),
                                   ),
@@ -165,8 +166,8 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                       child: CircleAvatar(
                                         radius: 18,
                                         backgroundColor: Colors.red,
-                                        child: profilePicture(
-                                            "Michael Jordan"), // Provide your custom image
+                                        child: profilePicture("Michael Jordan",
+                                            24.0), // Provide your custom image
                                       ),
                                     ),
                                   ),
@@ -177,8 +178,8 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                       child: CircleAvatar(
                                         radius: 18,
                                         backgroundColor: Colors.red,
-                                        child: profilePicture(
-                                            "John Doe"), // Provide your custom image
+                                        child: profilePicture("John Doe",
+                                            24.0), // Provide your custom image
                                       ),
                                     ),
                                   ),

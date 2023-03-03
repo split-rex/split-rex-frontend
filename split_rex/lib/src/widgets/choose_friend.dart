@@ -61,7 +61,7 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
                   children: [
                     Row(
                       children: [
-                        profilePicture(ref.watch(addExpenseProvider).friends[index]),
+                        profilePicture(ref.watch(addExpenseProvider).friends[index], 24),
                         const SizedBox(width: 16),
                         Text(
                           ref.watch(addExpenseProvider).friends[index], 

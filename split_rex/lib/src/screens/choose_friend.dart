@@ -12,8 +12,10 @@ class ChooseFriend extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return header(
-      context, 
+      context,
+      ref, 
       "Choose Friends",
+      "group_detail",
           Container(
             padding: const EdgeInsets.only(top: 8.0),
             child: 

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:split_rex/src/screens/add_friends.dart';
 
 import 'package:split_rex/src/widgets/navbar.dart';
 import 'package:split_rex/src/routes/routes.dart';
@@ -27,8 +28,9 @@ class MyApp extends ConsumerWidget {
         ),
       ),
       home: Scaffold(
+        resizeToAvoidBottomInset : false,
         bottomNavigationBar: ref.watch(routeProvider).isLogged ? const Navbar() : null,
-        body: const PageRouting(),
+        body: const AddFriends(),
       ),
     );
   }

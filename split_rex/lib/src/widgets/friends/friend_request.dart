@@ -127,24 +127,23 @@ class FriendRequestsBody extends ConsumerWidget {
     return Container(
         margin: const EdgeInsets.only(left: 28.0, right: 28.0),
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 15.0),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
         ),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: const [
               FriendRequestDetail(),
               Divider(
-                height: 10,
                 thickness: 1,
                 indent: 20,
                 color: Color(0xFFE1F3F2),
               ),
               FriendRequestDetail(),
               Divider(
-                height: 10,
                 thickness: 1,
                 indent: 20,
                 color: Color(0xFFE1F3F2),
@@ -165,6 +164,7 @@ class _FriendRequestDetail extends State<FriendRequestDetail> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 348,
       color: const Color(0xFFffffff),
       alignment: Alignment.center,
       padding: const EdgeInsets.only(top: 8, bottom: 16),
@@ -173,7 +173,10 @@ class _FriendRequestDetail extends State<FriendRequestDetail> {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Initicon(text: "Paulo Dybala"),
+            Container(
+              padding: const EdgeInsets.only(left: 5),
+              child: const Initicon(text: "Paulo Dybala"),
+            ),
             const SizedBox(width: 18),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,11 +189,13 @@ class _FriendRequestDetail extends State<FriendRequestDetail> {
                       fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 8),
-                Row(children: [
+                Row(
+                  children: [
                   InkWell(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40.0, vertical: 8.0),
+                      alignment: Alignment.center,
+                      width: 117,
+                      height: 36,
                       decoration: const BoxDecoration(
                         color: Color(0xFFDFF2F0),
                         borderRadius: BorderRadius.all(Radius.circular(12.0)),
@@ -200,7 +205,7 @@ class _FriendRequestDetail extends State<FriendRequestDetail> {
                         style: TextStyle(
                           fontSize: 14,
                           color: Color(0xFF2E9281),
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -208,8 +213,9 @@ class _FriendRequestDetail extends State<FriendRequestDetail> {
                   const SizedBox(width: 12),
                   InkWell(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40.0, vertical: 8.0),
+                      alignment: Alignment.center,
+                      width: 117,
+                      height: 36,
                       decoration: const BoxDecoration(
                         color: Color(0xFF6DC7BD),
                         borderRadius: BorderRadius.all(Radius.circular(12.0)),
@@ -219,7 +225,7 @@ class _FriendRequestDetail extends State<FriendRequestDetail> {
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.white,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),

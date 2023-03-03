@@ -66,7 +66,7 @@ class GroupInfo extends ConsumerWidget {
                       radius: 18,
                       backgroundColor: Colors.red,
                       child: profilePicture(
-                          "Pak Fitra"), // Provide your custom image
+                          "Pak Fitra", 16.0), // Provide your custom image
                     ),
                   ),
                 ),
@@ -78,7 +78,7 @@ class GroupInfo extends ConsumerWidget {
                       radius: 18,
                       backgroundColor: Colors.red,
                       child: profilePicture(
-                          "Michael Jordan"), // Provide your custom image
+                          "Michael Jordan", 16.0), // Provide your custom image
                     ),
                   ),
                 ),
@@ -90,7 +90,7 @@ class GroupInfo extends ConsumerWidget {
                       radius: 18,
                       backgroundColor: Colors.red,
                       child: profilePicture(
-                          "John Doe"), // Provide your custom image
+                          "John Doe", 16.0), // Provide your custom image
                     ),
                   ),
                 ),
@@ -264,7 +264,7 @@ class TransactionItem extends ConsumerWidget {
               ),
               height: 35,
               width: 35,
-              child: profilePicture("Muhammad Ali")),
+              child: profilePicture("Muhammad Ali", 16.0)),
           const SizedBox(
             width: 20,
           ),

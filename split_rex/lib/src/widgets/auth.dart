@@ -174,6 +174,9 @@ class _SignUpFormState extends State<SignUpForm> {
         const SizedBox(height: 30),
 
         SignInButton(Buttons.Google,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0)
+          ),
           onPressed: () {
             // sign up google
         }),
@@ -181,6 +184,9 @@ class _SignUpFormState extends State<SignUpForm> {
         const SizedBox(height: 5),
 
         SignInButton(Buttons.Facebook,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0)
+          ),
           onPressed: () {
             //  sign up facebook
         }),

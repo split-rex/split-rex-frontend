@@ -119,7 +119,7 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                       child: CircleAvatar(
                                         radius: 18,
                                         backgroundColor: Colors.red,
-                                        child: profilePicture("Pak Fitra"), // Provide your custom image
+                                        child: profilePicture("Pak Fitra", 24.0), // Provide your custom image
                                       ),
                                     ),
                                   ),
@@ -130,7 +130,7 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                       child: CircleAvatar(
                                         radius: 18,
                                         backgroundColor: Colors.red,
-                                        child: profilePicture("Michael Jordan"), // Provide your custom image
+                                        child: profilePicture("Michael Jordan", 24.0), // Provide your custom image
                                       ),
                                     ),
                                   ),
@@ -141,7 +141,7 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                       child: CircleAvatar(
                                         radius: 18,
                                         backgroundColor: Colors.red,
-                                        child: profilePicture("John Doe"), // Provide your custom image
+                                        child: profilePicture("John Doe", 24.0), // Provide your custom image
                                       ),
                                     ),
                                   ),

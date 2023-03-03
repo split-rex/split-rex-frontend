@@ -5,8 +5,9 @@ String getInitials(String fullname) =>
   fullname.trim().split(RegExp(' +')).map((s) => s[0]).take(2).join()
   : '';
 
-Widget profilePicture(String fullname) => 
+Widget profilePicture(String fullname, double size) => 
   CircleAvatar(
+    radius: size,
     backgroundColor: const Color(0XFFEEEEEE),
     child: Text(
       getInitials(fullname), 

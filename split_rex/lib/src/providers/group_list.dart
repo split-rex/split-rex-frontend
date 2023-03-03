@@ -15,6 +15,13 @@ class GroupListProvider extends ChangeNotifier {
   GroupListModel currGroup = GroupListModel("1232424124", "Trip2",
       [1, 2, 3, 4, 5, 6], "01-01-2023", "02-02-2023", "owed", 20, 35);
 
+  bool isOwed = true;
+
+  void changeIsOwed(bool value) {
+    isOwed = value;
+    notifyListeners();
+  }
+
   void changeCurrGroup(GroupListModel group) {
     currGroup = group;
   }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/friend.dart';
+import 'package:split_rex/src/providers/group_list.dart';
 
+import '../common/profile_picture.dart';
 import '../providers/routes.dart';
 import '../services/friend.dart';
+import '../services/group.dart';
 
 class UserDetail extends ConsumerWidget {
   const UserDetail({super.key});
@@ -14,7 +16,7 @@ class UserDetail extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        Initicon(text: ref.watch(authProvider).userData.name, size: 55),
+        profilePicture(ref.watch(authProvider).userData.name, 28),
         const SizedBox(width: 12),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Text(
@@ -100,7 +102,6 @@ class FriendRequest extends ConsumerWidget {
             onTap: () async {
               await FriendServices().friendRequestReceivedList(ref);
               await FriendServices().friendRequestSentList(ref);
-              await FriendServices().userFriendList(ref);
 
               ref.watch(routeProvider).changePage("friend_requests");
             },
@@ -141,11 +142,11 @@ class HomeHeader extends StatelessWidget {
   }
 }
 
-class HomeFooter extends StatelessWidget {
+class HomeFooter extends ConsumerWidget {
   const HomeFooter({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
         width: double.infinity,
         decoration: const BoxDecoration(
@@ -168,54 +169,109 @@ class HomeFooter extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.all(10.0),
                 child: Row(children: [
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      // color: Colors.white,
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(24.0)),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: const Color(0XFF4F4F4F).withOpacity(0.1),
-                              spreadRadius: 0.0,
-                              blurRadius: 5.0,
-                              offset: Offset.zero),
-                        ],
-                      ),
-                      child: const Text(
-                        "Owed",
-                        style: TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      // color: Colors.white,
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.all(8.0),
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(24.0)),
-                        // color: Colors.white,
-                        // boxShadow: [
-                        //   BoxShadow(
-                        //     color: Color(0XFF4F4F4F).withOpacity(0.1),
-                        //     spreadRadius: 0.0,
-                        //     blurRadius: 5.0,
-                        //     offset: Offset.zero
-                        //   ),
-                        // ],
-                      ),
-                      child: const Text(
-                        "Lent",
-                        style: TextStyle(fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
+                  (ref.watch(groupListProvider).isOwed)
+                      ? Expanded(
+                          flex: 5,
+                          child: InkWell(
+                            onTap: () {
+                              ref.watch(groupListProvider).changeIsOwed(true);
+                            },
+                            child: Container(
+                              // color: Colors.white,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(24.0)),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: const Color(0XFF4F4F4F)
+                                          .withOpacity(0.1),
+                                      spreadRadius: 0.0,
+                                      blurRadius: 5.0,
+                                      offset: Offset.zero),
+                                ],
+                              ),
+                              child: const Text(
+                                "Owed",
+                                style: TextStyle(fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          ))
+                      : Expanded(
+                          flex: 5,
+                          child: InkWell(
+                            onTap: () {
+                              ref.watch(groupListProvider).changeIsOwed(true);
+                            },
+                            child: Container(
+                              // color: Colors.white,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(24.0)),
+                                color: Colors.white,
+                                boxShadow: [],
+                              ),
+                              child: const Text(
+                                "Owed",
+                                style: TextStyle(fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                          )),
+                  (ref.watch(groupListProvider).isOwed)
+                      ? Expanded(
+                          flex: 5,
+                          child: InkWell(
+                            onTap: () {
+                              ref.watch(groupListProvider).changeIsOwed(false);
+                            },
+                            child: Container(
+                              // color: Colors.white,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(24.0)),
+                              ),
+                              child: const Text(
+                                "Lent",
+                                style: TextStyle(fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                          ))
+                      : Expanded(
+                          flex: 5,
+                          child: InkWell(
+                            onTap: () {
+                              ref.watch(groupListProvider).changeIsOwed(false);
+                            },
+                            child: Container(
+                              // color: Colors.white,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(24.0)),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: const Color(0XFF4F4F4F)
+                                          .withOpacity(0.1),
+                                      spreadRadius: 0.0,
+                                      blurRadius: 5.0,
+                                      offset: Offset.zero),
+                                ],
+                              ),
+                              child: const Text(
+                                "Lent",
+                                style: TextStyle(fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          ),
+                        )
                 ]),
               ),
               Container(

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "595016246866",
+    "project_id": "split-rex",
+    "storage_bucket": "split-rex.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595016246866:android:168b7169b858911f1ea18b",
+        "android_client_info": {
+          "package_name": "com.example.split_rex"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "595016246866-gvlkuvfrl2ljjpm8eu27arkt960cn288.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1UgZNjH4owbKGN075RelYNApShdm1nPE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "595016246866-gvlkuvfrl2ljjpm8eu27arkt960cn288.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "595016246866-a3orpcq78h8l315698tm0e4bqji9fosj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.splitRex"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

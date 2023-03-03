@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 
 import 'package:split_rex/src/providers/auth.dart';
@@ -69,8 +70,7 @@ class FriendServices {
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       ref.read(friendProvider).changeUserSentList(data["data"]);
-    } 
-    else {
+    } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
   }

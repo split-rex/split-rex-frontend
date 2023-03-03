@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/friend.dart';
-import 'package:split_rex/src/services/friend.dart';
 
 import '../common/profile_picture.dart';
 import '../providers/routes.dart';
+import '../services/friend.dart';
 
-class UserDetail extends StatelessWidget {
+class UserDetail extends ConsumerWidget {
   const UserDetail({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        profilePicture("Valentino Rossi", 28),
+        profilePicture(ref.watch(authProvider).userData.name, 28),
         const SizedBox(width: 12),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-          Text(
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Text(
             "Welcome back,",
             style: TextStyle(
               fontWeight: FontWeight.w400,
@@ -25,8 +26,8 @@ class UserDetail extends StatelessWidget {
             ),
           ),
           Text(
-            "Valentino Rossi",
-            style: TextStyle(
+            ref.watch(authProvider).userData.name,
+            style: const TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 28,
               color: Colors.white,
@@ -43,6 +44,9 @@ class FriendRequest extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    () async {
+      FriendServices().friendRequestReceivedList(ref);
+    }();
     return Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
@@ -61,20 +65,34 @@ class FriendRequest extends ConsumerWidget {
                   ),
                   const SizedBox(width: 8.0),
                   RichText(
-                    text: const TextSpan(
-                        style: TextStyle(
+                    text: TextSpan(
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12,
                             fontWeight: FontWeight.w400),
-                            
+
                         // TOOD: connect to backend @samuelswandi
-                        children: [
-                          TextSpan(text: "You have "),
-                          TextSpan(
-                              text: "3",
-                              style: TextStyle(fontWeight: FontWeight.w700)),
-                          TextSpan(text: " friend requests!"),
-                        ]),
+                        // if there is no friend request, show this you have no friend request
+                        // if there is friend request, show this you have x friend request
+
+                        children:
+                            ref.watch(friendProvider).friendReceivedList.isEmpty
+                                ? [
+                                    const TextSpan(
+                                        text: "You don't have friend request!"),
+                                  ]
+                                : [
+                                    const TextSpan(text: "You have "),
+                                    TextSpan(
+                                        text: ref
+                                            .watch(friendProvider)
+                                            .friendReceivedList
+                                            .length
+                                            .toString(),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w700)),
+                                    const TextSpan(text: " friend requests!"),
+                                  ]),
                   ),
                 ],
               )),

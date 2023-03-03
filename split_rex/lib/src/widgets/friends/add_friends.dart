@@ -108,7 +108,7 @@ class AddBtn extends ConsumerWidget {
     return GestureDetector(
       onTap: () async {
         // Write Click Listener Code Here.
-        // ApiServices().searchFriend(ref);
+        // ApiServices().addFriend(ref);
       },
       child: Container(
         alignment: Alignment.center,

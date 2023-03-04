@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/friend.dart';
 
-import '../common/header.dart';
-import '../widgets/friends/add_friends.dart';
+import '../../common/header.dart';
+import '../../widgets/friends/add_friends.dart';
+
 
 class AddFriends extends ConsumerWidget {
   const AddFriends({super.key});

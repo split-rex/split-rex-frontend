@@ -4,17 +4,17 @@ import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/screens/account.dart';
 import 'package:split_rex/src/screens/activity.dart';
-import 'package:split_rex/src/screens/add_friends.dart';
-import 'package:split_rex/src/screens/choose_friend.dart';
-import 'package:split_rex/src/screens/friend_requests.dart';
-import 'package:split_rex/src/screens/group_detail.dart';
-import 'package:split_rex/src/screens/group_list.dart';
+import 'package:split_rex/src/screens/friends/add_friends.dart';
+import 'package:split_rex/src/screens/friends/choose_friend.dart';
+import 'package:split_rex/src/screens/friends/friend_requests.dart';
+import 'package:split_rex/src/screens/groups/group_detail.dart';
+import 'package:split_rex/src/screens/groups/group_list.dart';
 
 import 'package:split_rex/src/screens/home.dart';
-import 'package:split_rex/src/screens/sign_in.dart';
-import 'package:split_rex/src/screens/sign_up.dart';
+import 'package:split_rex/src/screens/auth/sign_in.dart';
+import 'package:split_rex/src/screens/auth/sign_up.dart';
 import 'package:split_rex/src/screens/add_expense.dart';
-import '../screens/friends.dart';
+import 'package:split_rex/src/screens/friends/friends.dart';
 
 import 'package:split_rex/src/screens/edit_items.dart';
 import 'package:split_rex/src/screens/split_bill.dart';

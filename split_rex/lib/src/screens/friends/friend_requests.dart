@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../common/header.dart';
-import '../widgets/friends/friend_request.dart';
+import '../../common/header.dart';
+import '../../widgets/friends/friend_request.dart';
+
 
 class FriendRequests extends ConsumerWidget {
   const FriendRequests({super.key});

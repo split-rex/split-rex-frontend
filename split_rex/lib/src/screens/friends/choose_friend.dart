@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/header.dart';
 
-import '../widgets/choose_friend.dart';
-
-
+import '../../widgets/choose_friend.dart';
 
 class ChooseFriend extends ConsumerWidget {
   const ChooseFriend({super.key});

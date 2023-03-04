@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import '../widgets/auth.dart';
+
+import '../../widgets/auth.dart';
 
 
 class SignInScreen extends ConsumerWidget {

@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
+import 'package:split_rex/src/common/logger.dart';
 
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
@@ -103,6 +106,81 @@ class FriendServices {
     }
     Response resp = await post(
       Uri.parse("$endpoint/rejectRequest"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+      body: jsonEncode(<String, String>{"friend_id": userId}),
+    );
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      userFriendList(ref);
+      friendRequestReceivedList(ref);
+      friendRequestSentList(ref);
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> searchUser(WidgetRef ref, String username) async {
+    SignUpModel signUpData = ref.watch(authProvider).signUpData;
+    if (signUpData.confPass != signUpData.pass) {
+      throw Exception();
+    }
+    Response resp = await get(
+      Uri.parse("$endpoint/searchUser?username=$username"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+    );
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      userFriendList(ref);
+      friendRequestReceivedList(ref);
+      friendRequestSentList(ref);
+
+      ref.read(friendProvider).changeAddFriend(data["data"]);
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> searchUserToAdd(WidgetRef ref, String username) async {
+    SignUpModel signUpData = ref.watch(authProvider).signUpData;
+    if (signUpData.confPass != signUpData.pass) {
+      throw Exception();
+    }
+    Response resp = await get(
+      Uri.parse("$endpoint/searchUserToAdd?username=$username"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+    );
+    var data = jsonDecode(resp.body);
+    var log = Logger();
+    log.d(data);
+    if (data["message"] == "SUCCESS") {
+      ref.read(friendProvider).resetAddFriend();
+      userFriendList(ref);
+      friendRequestReceivedList(ref);
+      friendRequestSentList(ref);
+
+      ref.read(friendProvider).changeAddFriend(data["data"]);
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+      ref.read(friendProvider).changeAddFriend(data["data"]);
+    }
+  }
+
+  Future<void> addFriend(WidgetRef ref, String userId) async {
+    SignUpModel signUpData = ref.watch(authProvider).signUpData;
+    if (signUpData.confPass != signUpData.pass) {
+      throw Exception();
+    }
+    Response resp = await post(
+      Uri.parse("$endpoint/makeFriendRequest"),
       headers: <String, String>{
         'Content-Type': 'application/json',
         "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"

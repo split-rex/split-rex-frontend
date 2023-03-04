@@ -11,7 +11,10 @@ class AddFriendsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () => ref.watch(routeProvider).changePage("add_friends"),
+      onTap: () {
+        ref.watch(friendProvider).resetAddFriend();
+        ref.watch(routeProvider).changePage("add_friends");
+      },
       child: Container(
         height: 60,
         width: 348,

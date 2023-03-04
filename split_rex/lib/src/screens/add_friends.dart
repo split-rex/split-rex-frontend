@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/providers/error.dart';
+import 'package:split_rex/src/providers/friend.dart';
 
 import '../common/header.dart';
 import '../widgets/friends/add_friends.dart';
@@ -15,22 +17,17 @@ class AddFriends extends ConsumerWidget {
       "Add Friend",
       "friends",
       Column(
-        children: const [
-          AddFriendSearchSection(),
-          Center(heightFactor: 2, child: FriendsSearched()),
+        children: [
+          const AddFriendSearchSection(),
+          (ref.watch(friendProvider).addFriend.name.isEmpty)
+              ? (ref.watch(errorProvider).errorMsg.isNotEmpty)
+                  ? Text(ref.watch(errorProvider).errorMsg)
+                  : const SizedBox(
+                      height: 0,
+                    )
+              : const Center(heightFactor: 2, child: FriendsSearched()),
         ],
       ),
     );
-
-    // return Column(
-    //   children:  const [
-    //     AddFriendHeader(),
-    //     AddFriendSearchSection(),
-    //     Center(
-    //       heightFactor: 2,
-    //       child: FriendsSearched()
-    //     ),
-    //     ],
-    // );
   }
 }

@@ -102,6 +102,7 @@ class FriendRequest extends ConsumerWidget {
               await FriendServices().friendRequestReceivedList(ref);
               await FriendServices().friendRequestSentList(ref);
 
+              ref.watch(friendProvider).resetAddFriend();
               ref.watch(routeProvider).changePage("friend_requests");
             },
             child: const Text("Review",

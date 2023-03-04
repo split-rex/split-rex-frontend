@@ -7,6 +7,7 @@ class FriendProvider extends ChangeNotifier {
   List<Friend> friendList = <Friend>[];
   List<Friend> friendReceivedList = <Friend>[];
   List<Friend> friendSentList = <Friend>[];
+  Friend addFriend = Friend(name: "");
   bool isReceived = true;
 
   changeUserFriendList(val) {
@@ -53,6 +54,21 @@ class FriendProvider extends ChangeNotifier {
       friendSentList.add(friendObj);
     }
 
+    notifyListeners();
+  }
+
+  changeAddFriend(val) {
+    addFriend = Friend(
+        username: val["username"],
+        userId: val["user_id"],
+        name: val["fullname"]);
+
+    notifyListeners();
+  }
+
+  resetAddFriend() {
+    addFriend = Friend(name: "");
+    
     notifyListeners();
   }
 

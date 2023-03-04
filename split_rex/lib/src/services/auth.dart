@@ -25,7 +25,10 @@ class ApiServices {
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       ref.read(authProvider).loadUserData(data["data"]);
+      ref.read(errorProvider).changeError(data["message"]);
+      
       var logger = Logger();
+
       logger.d(ref.watch(authProvider).userData);
     } else {
       ref.read(errorProvider).changeError(data["message"]);
@@ -48,7 +51,8 @@ class ApiServices {
           "password": signUpData.pass
         }));
     var data = jsonDecode(resp.body);
-    if (data["message"] == "SUCCESS") {
+    if (data["message"] == "SUCCESS") 
+    { ref.read(errorProvider).changeError(data["message"]);
       ref.read(authProvider).changeJwtToken(data["data"]);
       await getProfile(ref);
       await FriendServices().userFriendList(ref);
@@ -71,6 +75,7 @@ class ApiServices {
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       ref.read(authProvider).changeJwtToken(data["data"]);
+      ref.read(errorProvider).changeError(data["message"]);
       await getProfile(ref);
       await FriendServices().userFriendList(ref);
       await FriendServices().friendRequestReceivedList(ref);
@@ -78,7 +83,9 @@ class ApiServices {
       ref.read(routeProvider).changePage("home");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
+      
     }
+    print(ref.read(errorProvider).errorMsg);
   }
 
   Future<void> readJson(WidgetRef ref) async {

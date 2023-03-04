@@ -45,6 +45,7 @@ class GroupListProvider extends ChangeNotifier {
 
     // groups = builder;
     // groupsLoaded = builder;
+    
     // notifyListeners();
     groups.clear();
     groupsLoaded.clear();
@@ -68,6 +69,8 @@ class GroupListProvider extends ChangeNotifier {
           modelList[i]["total_unpaid"],
           modelList[i]["total_expense"]));
     }
+
+    print(groups);
     notifyListeners();
   }
 

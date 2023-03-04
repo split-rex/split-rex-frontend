@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:split_rex/src/model/auth.dart';
@@ -12,7 +13,6 @@ class GroupServices {
   String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
 
   Future<void> userGroupList(WidgetRef ref) async {
-   
     SignUpModel signUpData = ref.watch(authProvider).signUpData;
     if (signUpData.confPass != signUpData.pass) {
       throw Exception();
@@ -30,7 +30,6 @@ class GroupServices {
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
-  
   }
 
   Future<void> getGroupDetail(WidgetRef ref, String groupId) async {
@@ -44,7 +43,6 @@ class GroupServices {
         'Content-Type': 'application/json',
         "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
       },
-      
     );
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
@@ -56,5 +54,19 @@ class GroupServices {
     }
   }
 
+  Future<void> getGroupOwed(WidgetRef ref) async {
+    final String response =
+        await rootBundle.loadString('assets/groupsOwed.json');
+    var data = await json.decode(response);
 
+    ref.read(groupListProvider).loadGroupData(data["data"]);
+
+  }
+
+  Future<void> getGroupLent(WidgetRef ref) async {
+    final String response =
+        await rootBundle.loadString('assets/groupLent.json');
+    var data = await json.decode(response);
+    ref.read(groupListProvider).loadGroupData(data["data"]);
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/group.dart';
 
@@ -23,6 +24,13 @@ class Navbar extends ConsumerWidget {
                   return const _PopupExpense();
                 });
           } else {
+            if (value == 0) {
+              if (ref.watch(groupListProvider).isOwed) {
+                GroupServices().getGroupOwed(ref);
+              } else {
+                GroupServices().getGroupLent(ref);
+              }
+            }
             if (value == 1) {
               GroupServices().userGroupList(ref);
             }

@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/group_list.dart';
+import 'package:split_rex/src/services/group.dart';
+import 'package:split_rex/src/widgets/group_list.dart';
 
 import '../providers/routes.dart';
 import '../services/friend.dart';
@@ -175,6 +177,7 @@ class HomeFooter extends ConsumerWidget {
                           child: InkWell(
                             onTap: () {
                               ref.watch(groupListProvider).changeIsOwed(true);
+                              GroupServices().getGroupOwed(ref);
                             },
                             child: Container(
                               // color: Colors.white,
@@ -204,6 +207,7 @@ class HomeFooter extends ConsumerWidget {
                           child: InkWell(
                             onTap: () {
                               ref.watch(groupListProvider).changeIsOwed(true);
+                              GroupServices().getGroupOwed(ref);
                             },
                             child: Container(
                               // color: Colors.white,
@@ -221,6 +225,7 @@ class HomeFooter extends ConsumerWidget {
                           child: InkWell(
                             onTap: () {
                               ref.watch(groupListProvider).changeIsOwed(false);
+                              GroupServices().getGroupLent(ref);
                             },
                             child: Container(
                               // color: Colors.white,
@@ -241,6 +246,7 @@ class HomeFooter extends ConsumerWidget {
                           child: InkWell(
                             onTap: () {
                               ref.watch(groupListProvider).changeIsOwed(false);
+                              GroupServices().getGroupLent(ref);
                             },
                             child: Container(
                               // color: Colors.white,
@@ -268,101 +274,10 @@ class HomeFooter extends ConsumerWidget {
                         )
                 ]),
               ),
-              Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    children: [
-                      Expanded(
-                          flex: 9,
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 246, 246, 246),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0)),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 12.0, horizontal: 24.0),
-                            child: const Text(
-                              "Search bar...",
-                            ),
-                          )),
-                      Expanded(
-                          flex: 2,
-                          child: Container(
-                              alignment: Alignment.center,
-                              margin: const EdgeInsets.only(left: 16.0),
-                              decoration: const BoxDecoration(
-                                color: Color.fromARGB(255, 246, 246, 246),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(24.0)),
-                              ),
-                              padding: const EdgeInsets.all(12.0),
-                              child: const Icon(Icons.filter_alt,
-                                  color: Colors.grey))),
-                    ],
-                  )),
-              Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Singapore Trip",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              const SizedBox(height: 6.0),
-                              const Text(
-                                "03 Feb 2023 / 15.40",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              const SizedBox(height: 18.0),
-                              RichText(
-                                text: const TextSpan(
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0XFF4f4f4f),
-                                        fontWeight: FontWeight.w400),
-                                    children: [
-                                      TextSpan(text: "You owe "),
-                                      TextSpan(
-                                          text: "Rp 32.500",
-                                          style: TextStyle(
-                                            color: Color(0XFFF10D0D),
-                                            fontWeight: FontWeight.w800,
-                                          )),
-                                      TextSpan(text: " in total"),
-                                    ]),
-                              ),
-                            ]),
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: const [
-                              Text(
-                                "Rp 52.500",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              Icon(Icons.fire_extinguisher)
-                            ]),
-                      ]))
+
+              searchBar(context, ref),
+              Expanded(flex: 5, child: showGroups(context, ref)),
+             
             ],
           ),
         ));

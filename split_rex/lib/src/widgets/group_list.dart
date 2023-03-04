@@ -20,7 +20,7 @@ Widget searchBar(BuildContext context, WidgetRef ref) => Container(
     child: TextField(
       onChanged: (text) {
         ref.read(groupListProvider).searchGroupName(text);
-        logger.d("AAAA ${ref.watch(groupListProvider).groups}");
+    
       },
       decoration: const InputDecoration(
         icon: Icon(

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 
-import '../common/profile_picture.dart';
 import '../providers/routes.dart';
 import '../services/friend.dart';
-import '../services/group.dart';
 
 class UserDetail extends ConsumerWidget {
   const UserDetail({super.key});
@@ -16,7 +15,7 @@ class UserDetail extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        profilePicture(ref.watch(authProvider).userData.name, 28),
+        Initicon(text: ref.watch(authProvider).userData.name, size: 55),
         const SizedBox(width: 12),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Text(
@@ -209,12 +208,6 @@ class HomeFooter extends ConsumerWidget {
                               // color: Colors.white,
                               alignment: Alignment.center,
                               padding: const EdgeInsets.all(8.0),
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(24.0)),
-                                color: Colors.white,
-                                boxShadow: [],
-                              ),
                               child: const Text(
                                 "Owed",
                                 style: TextStyle(fontWeight: FontWeight.w400),

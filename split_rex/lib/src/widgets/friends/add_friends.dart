@@ -6,8 +6,9 @@ import 'package:flutter_initicon/flutter_initicon.dart';
 
 class AddFriendSearchSection extends StatefulWidget {
   const AddFriendSearchSection({super.key});
+
   @override
-  _AddFriendSearchSection createState() => new _AddFriendSearchSection();
+  State<AddFriendSearchSection> createState() => _AddFriendSearchSection();
 }
 
 class _AddFriendSearchSection extends State<AddFriendSearchSection> {
@@ -34,8 +35,8 @@ class _AddFriendSearchSection extends State<AddFriendSearchSection> {
                           const TextStyle(color: Colors.grey, fontSize: 16),
                       prefixIcon: Container(
                         padding: const EdgeInsets.all(15),
-                        child: const Icon(Icons.search, color: Colors.grey),
                         width: 18,
+                        child: const Icon(Icons.search, color: Colors.grey),
                       )),
                 ),
               ),
@@ -50,23 +51,21 @@ class _AddFriendSearchSection extends State<AddFriendSearchSection> {
 class FriendsSearched extends StatefulWidget {
   const FriendsSearched({super.key});
   @override
-  _FriendsSearched createState() => new _FriendsSearched();
+  State<FriendsSearched> createState() => _FriendsSearched();
 }
 
 class _FriendsSearched extends State<FriendsSearched> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children:  [
-          // TODO: save the color!!!
-          Initicon(text: "Francesco Parrino", size:114, backgroundColor: Colors.primaries[Random().nextInt(Colors.primaries.length)]),
-          const SizedBox(height: 10),
-          const Text("Francesco Parrino",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF4F4F4F))),
-          const AddBtn()
-        ],
-      ),
+    return Column(
+      children:  [
+        // TODO: save the color!!!
+        Initicon(text: "Francesco Parrino", size:114, backgroundColor: Colors.primaries[Random().nextInt(Colors.primaries.length)]),
+        const SizedBox(height: 10),
+        const Text("Francesco Parrino",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF4F4F4F))),
+        const AddBtn()
+      ],
     );
   }
 }

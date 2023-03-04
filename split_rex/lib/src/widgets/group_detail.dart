@@ -1,7 +1,4 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/model/group_model.dart';
@@ -29,97 +26,92 @@ class GroupInfo extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Material(
-        type: MaterialType.transparency,
-        child: 
-            Row(
-              children: [
-                
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  InkWell(
-                  onTap: () => ref.watch(routeProvider).changePage(prevPage),
-                  child: const Positioned(
-                      top: 100,
-                      child: Icon(Icons.navigate_before,
-                          color: Colors.white, size: 35)),
+      type: MaterialType.transparency,
+      child: Row(
+        children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            InkWell(
+              onTap: () => ref.watch(routeProvider).changePage(prevPage),
+              child: const Positioned(
+                  top: 100,
+                  child: Icon(Icons.navigate_before,
+                      color: Colors.white, size: 35)),
+            ),
+            Text(
+              title,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 28,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              convertDate(startDate) + "-" + convertDate(endDate),
+              style: const TextStyle(
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+                fontSize: 12,
+              ),
+            ),
+          ]),
+          const Spacer(),
+          Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+            Text(
+              "Rp.$totalExpense",
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+            Stack(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: Colors.red,
+                      child: profilePicture(
+                          "Pak Fitra", 16.0), // Provide your custom image
+                    ),
+                  ),
                 ),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 28,
-                      color: Colors.white,
+                Align(
+                  alignment: Alignment.center,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: Colors.red,
+                      child: profilePicture(
+                          "Michael Jordan", 16.0), // Provide your custom image
                     ),
                   ),
-                  Text(
-                    convertDate(startDate) + "-" + convertDate(endDate),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                  ),
-                ]),
-                const Spacer(),
-                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                  Text(
-                    "Rp.$totalExpense",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Stack(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.centerRight,
+                ),
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: InkWell(
+                      onTap: () {
+                        ref.read(routeProvider).changePage("choose_friend");
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
                         child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: CircleAvatar(
-                            radius: 18,
-                            backgroundColor: Colors.red,
-                            child: profilePicture(
-                                "Pak Fitra", 16.0), // Provide your custom image
-                          ),
+                          radius: 18,
+                          backgroundColor: Colors.red,
+                          child: profilePicture(
+                              "John Doe", 16.0), // Provide your custom image
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: CircleAvatar(
-                            radius: 18,
-                            backgroundColor: Colors.red,
-                            child: profilePicture("Michael Jordan",
-                                16.0), // Provide your custom image
-                          ),
-                        ),
-                      ),
-                      Align(
-                          alignment: Alignment.centerLeft,
-                          child: InkWell(
-                            onTap: () {
-                              ref
-                                  .read(routeProvider)
-                                  .changePage("choose_friend");
-                            },
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: CircleAvatar(
-                                radius: 18,
-                                backgroundColor: Colors.red,
-                                child: profilePicture("John Doe",
-                                    16.0), // Provide your custom image
-                              ),
-                            ),
-                          )),
-                    ],
-                  ),
-                ])
+                    )),
               ],
             ),
-         
-        );
+          ])
+        ],
+      ),
+    );
   }
 }
 
@@ -164,7 +156,8 @@ class BalanceInfo extends ConsumerWidget {
 }
 
 class GroupDetailHeader extends ConsumerWidget {
-  const GroupDetailHeader({super.key, required this.group, required this.prevPage});
+  const GroupDetailHeader(
+      {super.key, required this.group, required this.prevPage});
 
   final GroupListModel group;
   final String prevPage;

@@ -191,7 +191,7 @@ class EditItems extends ConsumerWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 8.0),
+                                const SizedBox(height: 8.0),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -221,7 +221,7 @@ class EditItems extends ConsumerWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 8.0),
+                                const SizedBox(height: 8.0),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -251,7 +251,7 @@ class EditItems extends ConsumerWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 8.0),
+                                const SizedBox(height: 8.0),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -281,15 +281,15 @@ class EditItems extends ConsumerWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 14.0),
+                                const SizedBox(height: 14.0),
                             ]),
                             Container(
-                              margin: EdgeInsets.only(right: 8.0),    
+                              margin: const EdgeInsets.only(right: 8.0),    
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text("Total amount", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
-                                  const Text("150.000", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                                children: const [
+                                  Text("Total amount", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+                                  Text("150.000", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                                 ],
                               ),
                             ),

@@ -4,8 +4,8 @@ import 'package:split_rex/src/common/functions.dart';
 
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/screens/group_detail.dart';
 
+import '../common/logger.dart';
 import '../common/profile_picture.dart';
 
 Widget searchBar(BuildContext context, WidgetRef ref) => Container(
@@ -20,7 +20,7 @@ Widget searchBar(BuildContext context, WidgetRef ref) => Container(
     child: TextField(
       onChanged: (text) {
         ref.read(groupListProvider).searchGroupName(text);
-        print("AAAA ${ref.watch(groupListProvider).groups}");
+        logger.d("AAAA ${ref.watch(groupListProvider).groups}");
       },
       decoration: const InputDecoration(
         icon: Icon(

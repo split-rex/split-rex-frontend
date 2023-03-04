@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/group.dart';
 
-import '../services/auth.dart';
-
 class Navbar extends ConsumerWidget {
   const Navbar({super.key});
 
@@ -26,7 +24,6 @@ class Navbar extends ConsumerWidget {
                 });
           } else {
             if (value == 1) {
-              
               GroupServices().userGroupList(ref);
             }
             ref.read(routeProvider).changeNavbarIdx(value);

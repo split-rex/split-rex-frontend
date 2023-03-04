@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:split_rex/src/model/group_model.dart';
 
+import '../common/logger.dart';
+
 class GroupListProvider extends ChangeNotifier {
   List<GroupListModel> groups = <GroupListModel>[
     GroupListModel("1232424124", "Trip2", [1, 2, 3, 4, 5, 6], "01-01-2023",
@@ -92,12 +94,12 @@ class GroupListProvider extends ChangeNotifier {
     // print(groupsLoad);
     for (int i = 0; i < len; i++) {
       if (groupsLoaded[i].name.toLowerCase().contains(name.toLowerCase())) {
-        print("here");
+        logger.d("here");
         groups.add(groupsLoaded[i]);
       }
     }
-    print(groups.length);
-    print(groupsLoaded);
+    logger.d(groups.length);
+    logger.d(groupsLoaded);
     notifyListeners();
   }
 }
@@ -126,7 +128,7 @@ class CustomSearchDelegate extends SearchDelegate {
         onPressed: () {
           query = '';
         },
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
       ),
     ];
   }
@@ -138,7 +140,7 @@ class CustomSearchDelegate extends SearchDelegate {
       onPressed: () {
         close(context, null);
       },
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
     );
   }
 

@@ -1,15 +1,13 @@
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/model/add_expense.dart';
-import 'package:split_rex/src/providers/group_list.dart';
 
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
-import 'package:split_rex/src/model/auth.dart';
 
+import '../common/logger.dart';
 import '../model/friends.dart';
 import '../providers/friend.dart';
 import '../providers/add_expense.dart';
@@ -26,22 +24,20 @@ class FriendServices {
       newGroup.memberId.add(friendsList[index].userId);
     }
 
-    Response resp = await post(
-      Uri.parse("$endpoint/userCreateGroup"),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
-      },
-      body: jsonEncode(<String, dynamic>{
+    Response resp = await post(Uri.parse("$endpoint/userCreateGroup"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+        },
+        body: jsonEncode(<String, dynamic>{
           "name": newGroup.name,
           "member_id": newGroup.memberId,
           "start_date": newGroup.startDate,
           "end_date": newGroup.endDate
-      })
-    );
+        }));
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-      print("yuyu");
+      logger.d("yuyu");
       ref.read(addExpenseProvider).clearExpense();
     } else {
       ref.read(errorProvider).changeError(data["message"]);

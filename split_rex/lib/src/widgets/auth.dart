@@ -201,6 +201,7 @@ class SubmitBtn extends ConsumerWidget {
               .read(authProvider)
               .changeSignInData(emailController.text, passController.text);
           await ApiServices().postLogin(ref);
+          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Container(
               padding: const EdgeInsets.all(16),
@@ -371,6 +372,7 @@ class FormFill extends ConsumerWidget {
                 (ref.watch(errorProvider).errorType == "ERROR: INVALID USERNAME OR PASSWORD" && placeholderText == "Username")
                   ? 0xFFF44336 : 0xffEEEEEE))),
       child: TextField(
+        key: Key(placeholderText),
         controller: controller,
         cursorColor: const Color(0xFF59C4B0),
         decoration: InputDecoration(
@@ -424,6 +426,7 @@ class PasswordField extends ConsumerWidget {
                   ? 0xFFF44336
                   : 0xffEEEEEE))),
       child: TextField(
+        key: Key(placeholderText),
         obscureText: passwordVisible,
         controller: controller,
         cursorColor: const Color(0xFF59C4B0),

@@ -20,6 +20,7 @@ class SignUpScreen extends ConsumerWidget {
                   const Text("Have an account?  "),
                   GestureDetector(
                   child: const Text(
+                    key: Key("SignInPage"),
                     "Sign in",
                     style: TextStyle(
                         fontWeight: FontWeight.w800,

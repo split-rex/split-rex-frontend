@@ -201,24 +201,25 @@ class SubmitBtn extends ConsumerWidget {
               .read(authProvider)
               .changeSignInData(emailController.text, passController.text);
           await ApiServices().postLogin(ref);
-       
+
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               height: 70,
               decoration: BoxDecoration(
-                  color: Color(ref.watch(errorProvider).errorMsg == "Login Failed"
-                      ?  0xFFF44336
-                      : 0xFF388E3C),
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
+                  color: Color(
+                      ref.watch(errorProvider).errorMsg == "Login Failed"
+                          ? 0xFFF44336
+                          : 0xFF388E3C),
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     ref.watch(errorProvider).errorMsg == "Login Failed"
                         ? "Login failed, email or password are wrong!"
-                        :  "Logged in successfully!",
-                    style: TextStyle(
+                        : "Logged in successfully!",
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white,
                     ),
@@ -238,8 +239,62 @@ class SubmitBtn extends ConsumerWidget {
               passController.text,
               confController!.text);
           await ApiServices().postRegister(ref);
-
-          
+          print(ref.watch(errorProvider).errorType);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Container(
+              padding: const EdgeInsets.all(16),
+              height: 70,
+              decoration: BoxDecoration(
+                  color: Color(
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_FAILED_REGISTER" ||
+                          ref
+                                  .watch(errorProvider)
+                                  .errorType ==
+                              "ERROR_USERNAME_EXISTED" ||
+                          ref
+                                  .watch(errorProvider)
+                                  .errorType ==
+                              "ERROR_EMAIL_EXISTED" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR: INVALID USERNAME OR PASSWORD" ||
+                          ref.watch(errorProvider).errorMsg ==
+                              "Your password and confirmation does not match!"
+                      ? 0xFFF44336
+                      : 0xFF388E3C),
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                     ref.watch(errorProvider).errorType ==
+                              "ERROR_FAILED_REGISTER" ||
+                          ref
+                                  .watch(errorProvider)
+                                  .errorType ==
+                              "ERROR_USERNAME_EXISTED" ||
+                          ref
+                                  .watch(errorProvider)
+                                  .errorType ==
+                              "ERROR_EMAIL_EXISTED" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR: INVALID USERNAME OR PASSWORD" ||
+                          ref.watch(errorProvider).errorMsg ==
+                              "Your password and confirmation does not match!"
+                        ? ref.watch(errorProvider).errorType
+                        : "Registered successfully!",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ));
         }
       },
       child: Container(
@@ -296,20 +351,19 @@ class FormFill extends ConsumerWidget {
       padding: const EdgeInsets.only(left: 20, right: 20),
       height: 41,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.grey[200],
-        boxShadow: const [
-          BoxShadow(
-            offset: Offset(0, 10),
-            blurRadius: 50,
-            color: Color(0xffEEEEEE),
-          ),
-        ],
-        // border: Border.all(
-        //     color: Color(ref.watch(errorProvider).errorMsg == ""
-        //         ? 0xffEEEEEE
-        //         : 0xFFF44336))
-      ),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.grey[200],
+          boxShadow: const [
+            BoxShadow(
+              offset: Offset(0, 10),
+              blurRadius: 50,
+              color: Color(0xffEEEEEE),
+            ),
+          ],
+          border: Border.all(
+              color: Color(ref.watch(errorProvider).errorMsg == ""
+                  ? 0xffEEEEEE
+                  : 0xFFF44336))),
       child: TextField(
         controller: controller,
         cursorColor: const Color(0xFF59C4B0),
@@ -329,7 +383,7 @@ class FormFill extends ConsumerWidget {
   }
 }
 
-class PasswordField extends StatefulWidget {
+class PasswordField extends ConsumerWidget {
   final TextEditingController controller;
   final String placeholderText;
   const PasswordField({
@@ -337,31 +391,32 @@ class PasswordField extends StatefulWidget {
     required this.controller,
     required this.placeholderText,
   }) : super(key: key);
-  @override
-  PasswordFieldState createState() => PasswordFieldState();
-}
-
-class PasswordFieldState extends State<PasswordField> {
-  bool _isHidden = true;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final passwordVisible = ref.watch(authProvider).isVisible;
+    // print(passwordVisible);
     return Container(
       alignment: Alignment.center,
       margin: const EdgeInsets.only(left: 20, right: 20, top: 17),
       padding: const EdgeInsets.only(left: 20, right: 20),
       height: 41,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.grey[200],
-        boxShadow: const [
-          BoxShadow(
-              offset: Offset(0, 10), blurRadius: 50, color: Color(0xffEEEEEE)),
-        ],
-      ),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.grey[200],
+          boxShadow: const [
+            BoxShadow(
+                offset: Offset(0, 10),
+                blurRadius: 50,
+                color: Color(0xffEEEEEE)),
+          ],
+          border: Border.all(
+              color: Color(ref.watch(errorProvider).errorMsg == ""
+                  ? 0xffEEEEEE
+                  : 0xFFF44336))),
       child: TextField(
-        obscureText: _isHidden,
-        controller: widget.controller,
+        obscureText: passwordVisible,
+        controller: controller,
         cursorColor: const Color(0xFF59C4B0),
         decoration: InputDecoration(
             icon: const Icon(
@@ -369,12 +424,16 @@ class PasswordFieldState extends State<PasswordField> {
               color: Color(0xFF59C4B0),
             ),
             suffix: InkWell(
-              onTap: _togglePasswordView,
+              onTap: () {
+                ref.read(authProvider).changeVisibility();
+              },
               child: Icon(
-                _isHidden ? Icons.visibility : Icons.visibility_off,
+                ref.watch(authProvider).isVisible
+                    ? Icons.visibility
+                    : Icons.visibility_off,
               ),
             ),
-            hintText: widget.placeholderText,
+            hintText: placeholderText,
             enabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
             hintStyle: const TextStyle(
@@ -382,11 +441,5 @@ class PasswordFieldState extends State<PasswordField> {
             )),
       ),
     );
-  }
-
-  void _togglePasswordView() {
-    setState(() {
-      _isHidden = !_isHidden;
-    });
   }
 }

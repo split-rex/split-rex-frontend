@@ -11,12 +11,13 @@ class ErrorProvider extends ChangeNotifier {
     "ERROR_FAILED_REGISTER": "Register Failed",
     "ERROR_FAILED_LOGIN": "Login Failed",
     "ERROR_JWT_SIGNING": "JWT Error",
-    "USERNAME_EXISTED": "Username Already Exists",
-    "EMAIL_EXISTED": "Email Already Exists",
+    "ERROR_USERNAME_EXISTED": "Username Already Exists",
+    "ERROR_EMAIL_EXISTED": "Email Already Exists",
     "ERROR: INVALID USERNAME OR PASSWORD": "Please fill the form",
     "ERROR_CANNOT_ADD_SELF": "You cannot add yourself",
     "ERROR_ALREADY_FRIEND": "User is already friend",
-    "ERROR_USER_NOT_FOUND": "User not found"
+    "ERROR_USER_NOT_FOUND": "User not found",
+    "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH": "Your password and confirmation does not match!"
   };
 
   void changeError(String value) {
@@ -25,6 +26,8 @@ class ErrorProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  
 }
 
 final errorProvider = ChangeNotifierProvider((ref) => ErrorProvider());

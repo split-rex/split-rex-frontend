@@ -26,7 +26,7 @@ class ApiServices {
     if (data["message"] == "SUCCESS") {
       ref.read(authProvider).loadUserData(data["data"]);
       ref.read(errorProvider).changeError(data["message"]);
-      
+
       var logger = Logger();
 
       logger.d(ref.watch(authProvider).userData);
@@ -40,27 +40,32 @@ class ApiServices {
   Future<void> postRegister(WidgetRef ref) async {
     SignUpModel signUpData = ref.watch(authProvider).signUpData;
     if (signUpData.confPass != signUpData.pass) {
-      throw Exception();
-    }
-    Response resp = await post(Uri.parse("$endpoint/register"),
-        headers: <String, String>{'Content-Type': 'application/json'},
-        body: jsonEncode(<String, String>{
-          "name": signUpData.name,
-          "email": signUpData.email,
-          "username": signUpData.username,
-          "password": signUpData.pass
-        }));
-    var data = jsonDecode(resp.body);
-    if (data["message"] == "SUCCESS") 
-    { ref.read(errorProvider).changeError(data["message"]);
-      ref.read(authProvider).changeJwtToken(data["data"]);
-      await getProfile(ref);
-      await FriendServices().userFriendList(ref);
-      await FriendServices().friendRequestReceivedList(ref);
-      await FriendServices().friendRequestSentList(ref);
-      ref.read(routeProvider).changePage("home");
+      ref
+          .read(errorProvider)
+          .changeError("ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH");
     } else {
-      ref.read(errorProvider).changeError(data["message"]);
+      Response resp = await post(Uri.parse("$endpoint/register"),
+          headers: <String, String>{'Content-Type': 'application/json'},
+          body: jsonEncode(<String, String>{
+            "name": signUpData.name,
+            "email": signUpData.email,
+            "username": signUpData.username,
+            "password": signUpData.pass
+          }));
+      var data = jsonDecode(resp.body);
+      if (data["message"] == "SUCCESS") {
+        ref.read(errorProvider).changeError(data["message"]);
+        ref.read(authProvider).changeJwtToken(data["data"]);
+        await getProfile(ref);
+        await FriendServices().userFriendList(ref);
+        await FriendServices().friendRequestReceivedList(ref);
+        await FriendServices().friendRequestSentList(ref);
+        ref.read(routeProvider).changePage("home");
+      } else {
+        // print(data["message"]);
+        ref.read(errorProvider).changeError(data["message"]);
+        // print(ref.watch(errorProvider).errorType);
+      }
     }
   }
 
@@ -83,7 +88,6 @@ class ApiServices {
       ref.read(routeProvider).changePage("home");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
-      
     }
     print(ref.read(errorProvider).errorMsg);
   }

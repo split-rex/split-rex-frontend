@@ -201,16 +201,15 @@ class SubmitBtn extends ConsumerWidget {
               .read(authProvider)
               .changeSignInData(emailController.text, passController.text);
           await ApiServices().postLogin(ref);
-       
-          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Container(
               padding: const EdgeInsets.all(16),
               height: 70,
               decoration: BoxDecoration(
-                  color: Color(ref.watch(errorProvider).errorMsg == "Login Failed"
-                      ?  0xFFF44336
-                      : 0xFF388E3C),
+                  color: Color(
+                      ref.watch(errorProvider).errorMsg == "Login Failed"
+                          ? 0xFFF44336
+                          : 0xFF388E3C),
                   borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,7 +217,7 @@ class SubmitBtn extends ConsumerWidget {
                   Text(
                     ref.watch(errorProvider).errorMsg == "Login Failed"
                         ? "Login failed, email or password are wrong!"
-                        :  "Logged in successfully!",
+                        : "Logged in successfully!",
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white,
@@ -239,8 +238,66 @@ class SubmitBtn extends ConsumerWidget {
               passController.text,
               confController!.text);
           await ApiServices().postRegister(ref);
-
-          
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Container(
+              padding: const EdgeInsets.all(16),
+              height: 70,
+              decoration: BoxDecoration(
+                  color: Color(
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_FAILED_REGISTER" ||
+                          ref
+                                  .watch(errorProvider)
+                                  .errorType ==
+                              "ERROR_USERNAME_EXISTED" ||
+                          ref
+                                  .watch(errorProvider)
+                                  .errorType ==
+                              "ERROR_EMAIL_EXISTED" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR: INVALID USERNAME OR PASSWORD" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" ||
+                          ref.watch(errorProvider).errorType ==
+                            "ERROR_INVALID_EMAIL"
+                      ? 0xFFF44336
+                      : 0xFF388E3C),
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                     ref.watch(errorProvider).errorType ==
+                              "ERROR_FAILED_REGISTER" ||
+                          ref
+                                  .watch(errorProvider)
+                                  .errorType ==
+                              "ERROR_USERNAME_EXISTED" ||
+                          ref
+                                  .watch(errorProvider)
+                                  .errorType ==
+                              "ERROR_EMAIL_EXISTED" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR: INVALID USERNAME OR PASSWORD" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_INVALID_EMAIL"
+                        ? ref.watch(errorProvider).errorMsg
+                        : "Registered successfully!",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ));
         }
       },
       child: Container(
@@ -297,20 +354,22 @@ class FormFill extends ConsumerWidget {
       padding: const EdgeInsets.only(left: 20, right: 20),
       height: 41,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.grey[200],
-        boxShadow: const [
-          BoxShadow(
-            offset: Offset(0, 10),
-            blurRadius: 50,
-            color: Color(0xffEEEEEE),
-          ),
-        ],
-        // border: Border.all(
-        //     color: Color(ref.watch(errorProvider).errorMsg == ""
-        //         ? 0xffEEEEEE
-        //         : 0xFFF44336))
-      ),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.grey[200],
+          boxShadow: const [
+            BoxShadow(
+              offset: Offset(0, 10),
+              blurRadius: 50,
+              color: Color(0xffEEEEEE),
+            ),
+          ],
+          border: Border.all(
+              color: Color(
+                (ref.watch(errorProvider).errorType == "ERROR_USERNAME_EXISTED" && placeholderText == "Username") ||
+                (ref.watch(errorProvider).errorType == "ERROR_INVALID_EMAIL" && placeholderText == "E-mail") ||
+                (ref.watch(errorProvider).errorType == "ERROR_EMAIL_EXISTED" && placeholderText == "E-mail") ||
+                (ref.watch(errorProvider).errorType == "ERROR: INVALID USERNAME OR PASSWORD" && placeholderText == "Username")
+                  ? 0xFFF44336 : 0xffEEEEEE))),
       child: TextField(
         controller: controller,
         cursorColor: const Color(0xFF59C4B0),
@@ -330,7 +389,7 @@ class FormFill extends ConsumerWidget {
   }
 }
 
-class PasswordField extends StatefulWidget {
+class PasswordField extends ConsumerWidget {
   final TextEditingController controller;
   final String placeholderText;
   const PasswordField({
@@ -338,31 +397,35 @@ class PasswordField extends StatefulWidget {
     required this.controller,
     required this.placeholderText,
   }) : super(key: key);
-  @override
-  PasswordFieldState createState() => PasswordFieldState();
-}
-
-class PasswordFieldState extends State<PasswordField> {
-  bool _isHidden = true;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final passwordVisible = ref.watch(authProvider).isVisible;
+    // print(passwordVisible);
     return Container(
       alignment: Alignment.center,
       margin: const EdgeInsets.only(left: 20, right: 20, top: 17),
       padding: const EdgeInsets.only(left: 20, right: 20),
       height: 41,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.grey[200],
-        boxShadow: const [
-          BoxShadow(
-              offset: Offset(0, 10), blurRadius: 50, color: Color(0xffEEEEEE)),
-        ],
-      ),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.grey[200],
+          boxShadow: const [
+            BoxShadow(
+                offset: Offset(0, 10),
+                blurRadius: 50,
+                color: Color(0xffEEEEEE)),
+          ],
+          border: Border.all(
+              color: Color(
+                (ref.watch(errorProvider).errorType == "ERROR: INVALID USERNAME OR PASSWORD" && placeholderText == "Password") ||
+                (ref.watch(errorProvider).errorType == "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" && placeholderText == "Password") ||
+                (ref.watch(errorProvider).errorType == "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" && placeholderText == "Confirm Password") 
+                  ? 0xFFF44336
+                  : 0xffEEEEEE))),
       child: TextField(
-        obscureText: _isHidden,
-        controller: widget.controller,
+        obscureText: passwordVisible,
+        controller: controller,
         cursorColor: const Color(0xFF59C4B0),
         decoration: InputDecoration(
             icon: const Icon(
@@ -370,12 +433,16 @@ class PasswordFieldState extends State<PasswordField> {
               color: Color(0xFF59C4B0),
             ),
             suffix: InkWell(
-              onTap: _togglePasswordView,
+              onTap: () {
+                ref.read(authProvider).changeVisibility();
+              },
               child: Icon(
-                _isHidden ? Icons.visibility : Icons.visibility_off,
+                ref.watch(authProvider).isVisible
+                    ? Icons.visibility
+                    : Icons.visibility_off,
               ),
             ),
-            hintText: widget.placeholderText,
+            hintText: placeholderText,
             enabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
             hintStyle: const TextStyle(
@@ -383,11 +450,5 @@ class PasswordFieldState extends State<PasswordField> {
             )),
       ),
     );
-  }
-
-  void _togglePasswordView() {
-    setState(() {
-      _isHidden = !_isHidden;
-    });
   }
 }

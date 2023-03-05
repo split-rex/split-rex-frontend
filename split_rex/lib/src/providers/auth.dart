@@ -10,6 +10,7 @@ class AuthProvider extends ChangeNotifier {
   User userData = User();
 
   String jwtToken = "";
+  bool isVisible = true;
 
   void clearAuthProvider() {
     signUpData = SignUpModel();
@@ -31,7 +32,12 @@ class AuthProvider extends ChangeNotifier {
     signInData.email = email;
     signInData.pass = pass;
   }
-  
+
+  void changeVisibility() {
+    isVisible = !isVisible;
+    notifyListeners();
+  }
+
   void changeJwtToken(jwt) {
     jwtToken = jwt;
   }

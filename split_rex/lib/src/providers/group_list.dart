@@ -70,7 +70,6 @@ class GroupListProvider extends ChangeNotifier {
           modelList[i]["total_expense"]));
     }
 
-    print(groups);
     notifyListeners();
   }
 

@@ -1,32 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
+import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 
 import 'package:split_rex/src/common/profile_picture.dart';
 
-import '../providers/friend.dart';
+import '../../providers/friend.dart';
 
-Widget searchBar() => Container(
-      margin: const EdgeInsets.only(left: 18.0, right: 18.0),
-      decoration: BoxDecoration(
-        color: const Color(0XFFFFFFFF),
-        border: Border.all(
-            color: const Color.fromARGB(50, 154, 154, 176), width: 1.0),
-        borderRadius: const BorderRadius.all(Radius.circular(14.0)),
+Widget searchBar(WidgetRef ref) => Container(
+  margin: const EdgeInsets.only(left: 18.0, right: 18.0),
+  decoration: BoxDecoration(
+    color: const Color(0XFFFFFFFF),
+    border: Border.all(
+        color: const Color.fromARGB(50, 154, 154, 176), width: 1.0),
+    borderRadius: const BorderRadius.all(Radius.circular(14.0)),
+  ),
+  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+  child: TextField(
+    onChanged: (val) {
+      ref.read(groupListProvider).searchGroupName(val);
+      ref.read(friendProvider).searchFriendName(val);
+    },
+    decoration: const InputDecoration(
+      icon: Icon(
+        Icons.search,
+        color: Color(0XFF9A9AB0),
       ),
-      padding: const EdgeInsets.all(12.0),
-      child: Row(
-        children: const [
-          Icon(
-            Icons.search,
-            color: Color(0XFF9A9AB0),
-          ),
-          SizedBox(width: 8.0),
-          Text("Search by name...", style: TextStyle(color: Color(0XFF9A9AB0)))
-        ],
-      ),
-    );
+      hintText: "Search group or friends name....",
+      enabledBorder: InputBorder.none,
+      focusedBorder: InputBorder.none,
+      contentPadding: EdgeInsets.zero
+    ),
+  )
+);
 
 Widget addExistingGroup(BuildContext context, WidgetRef ref) {
   return Container(
@@ -48,27 +55,40 @@ Widget addExistingGroup(BuildContext context, WidgetRef ref) {
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(12.0)),
           ),
-          child: ListView.separated(
+          child: ref.watch(groupListProvider).groupsLoaded.isEmpty ? 
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text("You don't have existing groups"),
+              Text("\nTry adding expense to create groups")
+            ],
+          ) :
+          ref.watch(groupListProvider).groups.isEmpty ?
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text("You don't have any groups with that name"),
+                ],
+          ) : 
+          ListView.separated(
             shrinkWrap: true,
             padding: const EdgeInsets.symmetric(vertical: 8.0),
-            itemCount: ref.watch(addExpenseProvider).groups.length,
+            itemCount: ref.watch(groupListProvider).groups.length,
             itemBuilder: (BuildContext context, int index) {
               return CheckboxListTile(
                 title: Text(
-                  ref.watch(addExpenseProvider).groups[index],
+                  ref.watch(groupListProvider).groups[index].name,
                   style: const TextStyle(
                       fontWeight: FontWeight.w700, fontSize: 16),
                 ),
-                value: ref.watch(addExpenseProvider).selectedGroupIdx == index
-                    ? true
-                    : false,
+                value: ref.watch(addExpenseProvider).existingGroup.groupId == ref.watch(groupListProvider).groups[index].groupId,
                 tileColor: Colors.white,
-                onChanged: (ref.watch(addExpenseProvider).checkedFriends ||
-                            ref.watch(addExpenseProvider).checkedGroups) &&
-                        ref.watch(addExpenseProvider).selectedGroupIdx != index
+                onChanged: (ref.watch(addExpenseProvider).newGroup.memberId.isNotEmpty ||
+                            ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty) &&
+                        ref.watch(addExpenseProvider).existingGroup.groupId != ref.watch(groupListProvider).groups[index].groupId
                     ? null
                     : (bool? value) {
-                        ref.read(addExpenseProvider).changeSelectedGroup(index);
+                        ref.read(addExpenseProvider).changeSelectedGroup(ref.watch(groupListProvider).groups[index]);
                       },
                 checkboxShape: const CircleBorder(),
               );
@@ -95,10 +115,10 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
                   fontWeight: FontWeight.w800,
                 )),
             Expanded(
-                child: Container(
+              child: Container(
               padding: const EdgeInsets.all(16.0),
               margin: const EdgeInsets.only(top: 8.0),
-              alignment: Alignment.center,
+              alignment: Alignment.topCenter,
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -107,19 +127,34 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
                     bottomLeft: Radius.circular(4.0),
                     bottomRight: Radius.circular(4.0)),
               ),
-              child: ListView.separated(
+              child: ref.watch(friendProvider).friendList.isEmpty ? 
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text("You don't have any friends"),
+                    Text("\nTry adding friends first!")
+                  ],
+                ) : 
+                ref.watch(friendProvider).friendSearched.isEmpty ?
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text("You don't have any friends with that name"),
+                  ],
+                ) : 
+                ListView.separated(
                 shrinkWrap: true,
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                itemCount: ref.watch(friendProvider).friendList.length,
+                itemCount: ref.watch(friendProvider).friendSearched.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: ref.watch(addExpenseProvider).checkedGroups
+                      onTap: ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty
                           ? null
                           : () {
                               ref
                                   .read(addExpenseProvider)
-                                  .changeSelectedFriends(index);
+                                  .changeSelectedFriends(ref.watch(friendProvider).friendSearched[index]);
                             },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,21 +163,21 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
                             profilePicture(
                                 ref
                                     .watch(friendProvider)
-                                    .friendList[index]
+                                    .friendSearched[index]
                                     .name,
                                 24.0),
                             const SizedBox(width: 16),
                             Text(
                                 ref
                                     .watch(friendProvider)
-                                    .friendList[index]
+                                    .friendSearched[index]
                                     .name,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 16,
                                   color: ref
                                           .watch(addExpenseProvider)
-                                          .checkedGroups
+                                          .existingGroup.memberId.isNotEmpty
                                       ? const Color.fromARGB(130, 79, 79, 79)
                                       : const Color(0XFF4F4F4F),
                                 ))
@@ -150,17 +185,18 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
                           Checkbox(
                               value: ref
                                       .watch(addExpenseProvider)
-                                      .selectedFriendsIdx
-                                      .contains(index)
-                                  ? true
-                                  : false,
+                                      .newGroup.memberId.
+                                      contains(ref.watch(friendProvider).friendSearched[index].userId),
                               onChanged:
-                                  ref.watch(addExpenseProvider).checkedGroups
+                                  ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty
                                       ? null
                                       : (bool? value) {
                                           ref
                                               .read(addExpenseProvider)
-                                              .changeSelectedFriends(index);
+                                              .changeSelectedFriends(ref
+                                                .watch(friendProvider)
+                                                .friendSearched[index]
+                                              );
                                         })
                         ],
                       ));
@@ -175,8 +211,8 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
 
 Widget addButton(WidgetRef ref) => GestureDetector(
     onTap: () {
-      ref.watch(addExpenseProvider).checkedFriends ||
-              ref.watch(addExpenseProvider).checkedGroups
+      ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty ||
+              ref.watch(addExpenseProvider).newGroup.memberId.isNotEmpty
           ? ref.read(routeProvider).changePage("edit_items")
           : null;
     },
@@ -201,8 +237,8 @@ Widget addButton(WidgetRef ref) => GestureDetector(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-                  color: ref.watch(addExpenseProvider).checkedFriends ||
-                          ref.watch(addExpenseProvider).checkedGroups
+                  color: ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty ||
+                          ref.watch(addExpenseProvider).newGroup.memberId.isNotEmpty
                       ? const Color(0XFF6DC7BD)
                       : const Color.fromARGB(50, 79, 79, 79),
                 ),

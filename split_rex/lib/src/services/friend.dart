@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
-import 'package:split_rex/src/common/logger.dart';
 
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
@@ -36,10 +34,6 @@ class FriendServices {
   }
 
   Future<void> friendRequestReceivedList(WidgetRef ref) async {
-    SignUpModel signUpData = ref.watch(authProvider).signUpData;
-    if (signUpData.confPass != signUpData.pass) {
-      throw Exception();
-    }
     Response resp = await get(
       Uri.parse("$endpoint/friendRequestReceived"),
       headers: <String, String>{
@@ -77,10 +71,6 @@ class FriendServices {
 
   // Reject and accept friend request
   Future<void> acceptFriendRequest(WidgetRef ref, String userId) async {
-    SignUpModel signUpData = ref.watch(authProvider).signUpData;
-    if (signUpData.confPass != signUpData.pass) {
-      throw Exception();
-    }
     Response resp = await post(
       Uri.parse("$endpoint/acceptRequest"),
       headers: <String, String>{

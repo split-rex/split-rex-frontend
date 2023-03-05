@@ -202,15 +202,16 @@ class SubmitBtn extends ConsumerWidget {
               .changeSignInData(emailController.text, passController.text);
           await ApiServices().postLogin(ref);
        
+          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               height: 70,
               decoration: BoxDecoration(
                   color: Color(ref.watch(errorProvider).errorMsg == "Login Failed"
                       ?  0xFFF44336
                       : 0xFF388E3C),
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -218,7 +219,7 @@ class SubmitBtn extends ConsumerWidget {
                     ref.watch(errorProvider).errorMsg == "Login Failed"
                         ? "Login failed, email or password are wrong!"
                         :  "Logged in successfully!",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white,
                     ),

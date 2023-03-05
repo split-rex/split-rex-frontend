@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/profile_picture.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
+import 'package:split_rex/src/providers/friend.dart';
 
-import '../providers/friend.dart';
 
 Widget searchBar() => Container(
       margin: const EdgeInsets.only(left: 18.0, right: 18.0),
@@ -55,12 +55,12 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: ref.watch(addExpenseProvider).checkedGroups
+                      onTap: ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty
                           ? null
                           : () {
                               ref
                                   .read(addExpenseProvider)
-                                  .changeSelectedFriends(index);
+                                  .changeSelectedFriends(ref.watch(friendProvider).friendList[index]);
                             },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,7 +83,7 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
                                   fontSize: 16,
                                   color: ref
                                           .watch(addExpenseProvider)
-                                          .checkedGroups
+                                          .existingGroup.memberId.isNotEmpty
                                       ? const Color.fromARGB(130, 79, 79, 79)
                                       : const Color(0XFF4F4F4F),
                                 ))
@@ -91,17 +91,17 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
                           Checkbox(
                               value: ref
                                       .watch(addExpenseProvider)
-                                      .selectedFriendsIdx
-                                      .contains(index)
+                                      .newGroup.memberId
+                                      .contains(ref.watch(friendProvider).friendList[index].userId)
                                   ? true
                                   : false,
                               onChanged:
-                                  ref.watch(addExpenseProvider).checkedGroups
+                                  ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty
                                       ? null
                                       : (bool? value) {
                                           ref
                                               .read(addExpenseProvider)
-                                              .changeSelectedFriends(index);
+                                              .changeSelectedFriends(ref.watch(friendProvider).friendList[index]);
                                         })
                         ],
                       ));

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/header.dart';
 
-import 'package:split_rex/src/widgets/add_expense.dart';
+import 'package:split_rex/src/widgets/expense/add_expense.dart';
 
 class AddExpense extends ConsumerWidget {
   const AddExpense({super.key});
@@ -19,7 +19,7 @@ class AddExpense extends ConsumerWidget {
         child: 
         Column(
           children: [
-            searchBar(),
+            searchBar(ref),
             Expanded(
               flex: 5, 
               child: addExistingGroup(context, ref)

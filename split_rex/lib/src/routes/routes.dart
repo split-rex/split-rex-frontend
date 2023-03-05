@@ -13,11 +13,11 @@ import 'package:split_rex/src/screens/groups/group_list.dart';
 import 'package:split_rex/src/screens/home.dart';
 import 'package:split_rex/src/screens/auth/sign_in.dart';
 import 'package:split_rex/src/screens/auth/sign_up.dart';
-import 'package:split_rex/src/screens/add_expense.dart';
+import 'package:split_rex/src/screens/expense/add_expense.dart';
 import 'package:split_rex/src/screens/friends/friends.dart';
 
-import 'package:split_rex/src/screens/edit_items.dart';
-import 'package:split_rex/src/screens/split_bill.dart';
+import 'package:split_rex/src/screens/expense/edit_items.dart';
+import 'package:split_rex/src/screens/expense/split_bill.dart';
 
 class PageRouting extends ConsumerWidget {
   const PageRouting({super.key});
@@ -55,12 +55,16 @@ class PageRouting extends ConsumerWidget {
         return const EditItems();
       case "split_bill":
         return const SplitBill();
+
+        // group detail
       case "group_detail":
         return GroupDetail(
           group: ref.watch(groupListProvider).currGroup,
         );
       case "choose_friend":
         return const ChooseFriend();
+
+      // home
       default:
         return const Home();
     }

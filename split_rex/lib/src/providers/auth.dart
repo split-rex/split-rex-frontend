@@ -11,6 +11,10 @@ class AuthProvider extends ChangeNotifier {
 
   String jwtToken = "";
 
+  void clearUserData() {
+    userData = User();
+  }
+
   void changeSignUpData(name, username, email, pass, confPass){
     signUpData.name = name;
     signUpData.username = username;

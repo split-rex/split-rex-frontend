@@ -2,60 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/model/add_expense.dart';
 
+import '../model/friends.dart';
+import '../model/group_model.dart';
+
 class AddExpenseProvider extends ChangeNotifier {
-  List<String> groups = <String>['Singapore Trip', 'GKUB', 'Anjay geming'];
-  List<String> itemsName = ["Ayam", "Bebek Aji Anom"];
-  List<int> itemsQty = [1, 2];
-  List<int> itemsPrice = [50000, 70000];
-
-  bool checkedFriends = false;
-  bool checkedGroups = false;
-  List<int> selectedFriendsIdx = [];
-  int selectedGroupIdx = -1;
-
+  List<Items> items = [];
   NewGroup newGroup = NewGroup();
+  GroupListModel existingGroup = GroupListModel("", "", [], "", "", "", 0, 0);
 
   clearExpense() {
-    itemsName.clear();
-    itemsQty.clear();
-    itemsPrice.clear();
-    checkedFriends = false;
-    checkedGroups = false;
-    selectedFriendsIdx.clear();
-    selectedGroupIdx = -1;
+    items.clear();
     newGroup = NewGroup();
+    existingGroup = GroupListModel("", "", [], "", "", "", 0, 0);
     notifyListeners();
   }
 
-  addItemName(index, String val) {
-    itemsName.insert(index, val);
-  }
-
-  addItemQty(index, int val) {
-    itemsQty.insert(index, val);
-  }
-
-  addItemPrice(index, int val) {
-    itemsPrice.insert(index, val);
-  }
-
-  changeSelectedGroup(val) {
-    if (val == selectedGroupIdx) {
-      selectedGroupIdx = -1;
-    } else {
-      selectedGroupIdx = val;
-    }
-    checkedGroups = !checkedGroups;
+  addItem() {
+    items.add(Items());
     notifyListeners();
   }
 
-  changeSelectedFriends(val) {
-    if (selectedFriendsIdx.contains(val)) {
-      selectedFriendsIdx.remove(val);
+  changeItemName(index, String val) {
+    items[index].name = val;
+  }
+
+  changeItemQty(index, int val) {
+    items[index].qty = val;
+  }
+
+  changeItemPrice(index, int val) {
+    items[index].price = val;
+  }
+
+  changeItemSelected(index) {
+    items[index].selected = !items[index].selected;
+    notifyListeners();
+  }
+
+  changeSelectedGroup(GroupListModel group) {
+    if (existingGroup.groupId == group.groupId) {
+      existingGroup = GroupListModel("", "", [], "", "", "", 0, 0);
     } else {
-      selectedFriendsIdx.add(val);
+      existingGroup = group;
     }
-    checkedFriends = selectedFriendsIdx.isEmpty ? false : true;
+    notifyListeners();
+  }
+
+  changeSelectedFriends(Friend member) {
+    if (newGroup.memberId.contains(member.userId)) {
+      newGroup.memberId.remove(member.userId);
+    } else {
+      newGroup.memberId.add(member.userId);
+    }
     notifyListeners();
   }
 

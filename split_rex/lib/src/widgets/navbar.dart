@@ -15,7 +15,7 @@ class Navbar extends ConsumerWidget {
         selectedItemColor: const Color(0xFF4F4F4F),
         unselectedItemColor: const Color(0XFF92949C),
         currentIndex: ref.watch(routeProvider).currentNavbarIdx,
-        onTap: (value) {
+        onTap: (value) async {
           if (value == 2) {
             showDialog(
                 barrierColor: Colors.transparent,
@@ -26,13 +26,13 @@ class Navbar extends ConsumerWidget {
           } else {
             if (value == 0) {
               if (ref.watch(groupListProvider).isOwed) {
-                GroupServices().getGroupOwed(ref);
+                await GroupServices().getGroupOwed(ref);
               } else {
-                GroupServices().getGroupLent(ref);
+                await GroupServices().getGroupLent(ref);
               }
             }
-            if (value == 1) {
-              GroupServices().userGroupList(ref);
+            if (value == 1)  {
+              await GroupServices().userGroupList(ref);
             }
             ref.read(routeProvider).changeNavbarIdx(value);
           }

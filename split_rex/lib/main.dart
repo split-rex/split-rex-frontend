@@ -27,6 +27,7 @@ class MyApp extends ConsumerWidget {
         ),
       ),
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         bottomNavigationBar: 
           ref.watch(routeProvider).isNavbarRevealed 
           ? const Navbar() : null,

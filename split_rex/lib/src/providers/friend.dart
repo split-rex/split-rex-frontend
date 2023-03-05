@@ -7,11 +7,13 @@ class FriendProvider extends ChangeNotifier {
   List<Friend> friendList = <Friend>[];
   List<Friend> friendReceivedList = <Friend>[];
   List<Friend> friendSentList = <Friend>[];
+  List<Friend> friendSearched = <Friend>[];
   Friend addFriend = Friend(name: "");
   bool isReceived = true;
 
   changeUserFriendList(val) {
     friendList.clear();
+    friendSearched.clear();
 
     for (var friend in val) {
       var friendObj = Friend(
@@ -21,6 +23,7 @@ class FriendProvider extends ChangeNotifier {
       );
 
       friendList.add(friendObj);
+      friendSearched.add(friendObj);
     }
 
     notifyListeners();
@@ -76,6 +79,23 @@ class FriendProvider extends ChangeNotifier {
     isReceived = val;
 
     notifyListeners();
+  }
+
+  searchFriendName(String name) {
+    int len = friendList.length;
+    friendSearched.clear();
+
+    for (int i = 0; i < len; i++) {
+      if (friendList[i].name.toLowerCase().contains(name.toLowerCase())) {
+        friendSearched.add(friendList[i]);
+      }
+    }
+
+    notifyListeners();
+  }
+
+  Friend getFriend(memberId) {
+    return friendList.firstWhere((friend) => friend.userId == memberId);
   }
 }
 

@@ -10,3 +10,17 @@ class NewGroup {
     this.endDate = "",
   });
 }
+
+class Items {
+  String name;
+  int qty; 
+  int price;
+  bool selected;
+
+  Items({
+    this.name = "",
+    this.qty = 0,
+    this.price = 0,
+    this.selected = false
+  });
+}

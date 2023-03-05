@@ -269,7 +269,9 @@ class FriendRequestDetail extends ConsumerWidget {
                   ),
                   const SizedBox(width: 12),
                   InkWell(
-                    onTap: () async => await FriendServices().acceptFriendRequest(ref, userId),
+                    onTap: () async {
+                      await FriendServices().acceptFriendRequest(ref, userId);
+                    },
                     child: Container(
                       alignment: Alignment.center,
                       width: 117,

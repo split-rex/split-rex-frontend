@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
-import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 
@@ -13,10 +12,6 @@ class GroupServices {
   String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
 
   Future<void> userGroupList(WidgetRef ref) async {
-    SignUpModel signUpData = ref.watch(authProvider).signUpData;
-    if (signUpData.confPass != signUpData.pass) {
-      throw Exception();
-    }
     Response resp = await get(
       Uri.parse("$endpoint/userGroups"),
       headers: <String, String>{
@@ -33,10 +28,6 @@ class GroupServices {
   }
 
   Future<void> getGroupDetail(WidgetRef ref, String groupId) async {
-    SignUpModel signUpData = ref.watch(authProvider).signUpData;
-    if (signUpData.confPass != signUpData.pass) {
-      throw Exception();
-    }
     Response resp = await get(
       Uri.parse("$endpoint/groupDetail?id=$groupId"),
       headers: <String, String>{

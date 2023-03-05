@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
-import 'package:split_rex/src/providers/group_list.dart';
 
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/providers/auth.dart';
@@ -89,17 +87,16 @@ class ApiServices {
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
-    print(ref.read(errorProvider).errorMsg);
   }
 
-  Future<void> readJson(WidgetRef ref) async {
-    final String response = await rootBundle.loadString('assets/groups.json');
+  // Future<void> readJson(WidgetRef ref) async {
+  //   // final String response = await rootBundle.loadString('assets/groups.json');
 
-    var data = await json.decode(response);
-    ref.read(groupListProvider).loadGroupData(data["data"]);
-    // setState(() {
-    //   _items = data["items"];
-    //   print("..number of items ${_items.length}");
-    // });
-  }
+  //   var data = await json.decode(response);
+  //   ref.read(groupListProvider).loadGroupData(data["data"]);
+  //   // setState(() {
+  //   //   _items = data["items"];
+  //   //   print("..number of items ${_items.length}");
+  //   // });
+  // }
 }

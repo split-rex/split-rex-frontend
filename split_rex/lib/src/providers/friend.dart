@@ -11,6 +11,16 @@ class FriendProvider extends ChangeNotifier {
   Friend addFriend = Friend(name: "");
   bool isReceived = true;
 
+  clearFriendProvider() {
+    friendList = <Friend>[];
+    friendReceivedList = <Friend>[];
+    friendSentList = <Friend>[];
+    friendSearched = <Friend>[];
+    addFriend = Friend(name: "");
+    isReceived = true;
+    notifyListeners();
+  }
+
   changeUserFriendList(val) {
     friendList.clear();
     friendSearched.clear();

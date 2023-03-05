@@ -49,7 +49,7 @@ class FriendServices {
         0
       );
       ref.read(groupListProvider).changeCurrGroup(newGroup);
-      ref.read(addExpenseProvider).clearExpense();
+      ref.read(addExpenseProvider).clearAddExpenseProvider();
       ref.read(routeProvider).changeNavbarIdx(1);
       ref.read(routeProvider).changePage("group_detail");
       await GroupServices().userGroupList(ref);

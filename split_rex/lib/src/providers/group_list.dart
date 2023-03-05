@@ -6,18 +6,18 @@ import 'package:split_rex/src/model/group_model.dart';
 import '../common/logger.dart';
 
 class GroupListProvider extends ChangeNotifier {
-  List<GroupListModel> groups = <GroupListModel>[
-    GroupListModel("1232424124", "Trip2", [1, 2, 3, 4, 5, 6], "01-01-2023",
-        "02-02-2023", "owed", 20, 35)
-  ];
-  List<GroupListModel> groupsLoaded = <GroupListModel>[
-    GroupListModel("1232424124", "Trip2", [1, 2, 3, 4, 5, 6], "01-01-2023",
-        "02-02-2023", "owed", 20, 35)
-  ];
-  GroupListModel currGroup = GroupListModel("1232424124", "Trip2",
-      [1, 2, 3, 4, 5, 6], "01-01-2023", "02-02-2023", "owed", 20, 35);
-
+  List<GroupListModel> groups = <GroupListModel>[];
+  List<GroupListModel> groupsLoaded = <GroupListModel>[];
+  GroupListModel currGroup = GroupListModel("", "", [], "", "", "", 0, 0);
   bool isOwed = true;
+
+  void clearGroupListProvider() {
+    groups = <GroupListModel>[];
+    groupsLoaded = <GroupListModel>[];
+    currGroup = GroupListModel("", "", [], "", "", "", 0, 0);
+    isOwed = true;
+    notifyListeners();
+  }
 
   void changeIsOwed(bool value) {
     isOwed = value;
@@ -49,25 +49,27 @@ class GroupListProvider extends ChangeNotifier {
     // notifyListeners();
     groups.clear();
     groupsLoaded.clear();
-    for (int i = 0; i < modelList.length; i++) {
-      groups.add(GroupListModel(
-          modelList[i]["group_id"],
-          modelList[i]["name"],
-          modelList[i]["member_id"],
-          modelList[i]["start_date"],
-          modelList[i]["end_date"],
-          modelList[i]["type"],
-          modelList[i]["total_unpaid"],
-          modelList[i]["total_expense"]));
-      groupsLoaded.add(GroupListModel(
-          modelList[i]["group_id"],
-          modelList[i]["name"],
-          modelList[i]["member_id"],
-          modelList[i]["start_date"],
-          modelList[i]["end_date"],
-          modelList[i]["type"],
-          modelList[i]["total_unpaid"],
-          modelList[i]["total_expense"]));
+    if (modelList != null){
+      for (int i = 0; i < modelList.length; i++) {
+        groups.add(GroupListModel(
+            modelList[i]["group_id"],
+            modelList[i]["name"],
+            modelList[i]["member_id"],
+            modelList[i]["start_date"],
+            modelList[i]["end_date"],
+            modelList[i]["type"],
+            modelList[i]["total_unpaid"],
+            modelList[i]["total_expense"]));
+        groupsLoaded.add(GroupListModel(
+            modelList[i]["group_id"],
+            modelList[i]["name"],
+            modelList[i]["member_id"],
+            modelList[i]["start_date"],
+            modelList[i]["end_date"],
+            modelList[i]["type"],
+            modelList[i]["total_unpaid"],
+            modelList[i]["total_expense"]));
+      }
     }
 
     notifyListeners();

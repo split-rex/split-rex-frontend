@@ -6,6 +6,13 @@ class RouteProvider extends ChangeNotifier {
   int currentNavbarIdx = 0;
   bool isNavbarRevealed = false;
 
+  void clearRouteProvider() {
+    currentPage = "sign_up";
+    currentNavbarIdx = 0;
+    isNavbarRevealed = false;
+    notifyListeners();
+  }
+
   final List<String> _pagesWithNavbar = [
     "home",
     "activity",
@@ -22,8 +29,6 @@ class RouteProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
-  
 
   void changeNavbarIdx(value) {
     currentNavbarIdx = value;

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/header.dart';
+import 'package:split_rex/src/providers/group_list.dart';
 
+import '../providers/add_expense.dart';
 import '../providers/auth.dart';
+import '../providers/friend.dart';
 import '../providers/routes.dart';
 
 class Account extends ConsumerWidget {
@@ -16,9 +19,8 @@ class Account extends ConsumerWidget {
       "Account",
       "home",
       GestureDetector(
-        onTap: () {
-          ref.read(authProvider).clearUserData();
-          ref.read(routeProvider).changePage("sign_up");
+        onTap: () async {
+          await _signOut(ref);
         },
         child: Container(
           alignment: Alignment.center,
@@ -41,4 +43,12 @@ class Account extends ConsumerWidget {
       )
     );
   }
+}
+
+Future<void> _signOut(WidgetRef ref) async {
+  ref.read(routeProvider).clearRouteProvider();
+  ref.read(groupListProvider).clearGroupListProvider();
+  ref.read(friendProvider).clearFriendProvider();
+  ref.read(authProvider).clearAuthProvider();
+  ref.read(addExpenseProvider).clearAddExpenseProvider();
 }

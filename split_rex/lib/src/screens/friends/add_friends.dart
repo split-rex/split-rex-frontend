@@ -21,7 +21,7 @@ class AddFriends extends ConsumerWidget {
         children: [
           const AddFriendSearchSection(),
           (ref.watch(friendProvider).addFriend.name.isEmpty)
-              ? (ref.watch(errorProvider).errorMsg.isNotEmpty)
+              ? (ref.watch(errorProvider).errorMsg != "null")
                   ? Text(ref.watch(errorProvider).errorMsg)
                   : const SizedBox(
                       height: 0,

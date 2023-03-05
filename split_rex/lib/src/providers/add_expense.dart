@@ -10,7 +10,7 @@ class AddExpenseProvider extends ChangeNotifier {
   NewGroup newGroup = NewGroup();
   GroupListModel existingGroup = GroupListModel("", "", [], "", "", "", 0, 0);
 
-  clearExpense() {
+  clearAddExpenseProvider() {
     items.clear();
     newGroup = NewGroup();
     existingGroup = GroupListModel("", "", [], "", "", "", 0, 0);

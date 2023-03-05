@@ -84,8 +84,10 @@ class _PopupExpense extends ConsumerWidget {
                         const Divider(
                             thickness: 0, height: 2, color: Colors.white),
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
+                            await GroupServices().userGroupList(ref);
                             ref.read(routeProvider).changePage("add_expense");
+                            // ignore: use_build_context_synchronously
                             Navigator.pop(context);
                           },
                           child: const Text("Manual Input"),

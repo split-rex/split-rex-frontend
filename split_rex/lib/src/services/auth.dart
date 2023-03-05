@@ -8,6 +8,7 @@ import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/model/auth.dart';
+import 'package:split_rex/src/services/group.dart';
 
 import 'friend.dart';
 
@@ -27,7 +28,7 @@ class ApiServices {
       
       var logger = Logger();
 
-      logger.d(ref.watch(authProvider).userData);
+      logger.d(ref.watch(authProvider).userData.name);
     } else {
       ref.read(errorProvider).changeError(data["message"]);
       var logger = Logger();
@@ -56,6 +57,7 @@ class ApiServices {
       await FriendServices().userFriendList(ref);
       await FriendServices().friendRequestReceivedList(ref);
       await FriendServices().friendRequestSentList(ref);
+      await GroupServices().getGroupOwed(ref);
       ref.read(routeProvider).changePage("home");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
@@ -78,6 +80,7 @@ class ApiServices {
       await FriendServices().userFriendList(ref);
       await FriendServices().friendRequestReceivedList(ref);
       await FriendServices().friendRequestSentList(ref);
+      await GroupServices().getGroupOwed(ref);
       ref.read(routeProvider).changePage("home");
     } else {
       ref.read(errorProvider).changeError(data["message"]);

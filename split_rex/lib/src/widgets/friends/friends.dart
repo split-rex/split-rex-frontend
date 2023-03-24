@@ -162,7 +162,10 @@ class FriendsSection extends ConsumerWidget {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return FriendList(
-                      name: ref.watch(friendProvider).friendList[index].name);
+                      name: ref.watch(friendProvider).friendList[index].name,
+                      // TODO: uncomment
+                      // color: ref.watch(friendProvider).friendList[index].color,
+                  );
                 },
                 separatorBuilder: (context, index) => const Divider(
                   thickness: 1,
@@ -179,9 +182,16 @@ class FriendsSection extends ConsumerWidget {
 }
 
 class FriendList extends ConsumerWidget {
-  const FriendList({super.key, required this.name});
+  const FriendList({
+    super.key, 
+    required this.name, 
+    // TODO: ini jg
+    // required this.color
+  });
 
   final String name;
+  // TODO: ini jg
+  // final int color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -189,7 +199,15 @@ class FriendList extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
-          Initicon(text: name, size: 40),
+          Initicon(
+            text: name, 
+            size: 40,
+            // TODO: sama ini yak
+            // backgroundColor: getProfileBgColor(color),
+            // style: TextStyle(
+            //   color: getProfileTextColor(color)
+            // ),
+          ),
           Container(
               margin: const EdgeInsets.only(left: 20),
               child: Text(name,

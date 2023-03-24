@@ -167,14 +167,20 @@ class FriendRequestsBody extends ConsumerWidget {
                     padding: const EdgeInsets.only(top: 12),
                     itemBuilder: (context, index) {
                       return FriendRequestDetail(
-                          name: ref
-                              .watch(friendProvider)
-                              .friendReceivedList[index]
-                              .name,
-                          userId: ref
-                              .watch(friendProvider)
-                              .friendReceivedList[index]
-                              .userId);
+                        name: ref
+                            .watch(friendProvider)
+                            .friendReceivedList[index]
+                            .name,
+                        userId: ref
+                            .watch(friendProvider)
+                            .friendReceivedList[index]
+                            .userId,
+                        // TODO: sesuaiin ini yak
+                        // color: ref
+                        //   .watch(friendProvider)
+                        //   .friendReceivedList[index]
+                        //   .color
+                      );
                     },
                     separatorBuilder: (context, index) => const Divider(
                       thickness: 1,
@@ -212,11 +218,18 @@ class FriendRequestsBody extends ConsumerWidget {
 }
 
 class FriendRequestDetail extends ConsumerWidget {
-  const FriendRequestDetail(
-      {super.key, required this.name, required this.userId});
+  const FriendRequestDetail({
+    super.key, 
+    required this.name, 
+    required this.userId, 
+    //TODO: ini juga
+    // required this.color
+  });
 
   final String name;
   final String userId;
+  // TODO: sama ini jg
+  // final int color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -232,7 +245,14 @@ class FriendRequestDetail extends ConsumerWidget {
           children: [
             Container(
               padding: const EdgeInsets.only(left: 15),
-              child: Initicon(text: name),
+              child: Initicon(
+                text: name,
+                // TODO: sama ini yak
+                // backgroundColor: getProfileBgColor(color),
+                // style: TextStyle(
+                //   color: getProfileTextColor(color)
+                // ),
+              ),
             ),
             const SizedBox(width: 18),
             Column(

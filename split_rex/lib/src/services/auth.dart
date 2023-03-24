@@ -8,6 +8,7 @@ import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/model/auth.dart';
+import 'package:split_rex/src/model/user.dart';
 import 'package:split_rex/src/services/group.dart';
 
 import 'friend.dart';
@@ -33,6 +34,53 @@ class ApiServices {
       ref.read(errorProvider).changeError(data["message"]);
       var logger = Logger();
       logger.d(data);
+    }
+  }
+
+  Future<void> updateProfile(WidgetRef ref) async {
+    UserUpdate newUserData = ref.watch(authProvider).newUserData;
+    Response resp = await post(Uri.parse("$endpoint/updateProfile"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+      },
+      body: jsonEncode({
+        "name": newUserData.name,
+        "color": newUserData.color,
+      }));
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      ref.read(authProvider).resetNewUserData();
+      await getProfile(ref);
+    } else {
+        ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> updatePass(WidgetRef ref) async {
+    UserUpdatePass newPass = ref.watch(authProvider).newPass;
+    if (newPass.confNewPass != newPass.newPass) {
+      ref
+        .read(errorProvider)
+        .changeError("ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH");
+    } else {
+      Response resp = await post(Uri.parse("$endpoint/updatePassword"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        },
+        body: jsonEncode({
+          "old_password": newPass.oldPass,
+          "new_password": newPass.newPass,
+        }));
+      var data = jsonDecode(resp.body);
+      if (data["message"] == "SUCCESS") {
+        ref.read(authProvider).resetNewPass();
+        await getProfile(ref);
+        ref.watch(routeProvider).changePage("edit_account");
+      } else {
+          ref.read(errorProvider).changeError(data["message"]);
+      }
     }
   }
 

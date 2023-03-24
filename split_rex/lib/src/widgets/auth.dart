@@ -372,7 +372,7 @@ class FormFill extends ConsumerWidget {
                 (ref.watch(errorProvider).errorType == "ERROR: INVALID USERNAME OR PASSWORD" && placeholderText == "Username")
                   ? 0xFFF44336 : 0xffEEEEEE))),
       child: TextField(
-        key: Key(placeholderText),
+        key: key,
         controller: controller,
         cursorColor: const Color(0xFF59C4B0),
         decoration: InputDecoration(
@@ -426,7 +426,7 @@ class PasswordField extends ConsumerWidget {
                   ? 0xFFF44336
                   : 0xffEEEEEE))),
       child: TextField(
-        key: Key(placeholderText),
+        key: key,
         obscureText: passwordVisible,
         controller: controller,
         cursorColor: const Color(0xFF59C4B0),

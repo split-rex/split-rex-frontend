@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
@@ -55,12 +53,15 @@ class FriendsSearched extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        // TODO: save the color!!!
         Initicon(
             text: ref.watch(friendProvider).addFriend.name,
             size: 114,
-            backgroundColor:
-                Colors.primaries[Random().nextInt(Colors.primaries.length)]),
+            // TODO: disini ubah yak
+            // backgroundColor: getProfileBgColor(ref.watch(friendProvider).addFriend.color),
+            // style: TextStyle(
+            //   color: getProfileTextColor(ref.watch(friendProvider).addFriend.color)
+            // ),
+        ),
         const SizedBox(height: 10),
         Text(ref.watch(friendProvider).addFriend.name,
             style: const TextStyle(

@@ -7,6 +7,7 @@ import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/services/group.dart';
 import 'package:split_rex/src/widgets/group_list.dart';
 
+import '../common/functions.dart';
 import '../providers/routes.dart';
 import '../services/friend.dart';
 
@@ -17,7 +18,14 @@ class UserDetail extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        Initicon(text: ref.watch(authProvider).userData.name, size: 55),
+        Initicon(
+          text: ref.watch(authProvider).userData.name, 
+          size: 55,
+          backgroundColor: getProfileBgColor(ref.watch(authProvider).userData.color),
+          style: TextStyle(
+            color: getProfileTextColor(ref.watch(authProvider).userData.color)
+          ),
+        ),
         const SizedBox(width: 12),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Text(

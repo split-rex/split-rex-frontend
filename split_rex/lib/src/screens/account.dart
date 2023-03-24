@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/header.dart';
-import 'package:split_rex/src/providers/group_list.dart';
+import 'package:flutter_initicon/flutter_initicon.dart';
+import 'package:split_rex/src/providers/auth.dart';
+import 'package:split_rex/src/providers/routes.dart';
 
-import '../providers/add_expense.dart';
-import '../providers/auth.dart';
-import '../providers/friend.dart';
-import '../providers/routes.dart';
 
 class Account extends ConsumerWidget {
   const Account({super.key});
@@ -18,37 +16,89 @@ class Account extends ConsumerWidget {
       ref,
       "Account",
       "home",
-      GestureDetector(
-        onTap: () async {
-          await _signOut(ref);
-        },
-        child: Container(
-          alignment: Alignment.center,
-          child: Container(
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.0),
-              gradient: const LinearGradient(
-                colors: [
-                  Color(0xFF59C4B0),
-                  Color(0XFF43A7B7),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-            child: const Text("Sign Out", style: TextStyle(color: Color(0XFFFFFFFF), fontWeight: FontWeight.bold)),
-          )
+      Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: const BoxDecoration(
         ),
-      )
+        width: double.infinity,
+        child: Column(
+          children:[
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(8.0))
+              ),
+              child: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(children: [
+                        Initicon(text: ref.watch(authProvider).userData.name, size: 72),
+                        const SizedBox(width: 16.0),
+                        Text(ref.watch(authProvider).userData.name,
+                            style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF4F4F4F),
+                          )),
+                        ],
+                      ),
+                      const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(95, 79, 79, 79)),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Username",
+                            style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF4F4F4F),
+                          )),
+                          const SizedBox(height: 4.0),
+                          Text(ref.watch(authProvider).userData.username,
+                            style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                            color: Color(0xFF4F4F4F),
+                          )),
+                        ],
+                      ),
+                      const SizedBox(height: 20.0,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text("Email",
+                            style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF4F4F4F),
+                          )),
+                          SizedBox(height: 4.0),
+                          Text("placeholder@email.com",
+                            style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.red,
+                          )),
+                        ],
+                      ),
+                    ],
+                  ),
+                  InkWell(
+                    onTap: () {
+                      ref.read(routeProvider).changePage("edit_account");
+                    },
+                    child: const Icon(Icons.edit),
+                  )
+                ]
+              )
+            )
+          ]
+        )
+      ),
     );
   }
-}
-
-Future<void> _signOut(WidgetRef ref) async {
-  ref.read(routeProvider).clearRouteProvider();
-  ref.read(groupListProvider).clearGroupListProvider();
-  ref.read(friendProvider).clearFriendProvider();
-  ref.read(authProvider).clearAuthProvider();
-  ref.read(addExpenseProvider).clearAddExpenseProvider();
 }

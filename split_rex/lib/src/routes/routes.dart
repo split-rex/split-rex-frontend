@@ -4,6 +4,7 @@ import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/screens/account.dart';
 import 'package:split_rex/src/screens/activity.dart';
+import 'package:split_rex/src/screens/editaccount.dart';
 import 'package:split_rex/src/screens/friends/add_friends.dart';
 import 'package:split_rex/src/screens/friends/choose_friend.dart';
 import 'package:split_rex/src/screens/friends/friend_requests.dart';
@@ -56,13 +57,17 @@ class PageRouting extends ConsumerWidget {
       case "split_bill":
         return const SplitBill();
 
-        // group detail
+      // group detail
       case "group_detail":
         return GroupDetail(
           group: ref.watch(groupListProvider).currGroup,
         );
       case "choose_friend":
         return const ChooseFriend();
+
+      // edit account
+      case "edit_account":
+        return const EditAccount();
 
       // home
       default:

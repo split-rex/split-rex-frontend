@@ -8,6 +8,7 @@ import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/model/auth.dart';
+import 'package:split_rex/src/model/user.dart';
 import 'package:split_rex/src/services/group.dart';
 
 import 'friend.dart';
@@ -33,6 +34,33 @@ class ApiServices {
       ref.read(errorProvider).changeError(data["message"]);
       var logger = Logger();
       logger.d(data);
+    }
+  }
+
+  Future<void> updateProfile(WidgetRef ref) async {
+    UserUpdate newUserData = ref.watch(authProvider).newUserData;
+    if (newUserData.confPassword != newUserData.password) {
+      ref
+        .read(errorProvider)
+        .changeError("ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH");
+    } else {
+      Response resp = await post(Uri.parse("$endpoint/updateProfile"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        },
+        body: jsonEncode({
+          "name": newUserData.name,
+          "password": newUserData.password,
+          "color": newUserData.color,
+        }));
+      var data = jsonDecode(resp.body);
+      if (data["message"] == "SUCCESS") {
+        ref.read(authProvider).resetNewUserData();
+        await getProfile(ref);
+      } else {
+          ref.read(errorProvider).changeError(data["message"]);
+      }
     }
   }
 

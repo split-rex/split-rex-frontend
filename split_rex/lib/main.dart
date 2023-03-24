@@ -27,7 +27,10 @@ class MyApp extends ConsumerWidget {
         ),
       ),
       home: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: 
+          ref.watch(routeProvider).currentPage == "edit_account" 
+          ? true 
+          : false,
         bottomNavigationBar: 
           ref.watch(routeProvider).isNavbarRevealed 
           ? const Navbar() : null,

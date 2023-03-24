@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/providers/add_expense.dart';
+import 'package:split_rex/src/providers/auth.dart';
+import 'package:split_rex/src/providers/friend.dart';
+import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/friend.dart';
 
 Widget header(BuildContext context, WidgetRef ref, String pagename,
-        String prevPage, Widget widget) =>
+    String prevPage, Widget widget) =>
     Container(
         color: const Color(0XFFFFFFFF),
         child: Column(
@@ -16,7 +20,10 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                     padding: const EdgeInsets.only(
                         top: 50.0, bottom: 10.0, left: 5.0, right: 5.0),
                     child: Stack(
-                      alignment: Alignment.centerLeft,
+                      alignment: 
+                        ref.watch(routeProvider).currentPage == "account" 
+                        ? Alignment.centerRight 
+                        : Alignment.centerLeft,
                       children: [
                         ref.watch(routeProvider).currentPage !=
                                     ("group_list") &&
@@ -44,29 +51,38 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                           ),
                         ),
                         ref.watch(routeProvider).currentPage == ("group_list")
-                            ? Container(
-                                width: MediaQuery.of(context).size.width - 20.0,
-                                alignment: Alignment.centerRight,
-                                child: GestureDetector(
-                                    onTap: () async {
-                                      await FriendServices()
-                                          .userFriendList(ref);
-                                      await FriendServices()
-                                          .friendRequestReceivedList(ref);
-                                      await FriendServices()
-                                          .friendRequestSentList(ref);
-                                      ref
-                                          .watch(routeProvider)
-                                          .changePage("friends");
-                                    },
-                                    child: const Text("All Friends",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFF4F9A99),
-                                        ))),
+                          ? Container(
+                              width: MediaQuery.of(context).size.width - 20.0,
+                              alignment: Alignment.centerRight,
+                              child: GestureDetector(
+                                  onTap: () async {
+                                    await FriendServices()
+                                        .userFriendList(ref);
+                                    await FriendServices()
+                                        .friendRequestReceivedList(ref);
+                                    await FriendServices()
+                                        .friendRequestSentList(ref);
+                                    ref
+                                        .watch(routeProvider)
+                                        .changePage("friends");
+                                  },
+                                  child: const Text("All Friends",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF4F9A99),
+                                      ))),
+                            )
+                          : const SizedBox(width: 0),
+                          ref.watch(routeProvider).currentPage == ("account")
+                            ? InkWell(
+                                onTap: () async {
+                                  await _signOut(ref);
+                                },
+                                child: const Icon(Icons.logout,
+                                        color: Color(0XFF4F4F4F), size: 24),
                               )
-                            : const SizedBox(width: 0)
+                            : const SizedBox(width: 0),
                       ],
                     )),
               ],
@@ -90,3 +106,11 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
             ]))
           ],
         ));
+
+Future<void> _signOut(WidgetRef ref) async {
+  ref.read(groupListProvider).clearGroupListProvider();
+  ref.read(friendProvider).clearFriendProvider();
+  ref.read(authProvider).clearAuthProvider();
+  ref.read(addExpenseProvider).clearAddExpenseProvider();
+  ref.read(routeProvider).clearRouteProvider();
+}

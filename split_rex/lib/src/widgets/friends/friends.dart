@@ -135,6 +135,7 @@ class FriendsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 24),
       width: MediaQuery.of(context).size.width - 40.0,
       padding: const EdgeInsets.only(top: 25, bottom: 10, left: 20, right: 30),
       decoration: BoxDecoration(

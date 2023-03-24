@@ -39,25 +39,45 @@ class ApiServices {
 
   Future<void> updateProfile(WidgetRef ref) async {
     UserUpdate newUserData = ref.watch(authProvider).newUserData;
-    if (newUserData.confPassword != newUserData.password) {
+    Response resp = await post(Uri.parse("$endpoint/updateProfile"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+      },
+      body: jsonEncode({
+        "name": newUserData.name,
+        "color": newUserData.color,
+      }));
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      ref.read(authProvider).resetNewUserData();
+      await getProfile(ref);
+    } else {
+        ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> updatePass(WidgetRef ref) async {
+    UserUpdatePass newPass = ref.watch(authProvider).newPass;
+    if (newPass.confNewPass != newPass.newPass) {
       ref
         .read(errorProvider)
         .changeError("ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH");
     } else {
-      Response resp = await post(Uri.parse("$endpoint/updateProfile"),
+      Response resp = await post(Uri.parse("$endpoint/updatePassword"),
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
         },
         body: jsonEncode({
-          "name": newUserData.name,
-          "password": newUserData.password,
-          "color": newUserData.color,
+          "old_password": newPass.oldPass,
+          "new_password": newPass.newPass,
         }));
       var data = jsonDecode(resp.body);
       if (data["message"] == "SUCCESS") {
-        ref.read(authProvider).resetNewUserData();
+        ref.read(authProvider).resetNewPass();
         await getProfile(ref);
+        ref.watch(routeProvider).changePage("edit_account");
       } else {
           ref.read(errorProvider).changeError(data["message"]);
       }

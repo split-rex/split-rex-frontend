@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 
+import '../common/functions.dart';
 import '../providers/auth.dart';
 
 class ModalColor extends StatefulWidget {
@@ -10,47 +11,55 @@ class ModalColor extends StatefulWidget {
   const ModalColor({super.key, required this.ref});
 
   @override
-  ColorPickerDemoState createState() => ColorPickerDemoState();
+  ModalColorState createState() => ModalColorState();
 }
 
-class ColorPickerDemoState extends State<ModalColor> {
-  late Color dialogPickerColor = yellow;
-  static const Color red = Color(0xFFFFD4D4);
-  static const Color purple = Color(0xFFF3E0FF);
-  static const Color yellow = Color(0xFFFFEEC1);
-  static const Color blue = Color(0xFFC1E9FF);
-  static const Color green = Color(0xFFD3FFFC);
-  static const Color pink = Color(0xFFFFE0F8);
-  static const Color orange = Color(0xFFFDE4DA);
+class ModalColorState extends State<ModalColor> {
+  static Color red = profileColors[0].bgColor;
+  static Color orange = profileColors[1].bgColor;
+  static Color yellow = profileColors[2].bgColor;
+  static Color blue = profileColors[3].bgColor;
+  static Color teal = profileColors[4].bgColor;
+  static Color green = profileColors[5].bgColor;
+  static Color deepblue = profileColors[6].bgColor;
+  static Color purple = profileColors[7].bgColor;
+  static Color pink = profileColors[8].bgColor;
 
   final Map<ColorSwatch<Object>, String> colorsNameMap =
     <ColorSwatch<Object>, String>{
     ColorTools.createPrimarySwatch(red): 'Base Red',
-    ColorTools.createPrimarySwatch(purple): 'Base Purple',
+    ColorTools.createPrimarySwatch(orange): 'Base Orange',
     ColorTools.createPrimarySwatch(yellow): 'Base Yellow',
     ColorTools.createPrimarySwatch(blue): 'Base Blue',
+    ColorTools.createPrimarySwatch(teal): 'Base Teal',
     ColorTools.createPrimarySwatch(green): 'Blue Green',
+    ColorTools.createPrimarySwatch(deepblue): 'Base Blue Dark',
+    ColorTools.createPrimarySwatch(purple): 'Base Purple',
     ColorTools.createPrimarySwatch(pink): 'Base Pink',
-    ColorTools.createPrimarySwatch(orange): 'Blue Orange',
   };
+
+  @override
+  void initState() {
+    widget.ref.read(authProvider).resetColor();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        // Store current color before we open the dialog.
-        final Color colorBeforeDialog = dialogPickerColor;
-        // Wait for the picker to close, if dialog was dismissed,
-        // then restore the color we had before it was opened.
+        int lastColor = widget.ref.watch(authProvider).newUserData.color;
         if (!(await colorPickerDialog(widget.ref))) {
-          setState(() {
-            dialogPickerColor = colorBeforeDialog;
-          });
+          widget.ref.read(authProvider).changeUserColor(lastColor);
         }
       },
       child: Initicon(
         text: widget.ref.watch(authProvider).userData.name,
         size: 72,
+        backgroundColor: getProfileBgColor(widget.ref.watch(authProvider).newUserData.color),
+        style: TextStyle(
+          color: getProfileTextColor(widget.ref.watch(authProvider).newUserData.color)
+        ),
       ),
     );
   }
@@ -58,9 +67,10 @@ class ColorPickerDemoState extends State<ModalColor> {
   Future<bool> colorPickerDialog(WidgetRef ref) async {
     return ColorPicker(
       crossAxisAlignment: CrossAxisAlignment.center,
-      color: dialogPickerColor,
+      color: getProfileBgColor(ref.watch(authProvider).newUserData.color),
       onColorChanged: (Color color) {
-          setState(() => dialogPickerColor = color);
+        var colorCode = getProfileColorCode(color);
+        ref.read(authProvider).changeUserColor(colorCode);
       },
       width: 65,
       height: 65,

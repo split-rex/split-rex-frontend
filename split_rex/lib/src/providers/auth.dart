@@ -8,6 +8,7 @@ class AuthProvider extends ChangeNotifier {
   SignUpModel signUpData = SignUpModel();
   SignInModel signInData = SignInModel();
   UserUpdate newUserData = UserUpdate();
+  UserUpdatePass newPass = UserUpdatePass();
   User userData = User();
 
   String jwtToken = "";
@@ -36,22 +37,37 @@ class AuthProvider extends ChangeNotifier {
 
   void changeUserColor(color) {
     newUserData.color = color;
+    notifyListeners();
   }
 
   void changeUserName(name) {
     newUserData.name = name;
   }
 
-  void changeUserPass(pass) {
-    newUserData.password = pass;
+  void changeOldPass(pass) {
+    newPass.oldPass = pass;
   }
 
-  void changeUserConfPass(confPass) {
-    newUserData.confPassword = confPass;
+  void changeNewPass(pass) {
+    newPass.newPass = pass;
+  }
+
+  void changeConfNewPass(pass) {
+    newPass.confNewPass = pass;
+  }
+
+  void resetNewPass() {
+    newPass.oldPass = "";
+    newPass.newPass = "";
+    newPass.confNewPass = "";
   }
 
   void resetNewUserData() {
-    newUserData = UserUpdate();
+    newUserData.name = userData.name;
+    newUserData.color = userData.color;
+  }
+
+  void resetColor() {
     newUserData.color = userData.color;
   }
 

@@ -28,7 +28,8 @@ class MyApp extends ConsumerWidget {
       ),
       home: Scaffold(
         resizeToAvoidBottomInset: 
-          ref.watch(routeProvider).currentPage == "edit_account" 
+          ref.watch(routeProvider).currentPage == "change_password" ||
+          ref.watch(routeProvider).currentPage == "edit_account"
           ? true 
           : false,
         bottomNavigationBar: 

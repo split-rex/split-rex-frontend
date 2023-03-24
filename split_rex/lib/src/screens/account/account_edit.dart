@@ -3,10 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/header.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/widgets/auth.dart';
 import 'package:split_rex/src/widgets/modal_color.dart';
 
-import '../services/auth.dart';
+import '../../services/auth.dart';
 
 class EditAccount extends ConsumerStatefulWidget {
   const EditAccount({super.key});
@@ -16,14 +15,10 @@ class EditAccount extends ConsumerStatefulWidget {
 }
 
 class _EditAccountState extends ConsumerState<EditAccount> {
-  final confpassController = TextEditingController();
-  final passController = TextEditingController();
   final nameController = TextEditingController();
 
   @override
   void dispose() {
-    confpassController.dispose();
-    passController.dispose();
     nameController.dispose();
     super.dispose();
   }
@@ -68,14 +63,16 @@ class _EditAccountState extends ConsumerState<EditAccount> {
                                 cursorColor: const Color(0xFF59C4B0),
                                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                                 decoration: InputDecoration(
+                                  filled: true,
                                   hintText: ref.watch(authProvider).userData.name,
                                   enabledBorder: InputBorder.none,
                                   focusedBorder: InputBorder.none,
+                                  suffixIcon: const Icon(Icons.edit, color: Colors.grey)
                                 )
                               )
                             )
                           ]),
-                          const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(95, 79, 79, 79)),
+                          const Divider(thickness: 1, height: 40.0, color: Color.fromARGB(95, 79, 79, 79)),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -117,21 +114,27 @@ class _EditAccountState extends ConsumerState<EditAccount> {
                       )
                     ),
                     const SizedBox(height: 16.0),
-                    PasswordField(
-                      key: UniqueKey(),
-                      controller: passController,
-                      placeholderText: "Password"
-                    ),
-                    PasswordField(
-                      key: UniqueKey(),
-                      controller: confpassController,
-                      placeholderText: "Confirm Password"
-                    ),
                     SaveButton(
                       key: UniqueKey(), 
                       nameController: nameController,
-                      passController: passController, 
-                      confPassController: confpassController
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                      margin: const EdgeInsets.only(top: 32),
+                      child:
+                        InkWell(
+                          onTap: () {
+                            ref.read(routeProvider).changePage("change_password");
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: const [
+                            Icon(Icons.lock, color: Color(0XFF2E9281), size: 16),
+                            SizedBox(width: 8.0),
+                            Text("Change password", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Color(0XFF2E9281)))
+                            ],
+                          )
+                        ),
                     ),
                   ],
                 ),
@@ -156,22 +159,16 @@ class _EditAccountState extends ConsumerState<EditAccount> {
 
 class SaveButton extends ConsumerWidget {
   final TextEditingController nameController;
-  final TextEditingController passController;
-  final TextEditingController confPassController;
 
   const SaveButton({
     required Key key,
     required this.nameController,
-    required this.passController,
-    required this.confPassController,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
     onTap: () async {
-      ref.read(authProvider).changeUserConfPass(confPassController.text);
-      ref.read(authProvider).changeUserPass(passController.text);
       ref.read(authProvider).changeUserName(
         nameController.text == "" 
         ? ref.watch(authProvider).userData.name 

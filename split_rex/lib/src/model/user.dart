@@ -17,13 +17,21 @@ class User {
 class UserUpdate {
   int color;
   String name;
-  String password;
-  String confPassword;
   
   UserUpdate({
     this.color = 1,
     this.name = "",
-    this.password = "",
-    this.confPassword = "",
+  });
+}
+
+class UserUpdatePass {
+  String oldPass;
+  String newPass;
+  String confNewPass;
+  
+  UserUpdatePass({
+    this.oldPass = "",
+    this.newPass = "",
+    this.confNewPass = "",
   });
 }

@@ -5,6 +5,8 @@ import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/routes.dart';
 
+import '../../common/functions.dart';
+
 
 class Account extends ConsumerWidget {
   const Account({super.key});
@@ -37,7 +39,14 @@ class Account extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(children: [
-                        Initicon(text: ref.watch(authProvider).userData.name, size: 72),
+                        Initicon(
+                          text: ref.watch(authProvider).userData.name, 
+                          size: 72,
+                          backgroundColor: getProfileBgColor(ref.watch(authProvider).userData.color),
+                          style: TextStyle(
+                            color: getProfileTextColor(ref.watch(authProvider).userData.color)
+                          ),
+                        ),
                         const SizedBox(width: 16.0),
                         Text(ref.watch(authProvider).userData.name,
                             style: const TextStyle(
@@ -47,7 +56,7 @@ class Account extends ConsumerWidget {
                           )),
                         ],
                       ),
-                      const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(95, 79, 79, 79)),
+                      const Divider(thickness: 1, height: 40.0, color: Color.fromARGB(95, 79, 79, 79)),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -91,7 +100,7 @@ class Account extends ConsumerWidget {
                     onTap: () {
                       ref.read(routeProvider).changePage("edit_account");
                     },
-                    child: const Icon(Icons.edit),
+                    child: const Icon(Icons.edit, color: Colors.grey,),
                   )
                 ]
               )

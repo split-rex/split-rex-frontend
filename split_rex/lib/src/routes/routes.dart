@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/screens/account.dart';
+import 'package:split_rex/src/screens/account/account.dart';
 import 'package:split_rex/src/screens/activity.dart';
-import 'package:split_rex/src/screens/editaccount.dart';
+import 'package:split_rex/src/screens/account/account_edit.dart';
+import 'package:split_rex/src/screens/account/change_password.dart';
 import 'package:split_rex/src/screens/friends/add_friends.dart';
 import 'package:split_rex/src/screens/friends/choose_friend.dart';
 import 'package:split_rex/src/screens/friends/friend_requests.dart';
@@ -68,6 +69,8 @@ class PageRouting extends ConsumerWidget {
       // edit account
       case "edit_account":
         return const EditAccount();
+      case "change_password":
+        return const ChangePassword();
 
       // home
       default:

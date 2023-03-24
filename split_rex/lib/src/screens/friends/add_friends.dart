@@ -6,7 +6,6 @@ import 'package:split_rex/src/providers/friend.dart';
 import '../../common/header.dart';
 import '../../widgets/friends/add_friends.dart';
 
-
 class AddFriends extends ConsumerWidget {
   const AddFriends({super.key});
 
@@ -27,6 +26,8 @@ class AddFriends extends ConsumerWidget {
                       height: 0,
                     )
               : const Center(heightFactor: 2, child: FriendsSearched()),
+         
+         // TODO; adding notify for friend sent
         ],
       ),
     );

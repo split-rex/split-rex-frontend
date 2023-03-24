@@ -74,7 +74,8 @@ class FriendProvider extends ChangeNotifier {
     addFriend = Friend(
         username: val["username"],
         userId: val["user_id"],
-        name: val["fullname"]);
+        name: val["fullname"],
+        color: val["color"]);
 
     notifyListeners();
   }

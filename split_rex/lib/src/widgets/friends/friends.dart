@@ -129,7 +129,7 @@ class FriendsSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       width: 348,
-      padding: const EdgeInsets.only(top: 15, bottom: 5, left: 15, right: 30),
+      padding: const EdgeInsets.only(top: 25, bottom: 10, left: 20, right: 30),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.all(Radius.circular(12.0)),

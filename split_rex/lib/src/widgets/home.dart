@@ -47,9 +47,6 @@ class FriendRequest extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    () async {
-      FriendServices().friendRequestReceivedList(ref);
-    }();
     return Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
@@ -101,10 +98,12 @@ class FriendRequest extends ConsumerWidget {
               )),
           InkWell(
             onTap: () async {
+              await GroupServices().userGroupList(ref);
               await FriendServices().friendRequestReceivedList(ref);
               await FriendServices().friendRequestSentList(ref);
 
               ref.watch(friendProvider).resetAddFriend();
+              ref.read(routeProvider).changeNavbarIdx(1);
               ref.watch(routeProvider).changePage("friend_requests");
             },
             child: const Text("Review",
@@ -161,7 +160,7 @@ class HomeFooter extends ConsumerWidget {
           end: Alignment.bottomCenter,
         )),
         child: Container(
-          margin: const EdgeInsets.only(top: 55.0, left: 28.0, right: 28.0),
+          margin: const EdgeInsets.only(top: 55.0),
           child: Column(
             children: [
               Container(
@@ -169,6 +168,7 @@ class HomeFooter extends ConsumerWidget {
                   color: Color(0XFFF9F7F7),
                   borderRadius: BorderRadius.all(Radius.circular(24.0)),
                 ),
+                margin:  const EdgeInsets.only(left: 20, right: 20),
                 padding: const EdgeInsets.all(10.0),
                 child: Row(children: [
                   (ref.watch(groupListProvider).isOwed)
@@ -277,7 +277,6 @@ class HomeFooter extends ConsumerWidget {
 
               searchBar(context, ref),
               Expanded(flex: 5, child: showGroups(context, ref)),
-             
             ],
           ),
         ));

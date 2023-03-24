@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
@@ -59,8 +57,7 @@ class FriendsSearched extends ConsumerWidget {
         Initicon(
             text: ref.watch(friendProvider).addFriend.name,
             size: 114,
-            backgroundColor:
-                Colors.primaries[Random().nextInt(Colors.primaries.length)]),
+            backgroundColor: const Color(0xFF6DC7BD)),
         const SizedBox(height: 10),
         Text(ref.watch(friendProvider).addFriend.name,
             style: const TextStyle(
@@ -83,7 +80,9 @@ class AddBtn extends ConsumerWidget {
 
     if (errorType == "ERROR_CANNOT_ADD_SELF" ||
         errorType == "ERROR_ALREADY_FRIEND" ||
-        errorType == "ERROR_USER_NOT_FOUND") {
+        errorType == "ERROR_USER_NOT_FOUND" ||
+        errorType == "ERROR_ALREADY_REQUESTED_SENT" ||
+        errorType == "ERROR_ALREADY_REQUESTED_RECEIVED") {
       return Text(errorMsg);
     }
 

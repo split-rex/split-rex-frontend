@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,6 +6,8 @@ import 'package:split_rex/src/providers/auth.dart';
 
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:split_rex/src/providers/error.dart';
+import 'package:split_rex/src/providers/firebaseauth.dart';
+import 'package:split_rex/src/providers/routes.dart';
 import '../services/auth.dart';
 
 const String assetName = 'assets/LogoSVG.svg';
@@ -77,13 +80,17 @@ class _SignInFormState extends State<SignInForm> {
             type: "signin",
           ),
           const SizedBox(height: 30),
-          SignInButton(Buttons.Google, onPressed: () {
-            // sign in google
-          }),
+          SignInFirebase(
+            key: UniqueKey(),
+            type: "google",
+            placeholdertext: "Sign In with Google",
+          ),
           const SizedBox(height: 5),
-          SignInButton(Buttons.Facebook, onPressed: () {
-            //  sign in facebook
-          }),
+          SignInFirebase(
+            key: UniqueKey(),
+            type: "facebook",
+            placeholdertext: "Sign In with Facebook",
+          ),
           const SizedBox(height: 10),
         ]));
   }
@@ -158,19 +165,38 @@ class _SignUpFormState extends State<SignUpForm> {
             type: "signup",
           ),
           const SizedBox(height: 30),
-          SignInButton(Buttons.Google,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0)), onPressed: () {
-            // sign up google
-          }),
+          SignInFirebase(
+            key: UniqueKey(),
+            placeholdertext: "Sign Up with Google",
+            type: "google",
+          ),
           const SizedBox(height: 5),
-          SignInButton(Buttons.Facebook,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0)), onPressed: () {
-            //  sign up facebook
-          }),
+          SignInFirebase(
+              key: UniqueKey(),
+              placeholdertext: "Sign Up with Facebook",
+              type: "facebook"),
           const SizedBox(height: 10),
         ]));
+  }
+}
+
+class SignInFirebase extends ConsumerWidget {
+  final String placeholdertext;
+  final String type;
+
+  const SignInFirebase(
+      {required Key key, required this.placeholdertext, required this.type})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SignInButton(
+      type == "google" ? Buttons.Google : Buttons.Facebook,
+      text: placeholdertext,
+      onPressed: () async {
+        await ref.read(googleSignInProvider).googleLogin();
+      },
+    );
   }
 }
 
@@ -245,39 +271,11 @@ class SubmitBtn extends ConsumerWidget {
               padding: const EdgeInsets.all(16),
               height: 70,
               decoration: BoxDecoration(
-                  color: Color(
-                          ref.watch(errorProvider).errorType ==
+                  color: Color(ref.watch(errorProvider).errorType ==
                               "ERROR_FAILED_REGISTER" ||
-                          ref
-                                  .watch(errorProvider)
-                                  .errorType ==
+                          ref.watch(errorProvider).errorType ==
                               "ERROR_USERNAME_EXISTED" ||
-                          ref
-                                  .watch(errorProvider)
-                                  .errorType ==
-                              "ERROR_EMAIL_EXISTED" ||
                           ref.watch(errorProvider).errorType ==
-                              "ERROR: INVALID USERNAME OR PASSWORD" ||
-                          ref.watch(errorProvider).errorType ==
-                              "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" ||
-                          ref.watch(errorProvider).errorType ==
-                            "ERROR_INVALID_EMAIL"
-                      ? 0xFFF44336
-                      : 0xFF388E3C),
-                  borderRadius: const BorderRadius.all(Radius.circular(15))),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                     ref.watch(errorProvider).errorType ==
-                              "ERROR_FAILED_REGISTER" ||
-                          ref
-                                  .watch(errorProvider)
-                                  .errorType ==
-                              "ERROR_USERNAME_EXISTED" ||
-                          ref
-                                  .watch(errorProvider)
-                                  .errorType ==
                               "ERROR_EMAIL_EXISTED" ||
                           ref.watch(errorProvider).errorType ==
                               "ERROR: INVALID USERNAME OR PASSWORD" ||
@@ -285,6 +283,25 @@ class SubmitBtn extends ConsumerWidget {
                               "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" ||
                           ref.watch(errorProvider).errorType ==
                               "ERROR_INVALID_EMAIL"
+                      ? 0xFFF44336
+                      : 0xFF388E3C),
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    ref.watch(errorProvider).errorType ==
+                                "ERROR_FAILED_REGISTER" ||
+                            ref.watch(errorProvider).errorType ==
+                                "ERROR_USERNAME_EXISTED" ||
+                            ref.watch(errorProvider).errorType ==
+                                "ERROR_EMAIL_EXISTED" ||
+                            ref.watch(errorProvider).errorType ==
+                                "ERROR: INVALID USERNAME OR PASSWORD" ||
+                            ref.watch(errorProvider).errorType ==
+                                "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" ||
+                            ref.watch(errorProvider).errorType ==
+                                "ERROR_INVALID_EMAIL"
                         ? ref.watch(errorProvider).errorMsg
                         : "Registered successfully!",
                     style: const TextStyle(
@@ -365,12 +382,20 @@ class FormFill extends ConsumerWidget {
             ),
           ],
           border: Border.all(
-              color: Color(
-                (ref.watch(errorProvider).errorType == "ERROR_USERNAME_EXISTED" && placeholderText == "Username") ||
-                (ref.watch(errorProvider).errorType == "ERROR_INVALID_EMAIL" && placeholderText == "E-mail") ||
-                (ref.watch(errorProvider).errorType == "ERROR_EMAIL_EXISTED" && placeholderText == "E-mail") ||
-                (ref.watch(errorProvider).errorType == "ERROR: INVALID USERNAME OR PASSWORD" && placeholderText == "Username")
-                  ? 0xFFF44336 : 0xffEEEEEE))),
+              color: Color((ref.watch(errorProvider).errorType ==
+                              "ERROR_USERNAME_EXISTED" &&
+                          placeholderText == "Username") ||
+                      (ref.watch(errorProvider).errorType ==
+                              "ERROR_INVALID_EMAIL" &&
+                          placeholderText == "E-mail") ||
+                      (ref.watch(errorProvider).errorType ==
+                              "ERROR_EMAIL_EXISTED" &&
+                          placeholderText == "E-mail") ||
+                      (ref.watch(errorProvider).errorType ==
+                              "ERROR: INVALID USERNAME OR PASSWORD" &&
+                          placeholderText == "Username")
+                  ? 0xFFF44336
+                  : 0xffEEEEEE))),
       child: TextField(
         key: Key(placeholderText),
         controller: controller,
@@ -419,10 +444,15 @@ class PasswordField extends ConsumerWidget {
                 color: Color(0xffEEEEEE)),
           ],
           border: Border.all(
-              color: Color(
-                (ref.watch(errorProvider).errorType == "ERROR: INVALID USERNAME OR PASSWORD" && placeholderText == "Password") ||
-                (ref.watch(errorProvider).errorType == "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" && placeholderText == "Password") ||
-                (ref.watch(errorProvider).errorType == "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" && placeholderText == "Confirm Password") 
+              color: Color((ref.watch(errorProvider).errorType ==
+                              "ERROR: INVALID USERNAME OR PASSWORD" &&
+                          placeholderText == "Password") ||
+                      (ref.watch(errorProvider).errorType ==
+                              "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" &&
+                          placeholderText == "Password") ||
+                      (ref.watch(errorProvider).errorType ==
+                              "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" &&
+                          placeholderText == "Confirm Password")
                   ? 0xFFF44336
                   : 0xffEEEEEE))),
       child: TextField(

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/model/user.dart';
 
+
 class AuthProvider extends ChangeNotifier {
   SignUpModel signUpData = SignUpModel();
   SignInModel signInData = SignInModel();
@@ -50,3 +51,4 @@ class AuthProvider extends ChangeNotifier {
 }
 
 final authProvider = ChangeNotifierProvider((ref) => AuthProvider());
+

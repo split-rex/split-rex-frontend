@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/header.dart';
+import 'package:split_rex/src/providers/firebaseauth.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 
 import '../providers/add_expense.dart';
@@ -46,6 +48,9 @@ class Account extends ConsumerWidget {
 }
 
 Future<void> _signOut(WidgetRef ref) async {
+  if (FirebaseAuth.instance.currentUser != null) {
+    await ref.read(googleSignInProvider).googleLogout();
+  }
   ref.read(routeProvider).clearRouteProvider();
   ref.read(groupListProvider).clearGroupListProvider();
   ref.read(friendProvider).clearFriendProvider();

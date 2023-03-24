@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,22 +38,22 @@ class ApiServices {
   }
 
   bool isEmailValid(email) {
-      return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+    return RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(email);
   }
 
   Future<void> postRegister(WidgetRef ref) async {
+    log("postRegister");
     SignUpModel signUpData = ref.watch(authProvider).signUpData;
     if (!isEmailValid(signUpData.email)) {
-      ref
-          .read(errorProvider)
-          .changeError("ERROR_INVALID_EMAIL");
-    }
-    else if (signUpData.confPass != signUpData.pass) {
+      ref.read(errorProvider).changeError("ERROR_INVALID_EMAIL");
+    } else if (signUpData.confPass != signUpData.pass) {
       ref
           .read(errorProvider)
           .changeError("ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH");
     } else {
+      log("postRegisterefefefe");
       Response resp = await post(Uri.parse("$endpoint/register"),
           headers: <String, String>{'Content-Type': 'application/json'},
           body: jsonEncode(<String, String>{
@@ -63,6 +64,7 @@ class ApiServices {
           }));
       var data = jsonDecode(resp.body);
       if (data["message"] == "SUCCESS") {
+        log("SUCCESS");
         ref.read(errorProvider).changeError(data["message"]);
         ref.read(authProvider).changeJwtToken(data["data"]);
         await getProfile(ref);
@@ -71,6 +73,7 @@ class ApiServices {
         await FriendServices().friendRequestSentList(ref);
         ref.read(routeProvider).changePage("home");
       } else {
+        
         // print(data["message"]);
         ref.read(errorProvider).changeError(data["message"]);
         // print(ref.watch(errorProvider).errorType);

@@ -84,7 +84,9 @@ class AddBtn extends ConsumerWidget {
 
     if (errorType == "ERROR_CANNOT_ADD_SELF" ||
         errorType == "ERROR_ALREADY_FRIEND" ||
-        errorType == "ERROR_USER_NOT_FOUND") {
+        errorType == "ERROR_USER_NOT_FOUND" ||
+        errorType == "ERROR_ALREADY_REQUESTED_SENT" ||
+        errorType == "ERROR_ALREADY_REQUESTED_RECEIVED") {
       return Text(errorMsg);
     }
 

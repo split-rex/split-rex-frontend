@@ -106,7 +106,6 @@ class FriendRequest extends ConsumerWidget {
               )),
           InkWell(
             onTap: () async {
-              await GroupServices().userGroupList(ref);
               await FriendServices().friendRequestReceivedList(ref);
               await FriendServices().friendRequestSentList(ref);
 
@@ -172,11 +171,11 @@ class HomeFooter extends ConsumerWidget {
           child: Column(
             children: [
               Container(
+                width: MediaQuery.of(context).size.width - 40.0,
                 decoration: const BoxDecoration(
                   color: Color(0XFFF9F7F7),
                   borderRadius: BorderRadius.all(Radius.circular(24.0)),
                 ),
-                margin:  const EdgeInsets.only(left: 20, right: 20),
                 padding: const EdgeInsets.all(10.0),
                 child: Row(children: [
                   (ref.watch(groupListProvider).isOwed)

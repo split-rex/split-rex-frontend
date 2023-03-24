@@ -10,7 +10,7 @@ class User {
     this.name = "",
     this.username = "",
     // this.email = "",
-    this.color = 0
+    this.color = 1
   });
 }
 

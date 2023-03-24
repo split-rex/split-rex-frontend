@@ -25,6 +25,8 @@ class FriendServices {
         "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
       },
     );
+    var logger = Logger();
+    logger.d(resp.body);
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       ref.read(friendProvider).changeUserFriendList(data["data"]);

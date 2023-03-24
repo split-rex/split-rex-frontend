@@ -143,6 +143,7 @@ class ApiServices {
       await FriendServices().friendRequestReceivedList(ref);
       await FriendServices().friendRequestSentList(ref);
       await GroupServices().getGroupOwed(ref);
+      await GroupServices().userGroupList(ref);
       ref.read(routeProvider).changePage("home");
     } else {
       ref.read(errorProvider).changeError(data["message"]);

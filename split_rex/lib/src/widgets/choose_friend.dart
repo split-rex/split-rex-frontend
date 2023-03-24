@@ -49,13 +49,12 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
                     bottomRight: Radius.circular(4.0)),
               ),
               child: ListView.separated(
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding: EdgeInsets.zero,
                 itemCount: ref.watch(friendProvider).friendList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty
+                      onTap: ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty
                           ? null
                           : () {
                               ref
@@ -81,11 +80,12 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 16,
-                                  color: ref
+                                  color: 
+                                  ref
                                           .watch(addExpenseProvider)
-                                          .existingGroup.memberId.isNotEmpty
-                                      ? const Color.fromARGB(130, 79, 79, 79)
-                                      : const Color(0XFF4F4F4F),
+                                          .existingGroup.members.isNotEmpty
+                                      ? const Color.fromARGB(130, 79, 79, 79) :
+                                       const Color(0XFF4F4F4F),
                                 ))
                           ]),
                           Checkbox(
@@ -96,7 +96,7 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
                                   ? true
                                   : false,
                               onChanged:
-                                  ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty
+                                  ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty
                                       ? null
                                       : (bool? value) {
                                           ref

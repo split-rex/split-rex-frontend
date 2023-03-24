@@ -30,6 +30,7 @@ class FriendProvider extends ChangeNotifier {
         userId: friend["user_id"],
         username: friend["username"],
         name: friend["fullname"],
+        color: friend["color"],
       );
 
       friendList.add(friendObj);
@@ -47,6 +48,7 @@ class FriendProvider extends ChangeNotifier {
         userId: friend["user_id"],
         username: friend["username"],
         name: friend["fullname"],
+        color: friend["color"],
       );
 
       friendReceivedList.add(friendObj);
@@ -62,6 +64,7 @@ class FriendProvider extends ChangeNotifier {
         userId: friend["user_id"],
         username: friend["username"],
         name: friend["fullname"],
+        color: friend["color"],
       );
 
       friendSentList.add(friendObj);

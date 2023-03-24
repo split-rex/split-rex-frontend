@@ -8,6 +8,6 @@ class Friend {
     this.userId = "",
     this.name = "",
     this.username = "",
-    this.color = -1,
+    this.color = 1,
   });
 }

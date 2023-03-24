@@ -27,6 +27,7 @@ class GroupServices {
     }
   }
 
+  // TODO: kayanya bisa diilangin.... :"V
   Future<void> getGroupDetail(WidgetRef ref, String groupId) async {
     Response resp = await get(
       Uri.parse("$endpoint/groupDetail?id=$groupId"),
@@ -37,9 +38,7 @@ class GroupServices {
     );
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-      // userFriendList(ref);
-      // friendRequestReceivedList(ref);
-      // friendRequestSentList(ref);
+      // ref.read(groupListProvider).changeCurrGroupDetail(data["data"]);
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
@@ -50,7 +49,7 @@ class GroupServices {
         await rootBundle.loadString('assets/groupsOwed.json');
     var data = await json.decode(response);
 
-    ref.read(groupListProvider).loadGroupData(data["data"]);
+    // ref.read(groupListProvider).loadGroupData(data["data"]);
 
   }
 
@@ -58,6 +57,6 @@ class GroupServices {
     final String response =
         await rootBundle.loadString('assets/groupLent.json');
     var data = await json.decode(response);
-    ref.read(groupListProvider).loadGroupData(data["data"]);
+    // ref.read(groupListProvider).loadGroupData(data["data"]);
   }
 }

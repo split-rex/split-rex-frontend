@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/model/add_expense.dart';
-import 'package:split_rex/src/model/group_model.dart';
 
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
@@ -36,19 +35,7 @@ class FriendServices {
     var data = jsonDecode(resp.body);
     logger.d(data);
     if (data["message"] == "SUCCESS") {
-      // TODO: gabungin sama hasil pat yg trakhir
-      NewGroup currentGroup = ref.watch(addExpenseProvider).newGroup;
-      GroupListModel newGroup = GroupListModel(
-        "dummy", 
-        currentGroup.name, 
-        currentGroup.memberId, 
-        currentGroup.startDate, 
-        currentGroup.endDate, 
-        "HARDCODED", 
-        0, 
-        0
-      );
-      ref.read(groupListProvider).changeCurrGroup(newGroup);
+      ref.read(groupListProvider).changeCurrGroup(data["data"]);
       ref.read(addExpenseProvider).clearAddExpenseProvider();
       ref.read(routeProvider).changeNavbarIdx(1);
       ref.read(routeProvider).changePage("group_detail");

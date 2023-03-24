@@ -21,6 +21,8 @@ import 'package:split_rex/src/screens/friends/friends.dart';
 import 'package:split_rex/src/screens/expense/edit_items.dart';
 import 'package:split_rex/src/screens/expense/split_bill.dart';
 
+import '../screens/groups/group_setting.dart';
+
 class PageRouting extends ConsumerWidget {
   const PageRouting({super.key});
 
@@ -71,6 +73,14 @@ class PageRouting extends ConsumerWidget {
         return const EditAccount();
       case "change_password":
         return const ChangePassword();
+
+      case "group_settings":
+        return GroupSettings(
+          group: ref.watch(groupListProvider).currGroup,
+        );
+
+      case "choose_friend_group_settings":
+        return const ChooseFriendInGroupSetting();
 
       // home
       default:

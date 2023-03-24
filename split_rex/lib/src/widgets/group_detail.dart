@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/common/bubble_member.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/model/group_model.dart';
 import 'package:split_rex/src/providers/routes.dart';
@@ -27,88 +28,67 @@ class GroupInfo extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Material(
       type: MaterialType.transparency,
-      child: Row(
+      child: Column(
         children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            InkWell(
-              onTap: () => ref.watch(routeProvider).changePage(prevPage),
-              child: const Positioned(
-                  top: 100,
-                  child: Icon(Icons.navigate_before,
-                      color: Colors.white, size: 35)),
-            ),
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 28,
-                color: Colors.white,
-              ),
-            ),
-            Text(
-              convertDate(startDate) + "-" + convertDate(endDate),
-              style: const TextStyle(
-                fontWeight: FontWeight.w400,
-                color: Colors.white,
-                fontSize: 12,
-              ),
-            ),
-          ]),
-          const Spacer(),
-          Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            Text(
-              "Rp.$totalExpense",
-              style: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 20,
-                color: Colors.white,
-              ),
-            ),
-            Stack(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Colors.red,
-                      child: profilePicture(
-                          "Pak Fitra", 16.0), // Provide your custom image
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Colors.red,
-                      child: profilePicture(
-                          "Michael Jordan", 16.0), // Provide your custom image
-                    ),
-                  ),
-                ),
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: InkWell(
-                      onTap: () {
-                        ref.read(routeProvider).changePage("choose_friend");
+          Row(
+            children: [
+              InkWell(
+                  onTap: () => {
+                        ref.read(routeProvider).changeNavbarIdx(1),
+                        ref.watch(routeProvider).changePage(prevPage),
                       },
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: CircleAvatar(
-                          radius: 18,
-                          backgroundColor: Colors.red,
-                          child: profilePicture(
-                              "John Doe", 16.0), // Provide your custom image
-                        ),
-                      ),
-                    )),
+                  child: const Icon(Icons.navigate_before,
+                      color: Colors.white, size: 35)),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 28,
+                  color: Colors.white,
+                ),
+              ),
+              const Spacer(),
+              InkWell(
+                onTap: () =>
+                    ref.watch(routeProvider).changePage("group_settings"),
+                child:
+                    const Icon(Icons.settings, color: Colors.white, size: 30),
+              )
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 8, left: 10),
+            child: Row(
+              children: [
+                Text(
+                  "Rp.$totalExpense",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+                const Spacer(),
+                getBubbleMember()
               ],
             ),
-          ])
+          ),
+          Container(
+            padding: const EdgeInsets.only(left: 10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  convertDate(startDate) + "-" + convertDate(endDate),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -123,7 +103,7 @@ class BalanceInfo extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
         decoration: const BoxDecoration(
           color: Color(0X25FFFFFF),
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
@@ -175,14 +155,14 @@ class GroupDetailHeader extends ConsumerWidget {
           end: Alignment.bottomCenter,
         )),
         padding: const EdgeInsets.only(
-            top: 72.0, right: 28.0, left: 28.0, bottom: 40.0),
+            top: 72.0, right: 28.0, left: 28.0, bottom: 20.0),
         child: Column(children: [
           GroupInfo(
             title: group.name,
             startDate: group.startDate,
             endDate: group.endDate,
             totalExpense: group.totalExpense,
-            memberId: group.memberId,
+            memberId: group.members,
             prevPage: prevPage,
           ),
           const SizedBox(height: 16),
@@ -222,6 +202,7 @@ class GroupDetailContent extends ConsumerWidget {
               ),
               Expanded(
                   child: ListView.builder(
+                      padding: EdgeInsets.zero,
                       itemCount: ref.watch(groupListProvider).groups.length,
                       itemBuilder: (BuildContext context, int index) {
                         return const TransactionItem();

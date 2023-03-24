@@ -84,7 +84,7 @@ Widget addExistingGroup(BuildContext context, WidgetRef ref) {
                 value: ref.watch(addExpenseProvider).existingGroup.groupId == ref.watch(groupListProvider).groups[index].groupId,
                 tileColor: Colors.white,
                 onChanged: (ref.watch(addExpenseProvider).newGroup.memberId.isNotEmpty ||
-                            ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty) &&
+                            ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty) &&
                         ref.watch(addExpenseProvider).existingGroup.groupId != ref.watch(groupListProvider).groups[index].groupId
                     ? null
                     : (bool? value) {
@@ -149,7 +149,7 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty
+                      onTap: ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty
                           ? null
                           : () {
                               ref
@@ -177,7 +177,7 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
                                   fontSize: 16,
                                   color: ref
                                           .watch(addExpenseProvider)
-                                          .existingGroup.memberId.isNotEmpty
+                                          .existingGroup.members.isNotEmpty
                                       ? const Color.fromARGB(130, 79, 79, 79)
                                       : const Color(0XFF4F4F4F),
                                 ))
@@ -188,7 +188,7 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
                                       .newGroup.memberId.
                                       contains(ref.watch(friendProvider).friendSearched[index].userId),
                               onChanged:
-                                  ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty
+                                  ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty
                                       ? null
                                       : (bool? value) {
                                           ref
@@ -211,7 +211,7 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
 
 Widget addButton(WidgetRef ref) => GestureDetector(
     onTap: () {
-      ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty ||
+      ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty ||
               ref.watch(addExpenseProvider).newGroup.memberId.isNotEmpty
           ? ref.read(routeProvider).changePage("edit_items")
           : null;
@@ -237,7 +237,7 @@ Widget addButton(WidgetRef ref) => GestureDetector(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-                  color: ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty ||
+                  color: ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty ||
                           ref.watch(addExpenseProvider).newGroup.memberId.isNotEmpty
                       ? const Color(0XFF6DC7BD)
                       : const Color.fromARGB(50, 79, 79, 79),

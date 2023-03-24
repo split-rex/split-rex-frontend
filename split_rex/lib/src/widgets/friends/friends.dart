@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/providers/routes.dart';
 
+import '../../common/functions.dart';
 import '../../providers/friend.dart';
 
 class AddFriendsSection extends ConsumerWidget {
@@ -17,7 +18,7 @@ class AddFriendsSection extends ConsumerWidget {
       },
       child: Container(
         height: 60,
-        width: 348,
+        width: MediaQuery.of(context).size.width - 40.0,
         padding: const EdgeInsets.only(left: 20, right: 20),
         alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
@@ -32,13 +33,19 @@ class AddFriendsSection extends ConsumerWidget {
             ),
           ],
         ),
-        child: const Text(
-          "Add Friends",
-          style: TextStyle(
-              color: Color(0xFF4F4F4F),
-              fontWeight: FontWeight.bold,
-              fontSize: 16),
-        ),
+        child: Row(
+            children: const [
+              Icon(Icons.group_add),
+              SizedBox(width: 10),
+              Text(
+                "Add Friends",
+                style: TextStyle(
+                    color: Color(0xFF4F4F4F),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+              ),
+            ],
+          )
       ),
     );
   }
@@ -63,7 +70,7 @@ class FriendRequestSection extends ConsumerWidget {
       onTap: () => ref.watch(routeProvider).changePage("friend_requests"),
       child: Container(
           height: 72,
-          width: 348,
+          width: MediaQuery.of(context).size.width - 40.0,
           padding:
               const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
           decoration: BoxDecoration(
@@ -128,7 +135,7 @@ class FriendsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      width: 348,
+      width: MediaQuery.of(context).size.width - 40.0,
       padding: const EdgeInsets.only(top: 25, bottom: 10, left: 20, right: 30),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -162,9 +169,8 @@ class FriendsSection extends ConsumerWidget {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return FriendList(
-                      name: ref.watch(friendProvider).friendList[index].name,
-                      // TODO: uncomment
-                      // color: ref.watch(friendProvider).friendList[index].color,
+                    name: ref.watch(friendProvider).friendList[index].name,
+                    color: ref.watch(friendProvider).friendList[index].color,
                   );
                 },
                 separatorBuilder: (context, index) => const Divider(
@@ -182,16 +188,10 @@ class FriendsSection extends ConsumerWidget {
 }
 
 class FriendList extends ConsumerWidget {
-  const FriendList({
-    super.key, 
-    required this.name, 
-    // TODO: ini jg
-    // required this.color
-  });
+  const FriendList({super.key, required this.name, required this.color});
 
   final String name;
-  // TODO: ini jg
-  // final int color;
+  final int color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -200,13 +200,10 @@ class FriendList extends ConsumerWidget {
       child: Row(
         children: [
           Initicon(
-            text: name, 
+            text: name,
             size: 40,
-            // TODO: sama ini yak
-            // backgroundColor: getProfileBgColor(color),
-            // style: TextStyle(
-            //   color: getProfileTextColor(color)
-            // ),
+            backgroundColor: getProfileBgColor(color),
+            style: TextStyle(color: getProfileTextColor(color)),
           ),
           Container(
               margin: const EdgeInsets.only(left: 20),

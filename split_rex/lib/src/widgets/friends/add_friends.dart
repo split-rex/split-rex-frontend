@@ -5,6 +5,8 @@ import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/services/friend.dart';
 
+import '../../common/functions.dart';
+
 class AddFriendSearchSection extends ConsumerWidget {
   const AddFriendSearchSection({super.key});
 
@@ -56,11 +58,10 @@ class FriendsSearched extends ConsumerWidget {
         Initicon(
             text: ref.watch(friendProvider).addFriend.name,
             size: 114,
-            // TODO: disini ubah yak
-            // backgroundColor: getProfileBgColor(ref.watch(friendProvider).addFriend.color),
-            // style: TextStyle(
-            //   color: getProfileTextColor(ref.watch(friendProvider).addFriend.color)
-            // ),
+            backgroundColor: getProfileBgColor(ref.watch(friendProvider).addFriend.color),
+            style: TextStyle(
+              color: getProfileTextColor(ref.watch(friendProvider).addFriend.color)
+            ),
         ),
         const SizedBox(height: 10),
         Text(ref.watch(friendProvider).addFriend.name,

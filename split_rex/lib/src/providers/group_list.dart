@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logger/logger.dart';
 
 import 'package:split_rex/src/model/group_model.dart';
 
@@ -69,6 +68,7 @@ class GroupListProvider extends ChangeNotifier {
             userId: currMember["member_id"],
             name: currMember["name"],
             username: currMember["username"],
+            color: currMember["color"],
           ));
         }
 

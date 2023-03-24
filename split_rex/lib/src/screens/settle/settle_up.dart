@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/header.dart';
-// import '../../widgets/settle/settle_up.dart';
+import '../../widgets/settle/settle_up.dart';
 
 class SettleUp extends ConsumerWidget {
   const SettleUp({super.key});
@@ -14,7 +14,11 @@ class SettleUp extends ConsumerWidget {
       ref,
       "Settle Up",
       "group_detail",
-      Column(),
+      Column(
+        children: const [
+          SettleUpBody()
+        ],
+      ),
     );
   }
 }

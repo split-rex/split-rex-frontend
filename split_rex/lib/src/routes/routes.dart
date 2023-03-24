@@ -19,7 +19,7 @@ import 'package:split_rex/src/screens/friends/friends.dart';
 import 'package:split_rex/src/screens/expense/edit_items.dart';
 import 'package:split_rex/src/screens/expense/split_bill.dart';
 
-// import 'package:split_rex/src/screens/settle/settle_up.dart';
+import 'package:split_rex/src/screens/settle/settle_up.dart';
 import 'package:split_rex/src/screens/settle/unsettled_payments.dart';
 
 class PageRouting extends ConsumerWidget {
@@ -68,15 +68,15 @@ class PageRouting extends ConsumerWidget {
         return const ChooseFriend();
 
       // settle payment
-      // case "settle_up":
-      //   return const SettleUp();
+      case "settle_up":
+        return const SettleUp();
 
       case "unsettled_payments":
         return const UnsettledPayments();
 
       // home
       default:
-        return const Home();
+        return const SettleUp();
     }
   }
 }

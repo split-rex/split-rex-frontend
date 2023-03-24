@@ -15,13 +15,13 @@ class GroupInfo extends ConsumerWidget {
       required this.startDate,
       required this.endDate,
       required this.totalExpense,
-      required this.memberId,
+      required this.members,
       required this.prevPage});
   final String title;
   final String startDate;
   final String endDate;
   final int totalExpense;
-  final List<dynamic> memberId;
+  final List<dynamic> members;
   final String prevPage;
 
   @override
@@ -69,7 +69,7 @@ class GroupInfo extends ConsumerWidget {
                   ),
                 ),
                 const Spacer(),
-                getBubbleMember()
+                getBubbleMember(members)
               ],
             ),
           ),
@@ -162,7 +162,7 @@ class GroupDetailHeader extends ConsumerWidget {
             startDate: group.startDate,
             endDate: group.endDate,
             totalExpense: group.totalExpense,
-            memberId: group.members,
+            members: group.members,
             prevPage: prevPage,
           ),
           const SizedBox(height: 16),

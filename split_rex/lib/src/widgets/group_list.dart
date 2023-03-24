@@ -147,7 +147,7 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                   fontSize: 18,
                                 ),
                               ),
-                              getBubbleMember(),
+                              getBubbleMember(ref.watch(groupListProvider).groups[index].members),
                             ]),
                       ]),
                 ));

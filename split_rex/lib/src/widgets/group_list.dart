@@ -5,9 +5,6 @@ import 'package:split_rex/src/common/functions.dart';
 
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/services/group.dart';
-
-import '../common/profile_picture.dart';
 
 Widget searchBar(BuildContext context, WidgetRef ref) => Container(
     width: MediaQuery.of(context).size.width - 40.0,

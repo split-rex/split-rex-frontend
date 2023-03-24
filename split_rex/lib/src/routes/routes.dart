@@ -79,6 +79,9 @@ class PageRouting extends ConsumerWidget {
           group: ref.watch(groupListProvider).currGroup,
         );
 
+      case "group_settings_edit":
+        return const GroupSettingsEdit();
+
       case "choose_friend_group_settings":
         return const ChooseFriendInGroupSetting();
 

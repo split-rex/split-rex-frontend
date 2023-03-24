@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logger/logger.dart';
 
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/providers/auth.dart';
@@ -26,14 +25,8 @@ class ApiServices {
     if (data["message"] == "SUCCESS") {
       ref.read(authProvider).loadUserData(data["data"]);
       ref.read(errorProvider).changeError(data["message"]);
-
-      var logger = Logger();
-
-      logger.d(ref.watch(authProvider).userData.name);
     } else {
       ref.read(errorProvider).changeError(data["message"]);
-      var logger = Logger();
-      logger.d(data);
     }
   }
 

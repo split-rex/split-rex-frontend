@@ -19,6 +19,9 @@ import 'package:split_rex/src/screens/friends/friends.dart';
 import 'package:split_rex/src/screens/expense/edit_items.dart';
 import 'package:split_rex/src/screens/expense/split_bill.dart';
 
+// import 'package:split_rex/src/screens/settle/settle_up.dart';
+import 'package:split_rex/src/screens/settle/unsettled_payments.dart';
+
 class PageRouting extends ConsumerWidget {
   const PageRouting({super.key});
 
@@ -56,13 +59,20 @@ class PageRouting extends ConsumerWidget {
       case "split_bill":
         return const SplitBill();
 
-        // group detail
+      // group detail
       case "group_detail":
         return GroupDetail(
           group: ref.watch(groupListProvider).currGroup,
         );
       case "choose_friend":
         return const ChooseFriend();
+
+      // settle payment
+      // case "settle_up":
+      //   return const SettleUp();
+
+      case "unsettled_payments":
+        return const UnsettledPayments();
 
       // home
       default:

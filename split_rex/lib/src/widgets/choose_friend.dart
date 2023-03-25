@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/common/profile_picture.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
 import 'package:split_rex/src/providers/friend.dart';
+import 'package:flutter_initicon/flutter_initicon.dart';
+
+import '../common/functions.dart';
 
 
 Widget searchBar() => Container(
@@ -65,12 +67,27 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(children: [
-                            profilePicture(
-                                ref
+                            Initicon(
+                              text: ref
                                     .watch(friendProvider)
                                     .friendList[index]
                                     .name,
-                                24),
+                              size: 40,
+                              backgroundColor: getProfileBgColor(
+                                ref
+                                    .watch(friendProvider)
+                                    .friendList[index]
+                                    .color
+                                ),
+                              style: TextStyle(
+                                color: getProfileTextColor(
+                                  ref
+                                    .watch(friendProvider)
+                                    .friendList[index]
+                                    .color
+                                )
+                              ), 
+                            ),
                             const SizedBox(width: 16),
                             Text(
                                 ref

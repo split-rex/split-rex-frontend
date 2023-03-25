@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:flutter_initicon/flutter_initicon.dart';
 
-import 'package:split_rex/src/common/profile_picture.dart';
-
+import '../../common/functions.dart';
 import '../../providers/friend.dart';
 
 Widget searchBar(WidgetRef ref) => Container(
@@ -160,12 +160,27 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(children: [
-                            profilePicture(
-                                ref
+                            Initicon(
+                              text: ref
                                     .watch(friendProvider)
                                     .friendSearched[index]
                                     .name,
-                                24.0),
+                              size: 40.0,
+                              backgroundColor: getProfileBgColor(
+                                ref
+                                    .watch(friendProvider)
+                                    .friendSearched[index]
+                                    .color
+                                ),
+                              style: TextStyle(
+                                color: getProfileTextColor(
+                                  ref
+                                    .watch(friendProvider)
+                                    .friendSearched[index]
+                                    .color
+                                )
+                              ), 
+                            ),
                             const SizedBox(width: 16),
                             Text(
                                 ref
@@ -211,10 +226,16 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
 
 Widget addButton(WidgetRef ref) => GestureDetector(
     onTap: () {
-      ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty ||
-              ref.watch(addExpenseProvider).newGroup.memberId.isNotEmpty
-          ? ref.read(routeProvider).changePage("edit_items")
-          : null;
+      if (ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty ||
+          ref.watch(addExpenseProvider).newGroup.memberId.isNotEmpty) {
+            if (ref.watch(addExpenseProvider).isNewGroup) {
+              ref.read(routeProvider).changePage("new_group");
+            } else {
+              ref.read(routeProvider).changePage("edit_items");
+            }
+      } else {
+        null;
+      }
     },
     child: Container(
         alignment: Alignment.bottomCenter,

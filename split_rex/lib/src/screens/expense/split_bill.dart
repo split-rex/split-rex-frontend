@@ -4,6 +4,8 @@ import 'package:split_rex/src/common/header.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/widgets/expense/split_bill.dart';
 
+import '../../providers/add_expense.dart';
+
 
 class SplitBill extends ConsumerWidget {
   const SplitBill({super.key});
@@ -51,14 +53,19 @@ class SplitBill extends ConsumerWidget {
                             summarySplit(ref, "Subtotal"),
                             summarySplit(ref, "Tax"),
                             summarySplit(ref, "Service charge"),
-                            summarySplit(ref, "Discounts"),
                             const SizedBox(height: 8.0,),
                         ]),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text("Total amount", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
-                            Text("150.000", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                          children: [
+                            const Text("Total amount", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+                            Text(
+                              ref.watch(addExpenseProvider).newBill.total.toString(), 
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600
+                              )
+                            ),
                           ],
                         ),
                       ]),

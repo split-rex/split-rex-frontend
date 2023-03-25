@@ -29,10 +29,26 @@ class GroupListProvider extends ChangeNotifier {
     currGroup = group;
   }
 
-  void changeGroupDetail(dynamic groupDetail) {
-    for (int i = 0; i < groups.length; i++) {
-      if (groups[i].groupId == groupDetail["group_id"]) {
-        var dataMemberList = groupDetail["list_memberr"];
+  void changeCurrGroupDetail(dynamic groupDetail) {
+    currGroup.groupId = groupDetail["group_id"];
+    currGroup.name = groupDetail["name"];
+    currGroup.startDate = groupDetail["start_date"].toString();
+    currGroup.endDate = groupDetail["end_date"].toString();
+    currGroup.type = groupDetail["type"];
+    currGroup.totalUnpaid = groupDetail["total_unpaid"];
+    currGroup.totalExpense = groupDetail["total_expense"];
+    var dataMemberList = groupDetail["list_memberr"];
+
+    List<Friend> memberList = <Friend>[];
+    for (int i = 0; i < dataMemberList.length; i++) {
+      var currMember = dataMemberList[i];
+      memberList.add(Friend(
+        userId: currMember["member_id"],
+        name: currMember["name"],
+        username: currMember["username"],
+        color: currMember["color"],
+      ));
+    }
 
         List<Friend> memberList = <Friend>[];
         for (int i = 0; i < dataMemberList.length; i++) {

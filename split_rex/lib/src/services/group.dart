@@ -38,7 +38,8 @@ class GroupServices {
     );
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-      ref.read(groupListProvider).changeGroupDetail(data["data"]);
+      print(data);
+      ref.read(groupListProvider).changeCurrGroupDetail(data["data"]);
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

@@ -14,12 +14,11 @@ import './group.dart';
 import '../common/logger.dart';
 import '../providers/add_expense.dart';
 
-class FriendServices {
+class AddExpenseServices {
   String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
 
   Future<void> createGroup(WidgetRef ref) async {
     NewGroup newGroup = ref.watch(addExpenseProvider).newGroup;
-    newGroup.memberId.add(ref.watch(authProvider).userData.userId);
 
     Response resp = await post(Uri.parse("$endpoint/userCreateGroup"),
         headers: <String, String>{
@@ -29,17 +28,144 @@ class FriendServices {
         body: jsonEncode(<String, dynamic>{
           "name": newGroup.name,
           "member_id": newGroup.memberId,
-          "start_date": newGroup.startDate,
-          "end_date": newGroup.endDate
+          "start_date": DateTime.parse(newGroup.startDate).toUtc().toIso8601String(),
+          "end_date": DateTime.parse(newGroup.endDate).toUtc().toIso8601String()
         }));
     var data = jsonDecode(resp.body);
     logger.d(data);
     if (data["message"] == "SUCCESS") {
-      ref.read(groupListProvider).changeCurrGroup(data["data"]);
-      ref.read(addExpenseProvider).clearAddExpenseProvider();
+      await GroupServices().getGroupDetail(ref, data["data"]);
+      await GroupServices().userGroupList(ref);
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> createTransaction(WidgetRef ref) async {
+    Transaction newBill = ref.watch(addExpenseProvider).newBill;
+    newBill.billOwner = ref.watch(authProvider).userData.userId;
+    newBill.groupId = ref.watch(groupListProvider).currGroup.groupId;
+    newBill.items = ref.watch(addExpenseProvider).items;
+    // print("YOYOMA");
+    // print(newBill.billOwner);
+    // print(newBill.date);
+    // print(newBill.desc);
+    // print(newBill.groupId);
+    // print(newBill.items);
+    // print(newBill.name);
+    // print(newBill.service);
+    // print(newBill.subtotal);
+    // print(newBill.tax);
+    // print(newBill.total);
+    // print("YOYOMA");
+
+    var itemsObj = {};
+
+    for (Items item in newBill.items) {
+      itemsObj[item.name] = {
+        "quantity": item.qty,
+        "price": item.price,
+        "consumere": item.consumer
+      };
+    }
+
+    Response resp = await post(Uri.parse("$endpoint/userCreateTransaction"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+        },
+        body: jsonEncode(<String, dynamic>{
+          "name": newBill.name,
+          "description": newBill.desc,
+          "group_id": newBill.groupId,
+          "date": DateTime.parse(newBill.date).toUtc().toIso8601String(),
+          "subtotal": newBill.subtotal,
+          "tax": newBill.tax,
+          "service": newBill.service,
+          "total": newBill.total,
+          "bill_owner": newBill.billOwner,
+        }));
+    var data = jsonDecode(resp.body);
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      await updatePayment(ref);
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> updatePayment(WidgetRef ref) async {
+    List<Items> items = ref.watch(addExpenseProvider).items;
+    String currGroupId = ref.watch(groupListProvider).currGroup.groupId;
+
+    // for every item, check its consumer
+    // divide total price with number of consumer
+    // check if uid is already in list payment
+    // skip if uid is bill owner's
+    var listPaymentObj = {};
+    for (var i = 0; i < items.length; i++) {
+      var consumer = items[i].consumer;
+      var owedPerPerson = items[i].total / consumer.length;
+      for (var j = 0; j < consumer.length; j++) {
+        var consumerId = consumer[j];
+        if (listPaymentObj.containsKey(consumerId)) {
+          listPaymentObj[consumerId] += owedPerPerson;
+        } else {
+          listPaymentObj[consumerId] = owedPerPerson;
+        }
+      }
+    }
+    var listPayment = [];
+    listPaymentObj.forEach((key, value) {
+      if (key != ref.watch(authProvider).userData.userId) {
+        listPayment.add({
+          "user_id": key,
+          "total_unpaid": 
+            value
+            + ref.watch(addExpenseProvider).newBill.tax / listPaymentObj.length
+            + ref.watch(addExpenseProvider).newBill.service / listPaymentObj.length
+        });
+      }
+    });
+
+    logger.d(listPayment);
+
+    Response resp = await post(Uri.parse("$endpoint/updatePayment"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+        },
+        body: jsonEncode(<String, dynamic>{
+          "group_id": currGroupId,
+          "list_payment": listPayment
+        }));
+    var data = jsonDecode(resp.body);
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      await resolveTransaction(ref);
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> resolveTransaction(WidgetRef ref) async {
+    String currGroupId = ref.watch(groupListProvider).currGroup.groupId;
+
+    Response resp = await post(Uri.parse("$endpoint/resolveTransaction"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+        },
+        body: jsonEncode(<String, dynamic>{
+          "group_id": currGroupId,
+        }));
+    var data = jsonDecode(resp.body);
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      logger.d("SUKSESSSSSSS");
+      ref.watch(addExpenseProvider).resetAll();      
       ref.read(routeProvider).changeNavbarIdx(1);
       ref.read(routeProvider).changePage("group_detail");
-      await GroupServices().userGroupList(ref);
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

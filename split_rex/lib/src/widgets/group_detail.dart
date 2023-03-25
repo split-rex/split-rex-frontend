@@ -4,8 +4,8 @@ import 'package:split_rex/src/common/bubble_member.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/model/group_model.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:flutter_initicon/flutter_initicon.dart';
 
-import '../common/profile_picture.dart';
 import '../providers/group_list.dart';
 
 class GroupInfo extends ConsumerWidget {
@@ -258,7 +258,11 @@ class TransactionItem extends ConsumerWidget {
               ),
               height: 35,
               width: 35,
-              child: profilePicture("Muhammad Ali", 16.0)),
+              child: const Initicon(
+                text: "Muhammad Ali", 
+                size: 16.0,
+              )
+            ),
           const SizedBox(
             width: 20,
           ),

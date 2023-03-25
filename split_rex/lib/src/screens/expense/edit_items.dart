@@ -5,11 +5,15 @@ import 'package:split_rex/src/providers/add_expense.dart';
 
 import 'package:split_rex/src/widgets/expense/edit_items.dart';
 
+import '../../providers/auth.dart';
+
 class EditItems extends ConsumerWidget {
   const EditItems({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(addExpenseProvider).selectedMember = (ref.watch(authProvider).userData.name);
+    
     return header(
       context, 
       ref,

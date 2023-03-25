@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
+import 'package:split_rex/src/providers/group_list.dart';
 
 import '../../common/functions.dart';
+import '../../model/friends.dart';
 import '../../providers/auth.dart';
 import '../../providers/friend.dart';
 import '../../services/add_expense.dart';
@@ -63,27 +65,51 @@ Widget membersScrollView(WidgetRef ref) => SingleChildScrollView(
         Column(children: [
           InkWell(
             onTap: () {
-              ref.read(addExpenseProvider).changeSelectedMember("");
+              ref.read(addExpenseProvider).changeSelectedMember(ref.watch(authProvider).userData.name);
             },
-            child: memberIcon(ref, ""),
+            child: memberIcon(ref, ref.watch(authProvider).userData),
           ),
           const Text("You", style: TextStyle(fontSize: 12)),
       ]), 
       const SizedBox(width: 12.0),
       Row(children: [
-        for (String memberId in ref.watch(addExpenseProvider).newGroup.memberId) 
-          Row(children: [
-            Column(children: [
-              InkWell(
-                onTap: () {
-                  ref.read(addExpenseProvider).changeSelectedMember(memberId);
-                },
-                child: memberIcon(ref, memberId),
-              ),
-              Text((ref.watch(friendProvider).getFriend(memberId)).name, style: const TextStyle(fontSize: 12)),
-          ]), 
-          const SizedBox(width: 12.0)
-        ])
+        if (ref.watch(addExpenseProvider).isNewGroup) ...[
+          for (String memberId in ref.watch(addExpenseProvider).newGroup.memberId) 
+            Row(children: [
+              Column(children: [
+                InkWell(
+                  onTap: () {
+                    ref.read(addExpenseProvider).changeSelectedMember(ref.watch(friendProvider).getFriend(memberId).name);
+                  },
+                  child: memberIcon(
+                    ref, 
+                    (ref.watch(friendProvider).getFriend(memberId))
+                  ),
+                ),
+                Text((ref.watch(friendProvider).getFriend(memberId)).name, style: const TextStyle(fontSize: 12)),
+            ]), 
+            const SizedBox(width: 12.0)
+          ])
+        ] else ...[
+          for (Friend members in ref.watch(groupListProvider).currGroup.members) 
+           members.userId == ref.watch(authProvider).userData.userId
+           ? const SizedBox()
+           : Row(children: [
+              Column(children: [
+                InkWell(
+                  onTap: () {
+                    ref.read(addExpenseProvider).changeSelectedMember(members.name);
+                  },
+                  child: memberIcon(
+                    ref, 
+                    (ref.watch(friendProvider).getFriend(members.userId))
+                  ),
+                ),
+                Text((ref.watch(friendProvider).getFriend(members.userId)).name, style: const TextStyle(fontSize: 12)),
+            ]), 
+            const SizedBox(width: 12.0)
+          ])
+        ],
       ])
   ],)
 ]));
@@ -157,7 +183,7 @@ Widget summarySplit(WidgetRef ref, String title) => Column(children: [
 
 Widget splitButton(WidgetRef ref) => GestureDetector(
   onTap: () async {
-    if (ref.watch(addExpenseProvider).newGroup.name == "") {
+    if (ref.watch(addExpenseProvider).newGroup.name == "" && ref.watch(addExpenseProvider).isNewGroup) {
       null;
     } else {
       if (ref.watch(addExpenseProvider).isNewGroup) {
@@ -184,7 +210,9 @@ Widget splitButton(WidgetRef ref) => GestureDetector(
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-          color: ref.watch(addExpenseProvider).newGroup.name == "" ? const Color.fromARGB(50, 79, 79, 79) : const Color(0XFF6DC7BD),
+          color: ref.watch(addExpenseProvider).newGroup.name == "" && ref.watch(addExpenseProvider).isNewGroup 
+                ? const Color.fromARGB(50, 79, 79, 79) 
+                : const Color(0XFF6DC7BD),
         ),
         child: const Text("Add Expense", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700))
       )
@@ -192,17 +220,10 @@ Widget splitButton(WidgetRef ref) => GestureDetector(
   )
 );
 
-Widget memberIcon(WidgetRef ref, String memberId) {
-  // ignore: prefer_typing_uninitialized_variables
-  var member;
-  if (memberId == "") {
-    member = ref.watch(authProvider).userData;
-  } else {
-    member = (ref.watch(friendProvider).getFriend(memberId));
-  }
+Widget memberIcon(WidgetRef ref, member) {
   return CircleAvatar(
     backgroundColor: 
-      ref.watch(addExpenseProvider).selectedMember == memberId 
+      ref.watch(addExpenseProvider).selectedMember == member.name 
       ? getProfileTextColor(member.color)
       : getProfileBgColor(member.color),
     radius: 32,

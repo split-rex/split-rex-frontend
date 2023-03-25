@@ -31,7 +31,7 @@ class Transaction {
   String name;
   String desc;
   int groupId;
-  String date;
+  String date = DateTime.now().toUtc().toIso8601String();
   int subtotal;
   int tax;
   int service;
@@ -43,7 +43,6 @@ class Transaction {
     this.name = "",
     this.desc = "",
     this.groupId = -1,
-    this.date = "",
     this.subtotal = 0,
     this.tax = 0,
     this.service = 0,

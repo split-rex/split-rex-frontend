@@ -4,6 +4,8 @@ import 'package:split_rex/src/providers/add_expense.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+import '../../services/group.dart';
+
 class DateTimeField extends ConsumerWidget {
   const DateTimeField({super.key});
 
@@ -293,10 +295,15 @@ Widget summaryField(WidgetRef ref, String title) => Column(children: [
 ],);
 
 Widget confirmButton(WidgetRef ref) => GestureDetector(
-  onTap: () {
-    ref.watch(addExpenseProvider).items.isNotEmpty ?
-    ref.watch(routeProvider).changePage("split_bill") : 
-    null;
+  onTap: () async {
+    if (ref.watch(addExpenseProvider).items.isNotEmpty) {
+      if (!ref.watch(addExpenseProvider).isNewGroup) {
+        await GroupServices().getGroupDetail(ref, ref.watch(addExpenseProvider).existingGroup.groupId);
+      }
+      ref.watch(routeProvider).changePage("split_bill");
+    } else {
+      null;
+    }
   },
   child: Container(
     alignment: Alignment.bottomCenter,

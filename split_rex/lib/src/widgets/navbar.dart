@@ -5,6 +5,7 @@ import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/group.dart';
 import 'package:camera/camera.dart';
 
+import '../providers/auth.dart';
 import '../providers/camera.dart';
 
 
@@ -30,7 +31,7 @@ class Navbar extends ConsumerWidget {
           } else {
             if (value == 0) {
               if (ref.watch(groupListProvider).isOwed) {
-                await GroupServices().getGroupOwed(ref);
+                await GroupServices().getGroupOwed(ref.watch(authProvider).jwtToken);
               } else {
                 await GroupServices().getGroupLent(ref);
               }

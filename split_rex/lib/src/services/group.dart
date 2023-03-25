@@ -76,25 +76,30 @@ class GroupServices {
     }
   }
 
-  Future<void> getGroupOwed(WidgetRef ref) async {
-    final String response =
-        await rootBundle.loadString('assets/groupsOwed.json');
-    var data = await json.decode(response);
+  Future<bool> getGroupOwed(String jwtToken) async {
+    Response response = await get(
+      Uri.parse("$endpoint/userGroupOwed"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $jwtToken"
+      },
+    );
+    var data = await json.decode(response.body);
     logger.d(data["data"]);
-    var isempty = false;
-    for (var i = 0; i < data["data"].length; i++) {
-      if (data["data"][i]["type"] != "HARDCODED") {
-        isempty = true;
-      }
-    }
-    ref.read(groupListProvider).updateHasOwedGroups(isempty);
+    return data["data"]["list_group"].isNotEmpty;
   }
 
   Future<void> getGroupLent(WidgetRef ref) async {
-    final String response =
-        await rootBundle.loadString('assets/groupLent.json');
-    var data = await json.decode(response);
-    ref.read(groupListProvider).updateHasLentGroups(data["data"].isNotEmpty);
+    Response response = await get(
+      Uri.parse("$endpoint/userGroupOwed"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+    );
+    var data = await json.decode(response.body);
+    logger.d(data["data"]);
+    return data["data"]["list_group"].isNotEmpty;
   }
 
   Future<void> editGroupInfo(WidgetRef ref, String groupId, String newGroupName) async {
@@ -119,3 +124,13 @@ class GroupServices {
     }
   }
 }
+
+final groupServicesProvider = Provider<GroupServices>(
+  (ref) => GroupServices()
+);
+
+final getGroupOwed = FutureProvider<bool>((ref) async {
+  return ref.read(groupServicesProvider).getGroupOwed(
+    ref.watch(authProvider).jwtToken
+  );
+});

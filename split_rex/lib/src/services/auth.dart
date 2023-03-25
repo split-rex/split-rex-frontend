@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/providers/group_list.dart';
 
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/providers/auth.dart';
@@ -135,9 +136,11 @@ class ApiServices {
       await FriendServices().userFriendList(ref);
       await FriendServices().friendRequestReceivedList(ref);
       await FriendServices().friendRequestSentList(ref);
-      await GroupServices().getGroupOwed(ref);
-      await GroupServices().userGroupList(ref);
-      ref.read(routeProvider).changePage("home");
+      GroupServices().getGroupOwed(ref.watch(authProvider).jwtToken).then((val) async {
+        ref.read(groupListProvider).updateHasOwedGroups(val);
+        await GroupServices().userGroupList(ref);
+        ref.read(routeProvider).changePage("home");
+      });
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

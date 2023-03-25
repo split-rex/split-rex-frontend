@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/common/bubble_member.dart';
 import 'package:split_rex/src/common/functions.dart';
 
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 
-import '../common/profile_picture.dart';
-
 Widget searchBar(BuildContext context, WidgetRef ref) => Container(
-    margin: const EdgeInsets.only(left: 20, right: 20, top: 17),
+    width: MediaQuery.of(context).size.width - 40.0,
+    margin: const EdgeInsets.only(top: 17),
     decoration: BoxDecoration(
       color: const Color(0XFFFFFFFF),
       border: Border.all(
@@ -52,11 +52,12 @@ Widget searchBar(BuildContext context, WidgetRef ref) => Container(
     );
 
 Widget showGroups(BuildContext context, WidgetRef ref) {
-  return Container(
-      padding: const EdgeInsets.only(left: 18.0, right: 18.0),
+  return SizedBox(
+      width: MediaQuery.of(context).size.width - 40.0,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Expanded(
             child: ListView.builder(
+          padding: EdgeInsets.zero,
           // shrinkWrap: true,
           // padding: const EdgeInsets.symmetric(vertical: 8.0),
           itemCount: ref.watch(groupListProvider).groups.length,
@@ -71,9 +72,9 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                 key: ValueKey(
                     ref.watch(groupListProvider).groups[index].groupId),
                 child: InkWell(
-                  onTap: () {
-                    ref.read(groupListProvider).changeCurrGroup(
-                        ref.watch(groupListProvider).groups[index]);
+                  onTap: () async {
+                    var currGroup = ref.watch(groupListProvider).groups[index];
+                    ref.read(groupListProvider).changeCurrGroup(currGroup);
                     ref.read(routeProvider).changePage("group_detail");
                     // Navigator.push(
                     //     context,
@@ -143,46 +144,7 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                   fontSize: 18,
                                 ),
                               ),
-                              Stack(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: CircleAvatar(
-                                        radius: 18,
-                                        backgroundColor: Colors.red,
-                                        child: profilePicture("Pak Fitra",
-                                            24.0), // Provide your custom image
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: CircleAvatar(
-                                        radius: 18,
-                                        backgroundColor: Colors.red,
-                                        child: profilePicture("Michael Jordan",
-                                            24.0), // Provide your custom image
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: CircleAvatar(
-                                        radius: 18,
-                                        backgroundColor: Colors.red,
-                                        child: profilePicture("John Doe",
-                                            24.0), // Provide your custom image
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              getBubbleMember(ref.watch(groupListProvider).groups[index].members),
                             ]),
                       ]),
                 ));

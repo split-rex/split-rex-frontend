@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/screens/account.dart';
+import 'package:split_rex/src/screens/account/account.dart';
 import 'package:split_rex/src/screens/activity.dart';
+import 'package:split_rex/src/screens/account/account_edit.dart';
+import 'package:split_rex/src/screens/account/change_password.dart';
 import 'package:split_rex/src/screens/friends/add_friends.dart';
 import 'package:split_rex/src/screens/friends/choose_friend.dart';
 import 'package:split_rex/src/screens/friends/friend_requests.dart';
@@ -19,8 +21,7 @@ import 'package:split_rex/src/screens/friends/friends.dart';
 import 'package:split_rex/src/screens/expense/edit_items.dart';
 import 'package:split_rex/src/screens/expense/split_bill.dart';
 
-import 'package:split_rex/src/screens/settle/settle_up.dart';
-import 'package:split_rex/src/screens/settle/unsettled_payments.dart';
+import '../screens/groups/group_setting.dart';
 
 class PageRouting extends ConsumerWidget {
   const PageRouting({super.key});
@@ -67,12 +68,22 @@ class PageRouting extends ConsumerWidget {
       case "choose_friend":
         return const ChooseFriend();
 
-      // settle payment
-      case "settle_up":
-        return const SettleUp();
+      // edit account
+      case "edit_account":
+        return const EditAccount();
+      case "change_password":
+        return const ChangePassword();
 
-      case "unsettled_payments":
-        return const UnsettledPayments();
+      case "group_settings":
+        return GroupSettings(
+          group: ref.watch(groupListProvider).currGroup,
+        );
+
+      case "group_settings_edit":
+        return const GroupSettingsEdit();
+
+      case "choose_friend_group_settings":
+        return const ChooseFriendInGroupSetting();
 
       // home
       default:

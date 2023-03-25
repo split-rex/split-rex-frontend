@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/model/group_model.dart';
 
 import '../common/logger.dart';
+import '../model/friends.dart';
 
 class GroupListProvider extends ChangeNotifier {
   List<GroupListModel> groups = <GroupListModel>[];
@@ -28,30 +29,34 @@ class GroupListProvider extends ChangeNotifier {
     currGroup = group;
   }
 
-  void loadGroupData(dynamic modelList) {
-    // List<GroupListModel> builder = groups;
-    // builder.clear();
-    // for (int i = 0; i < modelList.length; i++) {
-    //   builder.add(GroupListModel(
-    //       modelList[i]["group_id"],
-    //       modelList[i]["name"],
-    //       modelList[i]["member_id"],
-    //       modelList[i]["start_date"],
-    //       modelList[i]["end_date"],
-    //       modelList[i]["type"],
-    //       modelList[i]["total_unpaid"],
-    //       modelList[i]["total_expense"]));
-    // }
+  void changeGroupDetail(dynamic groupDetail) {
+    for (int i = 0; i < groups.length; i++) {
+      if (groups[i].groupId == groupDetail["group_id"]) {
+        var dataMemberList = groupDetail["list_memberr"];
 
-    // groups = builder;
-    // groupsLoaded = builder;
-    
-    // notifyListeners();
+        List<Friend> memberList = <Friend>[];
+        for (int i = 0; i < dataMemberList.length; i++) {
+          var currMember = dataMemberList[i];
+          memberList.add(Friend(
+            userId: currMember["member_id"],
+            name: currMember["name"],
+            username: currMember["username"],
+          ));
+        }
+
+        groups[i].name = groupDetail["name"];
+        groupsLoaded[i].name = groupDetail["name"];
+        break;
+      }
+    }
+  }
+
+  void loadGroupData(dynamic modelList) {
     groups.clear();
     groupsLoaded.clear();
-    if (modelList != null){
+    if (modelList != null) {
       for (int i = 0; i < modelList.length; i++) {
-        groups.add(GroupListModel(
+        var group = GroupListModel(
             modelList[i]["group_id"],
             modelList[i]["name"],
             modelList[i]["member_id"],
@@ -59,16 +64,23 @@ class GroupListProvider extends ChangeNotifier {
             modelList[i]["end_date"],
             modelList[i]["type"],
             modelList[i]["total_unpaid"],
-            modelList[i]["total_expense"]));
-        groupsLoaded.add(GroupListModel(
-            modelList[i]["group_id"],
-            modelList[i]["name"],
-            modelList[i]["member_id"],
-            modelList[i]["start_date"],
-            modelList[i]["end_date"],
-            modelList[i]["type"],
-            modelList[i]["total_unpaid"],
-            modelList[i]["total_expense"]));
+            modelList[i]["total_expense"]);
+
+        var dataMemberList = modelList[i]["list_memberr"];
+        List<Friend> memberList = <Friend>[];
+        for (int i = 0; i < dataMemberList.length; i++) {
+          var currMember = dataMemberList[i];
+          memberList.add(Friend(
+            userId: currMember["member_id"],
+            name: currMember["name"],
+            username: currMember["username"],
+            color: currMember["color"],
+          ));
+        }
+
+        group.members = memberList;
+        groups.add(group);
+        groupsLoaded.add(group);
       }
     }
 
@@ -158,6 +170,7 @@ class CustomSearchDelegate extends SearchDelegate {
       }
     }
     return ListView.builder(
+      padding: EdgeInsets.zero,
       itemCount: matchQuery.length,
       itemBuilder: (context, index) {
         var result = matchQuery[index];
@@ -179,6 +192,7 @@ class CustomSearchDelegate extends SearchDelegate {
       }
     }
     return ListView.builder(
+      padding: EdgeInsets.zero,
       itemCount: matchQuery.length,
       itemBuilder: (context, index) {
         var result = matchQuery[index];

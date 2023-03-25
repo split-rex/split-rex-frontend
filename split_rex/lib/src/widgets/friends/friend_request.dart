@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/services/friend.dart';
+import '../../common/functions.dart';
 import '../../providers/friend.dart';
 import '../../providers/routes.dart';
 import 'friends.dart';
@@ -51,7 +52,7 @@ class FriendRequestSectionPicker extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
         margin: const EdgeInsets.only(left: 28.0, right: 28.0),
-        width: 349,
+        width: MediaQuery.of(context).size.width - 40.0,
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -136,7 +137,7 @@ class FriendRequestsBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
         margin: const EdgeInsets.only(left: 28.0, right: 28.0),
-        width: 349,
+        width: MediaQuery.of(context).size.width - 40.0,
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -174,7 +175,11 @@ class FriendRequestsBody extends ConsumerWidget {
                           userId: ref
                               .watch(friendProvider)
                               .friendReceivedList[index]
-                              .userId);
+                              .userId,
+                          color: ref
+                              .watch(friendProvider)
+                              .friendReceivedList[index]
+                              .color);
                     },
                     separatorBuilder: (context, index) => const Divider(
                       thickness: 1,
@@ -200,7 +205,11 @@ class FriendRequestsBody extends ConsumerWidget {
                           name: ref
                               .watch(friendProvider)
                               .friendSentList[index]
-                              .name);
+                              .name,
+                          color: ref
+                              .watch(friendProvider)
+                              .friendList[index]
+                              .color);
                     },
                     separatorBuilder: (context, index) => const Divider(
                       thickness: 1,
@@ -213,15 +222,19 @@ class FriendRequestsBody extends ConsumerWidget {
 
 class FriendRequestDetail extends ConsumerWidget {
   const FriendRequestDetail(
-      {super.key, required this.name, required this.userId});
+      {super.key,
+      required this.name,
+      required this.userId,
+      required this.color});
 
   final String name;
   final String userId;
+  final int color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      width: 348,
+      width: MediaQuery.of(context).size.width - 40.0,
       color: const Color(0xFFffffff),
       alignment: Alignment.center,
       padding: const EdgeInsets.only(bottom: 18),
@@ -232,7 +245,11 @@ class FriendRequestDetail extends ConsumerWidget {
           children: [
             Container(
               padding: const EdgeInsets.only(left: 15),
-              child: Initicon(text: name),
+              child: Initicon(
+                text: name,
+                backgroundColor: getProfileBgColor(color),
+                style: TextStyle(color: getProfileTextColor(color)),
+              ),
             ),
             const SizedBox(width: 18),
             Column(
@@ -248,7 +265,8 @@ class FriendRequestDetail extends ConsumerWidget {
                 const SizedBox(height: 8),
                 Row(children: [
                   InkWell(
-                    onTap: () async => await FriendServices().rejectFriendRequest(ref, userId),
+                    onTap: () async =>
+                        await FriendServices().rejectFriendRequest(ref, userId),
                     child: Container(
                       alignment: Alignment.center,
                       width: 117,

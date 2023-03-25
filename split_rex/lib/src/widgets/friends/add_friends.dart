@@ -5,6 +5,8 @@ import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/services/friend.dart';
 
+import '../../common/functions.dart';
+
 class AddFriendSearchSection extends ConsumerWidget {
   const AddFriendSearchSection({super.key});
 
@@ -53,11 +55,14 @@ class FriendsSearched extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        // TODO: save the color!!!
         Initicon(
             text: ref.watch(friendProvider).addFriend.name,
             size: 114,
-            backgroundColor: const Color(0xFF6DC7BD)),
+            backgroundColor: getProfileBgColor(ref.watch(friendProvider).addFriend.color),
+            style: TextStyle(
+              color: getProfileTextColor(ref.watch(friendProvider).addFriend.color)
+            ),
+        ),
         const SizedBox(height: 10),
         Text(ref.watch(friendProvider).addFriend.name,
             style: const TextStyle(

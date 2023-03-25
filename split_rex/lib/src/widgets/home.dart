@@ -7,6 +7,7 @@ import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/services/group.dart';
 import 'package:split_rex/src/widgets/group_list.dart';
 
+import '../common/functions.dart';
 import '../providers/routes.dart';
 import '../services/friend.dart';
 
@@ -17,7 +18,14 @@ class UserDetail extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        Initicon(text: ref.watch(authProvider).userData.name, size: 55),
+        Initicon(
+          text: ref.watch(authProvider).userData.name, 
+          size: 55,
+          backgroundColor: getProfileBgColor(ref.watch(authProvider).userData.color),
+          style: TextStyle(
+            color: getProfileTextColor(ref.watch(authProvider).userData.color)
+          ),
+        ),
         const SizedBox(width: 12),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Text(
@@ -98,7 +106,6 @@ class FriendRequest extends ConsumerWidget {
               )),
           InkWell(
             onTap: () async {
-              await GroupServices().userGroupList(ref);
               await FriendServices().friendRequestReceivedList(ref);
               await FriendServices().friendRequestSentList(ref);
 
@@ -164,11 +171,11 @@ class HomeFooter extends ConsumerWidget {
           child: Column(
             children: [
               Container(
+                width: MediaQuery.of(context).size.width - 40.0,
                 decoration: const BoxDecoration(
                   color: Color(0XFFF9F7F7),
                   borderRadius: BorderRadius.all(Radius.circular(24.0)),
                 ),
-                margin:  const EdgeInsets.only(left: 20, right: 20),
                 padding: const EdgeInsets.all(10.0),
                 child: Row(children: [
                   (ref.watch(groupListProvider).isOwed)

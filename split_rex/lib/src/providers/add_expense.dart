@@ -12,6 +12,13 @@ class AddExpenseProvider extends ChangeNotifier {
   Transaction newBill = Transaction();
   GroupListModel existingGroup = GroupListModel("", "", [], "", "", "", 0, 0);
 
+  String selectedMember = "";
+
+  changeSelectedMember(val) {
+    selectedMember = val;
+    notifyListeners();
+  }
+
   clearAddExpenseProvider() {
     items.clear();
     isNewGroup = false;

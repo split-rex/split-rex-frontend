@@ -9,6 +9,7 @@ import 'package:camera/camera.dart';
 
 import '../providers/camera.dart';
 import '../providers/routes.dart';
+import '../services/scan_bill.dart';
 
 
 class CameraPage extends ConsumerStatefulWidget {
@@ -48,7 +49,8 @@ class _CameraPageState extends ConsumerState<CameraPage> {
     try {
       XFile picture = await _cameraController.takePicture();
       ref.read(cameraProvider).setPicture(picture);
-      // ignore: use_build_context_synchronously
+      // TODO: PETORIKU DESU
+      // await ScanBillServices().postBill(ref, File(ref.watch(cameraProvider).picture.path));
       ref.read(routeProvider).changePage("preview_image");
     } on CameraException catch (e) {
       debugPrint('Error occured while taking picture: $e');
@@ -201,7 +203,10 @@ class PreviewPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Center(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Image.file(File(picture.path), fit: BoxFit.cover, width: 250),
+          Image.file(
+            File(picture.path), 
+            fit: BoxFit.cover, width: 250
+          ),
           const SizedBox(height: 24),
           Text(picture.name),
           InkWell(

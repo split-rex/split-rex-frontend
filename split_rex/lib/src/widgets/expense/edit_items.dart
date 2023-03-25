@@ -1,67 +1,88 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DateTimeField extends ConsumerWidget {
+  const DateTimeField({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return TextField(
-    onChanged: (val) {
-      showDialog(
-        barrierColor: const Color.fromARGB(82, 0, 0, 0),
-        context: context,
-        builder: (BuildContext dialogContext) {
-          final DateRangePickerController dateController = DateRangePickerController();
-          dateController.selectedRange = PickerDateRange(DateTime.now(), DateTime.now().add(Duration(days: 3)));
-          return Center(
-            child: Container(
-              // padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              // width: MediaQuery.of(context).size.width - 60.0,
-              // height: MediaQuery.of(context).size.height - 275.0,
-              // decoration: BoxDecoration(
-              //   color: Colors.white,
-              //   borderRadius: BorderRadius.circular(8.0),
-              // ),
-              // child: 
-              //   Column(
-              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //     children: [
-              //     const Text("Select start and end date"),
-              //     SfDateRangePicker(
-              //       controller: dateController,
-              //       view: DateRangePickerView.month,
-              //       selectionMode: DateRangePickerSelectionMode.range,
-              //       onSelectionChanged: (args) {
-              //         if (ref.watch(addExpenseProvider).isNewGroup) {
-              //           ref.read(addExpenseProvider).changenew(args.value.startDate);
-              //           ref.read(addExpenseProvider).changeEndDate(args.value.endDate ?? args.value.startDate);
-              //         }
-              //       },
-              //     )
-              //   ])
-            )
-          );
-        }
-      );
-      // ref.read(addExpenseProvider).changeStartDate(DateTime.now().toUtc().toIso8601String());
-      // ref.read(addExpenseProvider).changeEndDate(DateTime.now().toUtc().toIso8601String());
-    },
-    style: const TextStyle(
-      fontWeight: FontWeight.w900,
-    ),
-    decoration: InputDecoration(
-      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16.0),
-      hintText: "${DateTime.now().day.toString()}/${DateTime.now().month.toString()}/${DateTime.now().year.toString()}\t\t\t\t|\t\t\t\t${DateTime.now().hour.toString()}:${DateTime.now().minute.toString()}",
-      filled: true,
-      fillColor: const Color(0XFFF6F6F6),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10.0),
-        borderSide: BorderSide.none
-      ),
-    ),
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          barrierColor: const Color.fromARGB(82, 0, 0, 0),
+          context: context,
+          builder: (BuildContext dialogContext) {
+            final DateRangePickerController dateController = DateRangePickerController();
+            dateController.selectedDate = ref.watch(addExpenseProvider).newBill.date != "" 
+            ? DateTime.parse(ref.watch(addExpenseProvider).newBill.date)
+            : DateTime.now();
+            return Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                width: MediaQuery.of(context).size.width - 60.0,
+                height: MediaQuery.of(context).size.height - 275.0,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: 
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                    const Text("Select transaction date"),
+                    SfDateRangePicker(
+                      controller: dateController,
+                      view: DateRangePickerView.month,
+                      selectionMode: DateRangePickerSelectionMode.single,
+                      onSelectionChanged: (args) {
+                        if (ref.watch(addExpenseProvider).isNewGroup) {
+                          ref.read(addExpenseProvider).changeBillDate(args.value.toString());
+                        }
+                      },
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(dialogContext);
+                      },
+                      child:
+                      Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: const Color(0XFF2E9281),
+                          borderRadius: BorderRadius.circular(8.0)
+                        ),
+                        child: const Text("Done", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                      ),
+                    )
+                ])
+              )
+            );
+          }
+        );
+      },
+      child: Card(
+        elevation: 2.0,
+        child: Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              const Icon(Icons.calendar_month, color: Color.fromARGB(255, 110, 110, 110)),
+              const SizedBox(width: 8.0),
+              Text(
+                ref.watch(addExpenseProvider).newBill.date != "" 
+                ? "${DateTime.parse(ref.watch(addExpenseProvider).newBill.date).day}/${DateTime.parse(ref.watch(addExpenseProvider).newBill.date).month}/${DateTime.parse(ref.watch(addExpenseProvider).newBill.date).year}"
+                : "${DateTime.now().day.toString()}/${DateTime.now().month.toString()}/${DateTime.now().year.toString()}",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold
+                ),
+              )
+            ]
+          )
+        )
+      ) 
   );
 }
 }
@@ -100,14 +121,23 @@ Widget itemCard(WidgetRef ref, int index) => Row(
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              const Icon(Icons.delete, color: Color(0XFF6DC7BD)),
+              GestureDetector(
+                onTap: () {
+                  // TODO: masih janky (can only delete from bottom to top)
+                  ref.read(addExpenseProvider).deleteItem(index);
+                },
+                child: const Icon(
+                  Icons.delete, 
+                  color: Color(0XFF6DC7BD
+                )),
+              ),
               Container(
                 width: 65,
                 margin: const EdgeInsets.only(left: 8.0),
                 child: 
                 TextField(
                   onChanged: (val) {
-                    ref.read(addExpenseProvider).changeItemQty(index, int.parse(val));
+                    ref.read(addExpenseProvider).changeItemQty(index, val);
                   },
                   textAlign: TextAlign.center,
                   style: const TextStyle(
@@ -132,7 +162,7 @@ Widget itemCard(WidgetRef ref, int index) => Row(
                 child: 
                 TextField(
                   onChanged: (val) {
-                    ref.read(addExpenseProvider).changeItemPrice(index, int.parse(val));
+                    ref.read(addExpenseProvider).changeItemPrice(index, val);
                   },
                   textAlign: TextAlign.end,
                   style: const TextStyle(
@@ -151,6 +181,21 @@ Widget itemCard(WidgetRef ref, int index) => Row(
                   ),
                 ),
               ),
+            ],
+          )
+        ),
+        SizedBox(
+          width: 340,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                padding: const EdgeInsets.only(top: 8.0, right: 8.0), 
+                alignment: Alignment.centerRight, 
+                child: Text(
+                  "Total: Rp ${ref.watch(addExpenseProvider).items[index].total.toString()}", textAlign: TextAlign.right
+                )
+              )
             ],
           )
         )
@@ -181,7 +226,7 @@ Widget addItem(WidgetRef ref) => InkWell(
   )
 );
 
-Widget summaryField(String title) => Column(children: [
+Widget summaryField(WidgetRef ref, String title) => Column(children: [
   Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -191,7 +236,32 @@ Widget summaryField(String title) => Column(children: [
         height: 40,
         padding: EdgeInsets.zero,
         child: 
+        title == "Subtotal"
+        ? Container(
+            padding: const EdgeInsets.only(right: 8.0),
+            alignment: Alignment.centerRight,
+            child: Text(
+            ref.watch(addExpenseProvider).newBill.subtotal.toString(),
+            style: const TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 14
+            )
+          ),
+        )
+        :
         TextField(
+          onChanged: (val) {
+            switch (title) {
+              case "Tax":
+                ref.read(addExpenseProvider).changeBillTax(val);
+                break;
+              case "Service charge":
+                ref.read(addExpenseProvider).changeBillService(val);
+                break;
+              default:
+                break;
+            }
+          },
           textAlign: TextAlign.end,
           style: const TextStyle(
             fontWeight: FontWeight.w400,
@@ -199,7 +269,10 @@ Widget summaryField(String title) => Column(children: [
           ),
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8.0),
-            hintText: "0",
+            hintText: title == "Tax"
+            ? ref.watch(addExpenseProvider).newBill.tax.toString()
+            : ref.watch(addExpenseProvider).newBill.service.toString()
+            ,
             filled: true,
             fillColor: const Color(0XFFF6F6F6),
             border: OutlineInputBorder(

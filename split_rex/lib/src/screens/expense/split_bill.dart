@@ -51,7 +51,6 @@ class SplitBill extends ConsumerWidget {
                             summarySplit(ref, "Subtotal"),
                             summarySplit(ref, "Tax"),
                             summarySplit(ref, "Service charge"),
-                            summarySplit(ref, "Discounts"),
                             const SizedBox(height: 8.0,),
                         ]),
                         Row(

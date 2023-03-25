@@ -28,6 +28,43 @@ class AddExpenseProvider extends ChangeNotifier {
 
   changeBillName(val) {
     newBill.name = val;
+    notifyListeners();
+  }
+
+  changeBillDate(val) {
+    newBill.date = val;
+    notifyListeners();
+  }
+
+  convertStringToInt(str) {
+    int val;
+    if (str == "") {
+      val = 0;
+    } else {
+      val = int.parse(str);
+    }
+    return val;
+  }
+  
+  changeBillTax(String str) {
+    int val = convertStringToInt(str);
+    newBill.total -= newBill.tax;
+    newBill.tax = val;
+    newBill.total += val;
+    notifyListeners();
+  }
+
+  changeBillService(String str) {
+    int val = convertStringToInt(str);
+    newBill.total -= newBill.service;
+    newBill.service = val;
+    newBill.total += val;
+    notifyListeners();
+  }
+
+  changeBillTotal(int val) {
+    newBill.total = val;
+    notifyListeners();
   }
 
   addItem() {
@@ -35,16 +72,37 @@ class AddExpenseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  deleteItem(index) {
+    newBill.subtotal -= items[index].total;
+    newBill.total -= items[index].total;
+    items.removeAt(index);
+    notifyListeners();
+  }
+
   changeItemName(index, String val) {
     items[index].name = val;
   }
 
-  changeItemQty(index, int val) {
+  changeItemQty(index, String str) {
+    int val = convertStringToInt(str);
     items[index].qty = val;
+    newBill.total -= newBill.subtotal;
+    newBill.subtotal -= items[index].total;
+    items[index].total = items[index].price * items[index].qty;
+    newBill.subtotal += items[index].total;
+    newBill.total += newBill.subtotal;
+    notifyListeners();
   }
 
-  changeItemPrice(index, int val) {
+  changeItemPrice(index, String str) {
+    int val = convertStringToInt(str);
     items[index].price = val;
+    newBill.total -= newBill.subtotal;
+    newBill.subtotal -= items[index].total;
+    items[index].total = items[index].price * items[index].qty;
+    newBill.subtotal += items[index].total;
+    newBill.total += newBill.subtotal;
+    notifyListeners();
   }
 
   changeItemSelected(index) {

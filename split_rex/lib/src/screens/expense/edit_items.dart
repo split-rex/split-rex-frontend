@@ -41,7 +41,7 @@ class EditItems extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            DateTimeField(),
+                            const DateTimeField(),
                             const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(30, 79, 79, 79)),
                             listItem(ref),
                             const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(30, 79, 79, 79)),
@@ -52,19 +52,18 @@ class EditItems extends ConsumerWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                summaryField("Subtotal"),
-                                summaryField("Tax"),
-                                summaryField("Service charge"),
-                                summaryField("Discounts"),
+                                summaryField(ref, "Subtotal"),
+                                summaryField(ref, "Tax"),
+                                summaryField(ref, "Service charge"),
                                 const SizedBox(height: 14.0),
                             ]),
                             Container(
                               margin: const EdgeInsets.only(right: 8.0),    
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text("Total amount", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
-                                  Text("150.000", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                                children: [
+                                  const Text("Total amount", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+                                  Text(ref.watch(addExpenseProvider).newBill.total.toString(), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                                 ],
                               ),
                             ),

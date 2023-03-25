@@ -14,16 +14,18 @@ class AddExpenseProvider extends ChangeNotifier {
 
   String selectedMember = "";
 
-  changeSelectedMember(val) {
-    selectedMember = val;
+  resetAll() {
+    items = [];
+    isNewGroup = false;
+    newGroup = NewGroup();
+    newBill = Transaction();
+    existingGroup = GroupListModel("", "", [], "", "", "", 0, 0);
+    selectedMember = "";
     notifyListeners();
   }
 
-  clearAddExpenseProvider() {
-    items.clear();
-    isNewGroup = false;
-    newGroup = NewGroup();
-    existingGroup = GroupListModel("", "", [], "", "", "", 0, 0);
+  changeSelectedMember(val) {
+    selectedMember = val;
     notifyListeners();
   }
 
@@ -111,9 +113,13 @@ class AddExpenseProvider extends ChangeNotifier {
     newBill.total += newBill.subtotal;
     notifyListeners();
   }
-
-  changeItemSelected(index) {
-    items[index].selected = !items[index].selected;
+  
+  changeItemConsumer(index, userId) {
+    if (items[index].consumer.contains(userId)) {
+      items[index].consumer.remove(userId);
+    } else {
+      items[index].consumer.add(userId);
+    }
     notifyListeners();
   }
 

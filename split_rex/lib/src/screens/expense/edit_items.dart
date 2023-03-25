@@ -12,7 +12,7 @@ class EditItems extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(addExpenseProvider).selectedMember = (ref.watch(authProvider).userData.name);
+    ref.read(addExpenseProvider).selectedMember = (ref.watch(authProvider).userData.userId);
     
     return header(
       context, 

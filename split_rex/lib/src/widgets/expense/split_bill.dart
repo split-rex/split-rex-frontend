@@ -65,7 +65,7 @@ Widget membersScrollView(WidgetRef ref) => SingleChildScrollView(
         Column(children: [
           InkWell(
             onTap: () {
-              ref.read(addExpenseProvider).changeSelectedMember(ref.watch(authProvider).userData.name);
+              ref.read(addExpenseProvider).changeSelectedMember(ref.watch(authProvider).userData.userId);
             },
             child: memberIcon(ref, ref.watch(authProvider).userData),
           ),
@@ -79,7 +79,7 @@ Widget membersScrollView(WidgetRef ref) => SingleChildScrollView(
               Column(children: [
                 InkWell(
                   onTap: () {
-                    ref.read(addExpenseProvider).changeSelectedMember(ref.watch(friendProvider).getFriend(memberId).name);
+                    ref.read(addExpenseProvider).changeSelectedMember(ref.watch(friendProvider).getFriend(memberId).userId);
                   },
                   child: memberIcon(
                     ref, 
@@ -98,7 +98,7 @@ Widget membersScrollView(WidgetRef ref) => SingleChildScrollView(
               Column(children: [
                 InkWell(
                   onTap: () {
-                    ref.read(addExpenseProvider).changeSelectedMember(members.name);
+                    ref.read(addExpenseProvider).changeSelectedMember(members.userId);
                   },
                   child: memberIcon(
                     ref, 
@@ -128,24 +128,32 @@ Widget itemSplitCard(WidgetRef ref, int index) => Row(
             style: const TextStyle(
               color: Color(0XFF4F4F4F),
           ),),
-          value: ref.watch(addExpenseProvider).items[index].selected,
+          value: ref.watch(addExpenseProvider).items[index].consumer.contains(ref.watch(addExpenseProvider).selectedMember)
+          ,
           tileColor: Colors.white,
           onChanged: (val) {
-            ref.read(addExpenseProvider).changeItemSelected(index);
+            ref.read(addExpenseProvider).changeItemConsumer(index, ref.watch(addExpenseProvider).selectedMember);
           },
         ),
         SizedBox(
           width: 340,
           child: 
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("${ref.watch(addExpenseProvider).items[index].qty} x"),
-              const SizedBox(width: 36),
-              Text("Rp ${ref.watch(addExpenseProvider).items[index].price}", style: const TextStyle(fontWeight: FontWeight.w700)),
+              Text(
+                "Total: Rp${ref.watch(addExpenseProvider).items[index].total}"
+              ),
+              Row(
+                children: [
+                  Text("${ref.watch(addExpenseProvider).items[index].qty} x"),
+                  const SizedBox(width: 36),
+                  Text("Rp ${ref.watch(addExpenseProvider).items[index].price}", style: const TextStyle(fontWeight: FontWeight.w700)),
+                ]
+              ),
             ],
           )
-        )
+        ),
     ],)
   )],
 );
@@ -187,8 +195,9 @@ Widget splitButton(WidgetRef ref) => GestureDetector(
       null;
     } else {
       if (ref.watch(addExpenseProvider).isNewGroup) {
-        await FriendServices().createGroup(ref);
+        await AddExpenseServices().createGroup(ref);
       }
+      await AddExpenseServices().createTransaction(ref);
     }
   },
   child: Container(
@@ -223,7 +232,7 @@ Widget splitButton(WidgetRef ref) => GestureDetector(
 Widget memberIcon(WidgetRef ref, member) {
   return CircleAvatar(
     backgroundColor: 
-      ref.watch(addExpenseProvider).selectedMember == member.name 
+      ref.watch(addExpenseProvider).selectedMember == member.userId 
       ? getProfileTextColor(member.color)
       : getProfileBgColor(member.color),
     radius: 32,

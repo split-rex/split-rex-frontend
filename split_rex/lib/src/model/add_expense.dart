@@ -16,37 +16,36 @@ class Items {
   int qty; 
   int price;
   int total;
-  bool selected;
+  List<String> consumer = [];
 
   Items({
     this.name = "",
     this.qty = 0,
     this.price = 0,
     this.total = 0,
-    this.selected = false
   });
 }
 
 class Transaction {
   String name;
   String desc;
-  int groupId;
+  String groupId;
   String date = DateTime.now().toUtc().toIso8601String();
   int subtotal;
   int tax;
   int service;
   int total;
-  int billOwner;
+  String billOwner;
   List<Items> items = []; 
 
   Transaction({
     this.name = "",
     this.desc = "",
-    this.groupId = -1,
+    this.groupId = "",
     this.subtotal = 0,
     this.tax = 0,
     this.service = 0,
     this.total = 0,
-    this.billOwner = -1,
+    this.billOwner = "",
   });
 }

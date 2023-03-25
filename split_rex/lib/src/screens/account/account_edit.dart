@@ -177,6 +177,32 @@ class SaveButton extends ConsumerWidget {
       );
       await ApiServices().updateProfile(ref);
       ref.watch(routeProvider).changePage("account");
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Container(
+          padding: const EdgeInsets.all(16),
+          height: 70,
+          decoration: const BoxDecoration(
+              color: Color(0xFF6DC7BD),
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                "Changes saved!",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ));
     },
     child: Container(
       margin: const EdgeInsets.all(20),

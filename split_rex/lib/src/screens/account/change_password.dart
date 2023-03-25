@@ -4,6 +4,7 @@ import 'package:split_rex/src/common/header.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/widgets/auth.dart';
 
+import '../../providers/routes.dart';
 import '../../services/auth.dart';
 
 class ChangePassword extends ConsumerStatefulWidget {
@@ -132,6 +133,33 @@ class ChangeButton extends ConsumerWidget {
       ref.read(authProvider).changeConfNewPass(confNewPassController.text);
     
       await ApiServices().updatePass(ref);
+      ref.read(routeProvider).changePage("edit_account");
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Container(
+          padding: const EdgeInsets.all(16),
+          height: 70,
+          decoration: const BoxDecoration(
+              color: Color(0xFF6DC7BD),
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                "Password changed!",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ));
     },
     child: Container(
       padding: const EdgeInsets.only(top: 16),

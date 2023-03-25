@@ -24,6 +24,8 @@ import 'package:split_rex/src/screens/expense/split_bill.dart';
 import '../screens/groups/group_setting.dart';
 import '../providers/camera.dart';
 import '../screens/scan_bill.dart';
+import '../screens/settle/settle_up.dart';
+import '../screens/settle/unsettled_payments.dart';
 
 class PageRouting extends ConsumerWidget {
   const PageRouting({super.key});
@@ -96,9 +98,17 @@ class PageRouting extends ConsumerWidget {
           picture: ref.watch(cameraProvider).picture,
         );
 
+        // settle payment
+      case "settle_up":
+        return const SettleUp();
+        
+      case "unsettled_payments":
+        return const UnsettledPayments();
+
+
       // home
       default:
-        return const UnsettledPayments();
+        return const Home();
     }
   }
 }

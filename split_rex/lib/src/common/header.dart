@@ -79,6 +79,26 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                         ))),
                               )
                             : const SizedBox(width: 0),
+                            ref.watch(routeProvider).currentPage == ("settle_up")
+                          ? Container(
+                              width: MediaQuery.of(context).size.width - 20.0,
+                              alignment: Alignment.centerRight,
+                              child: GestureDetector(
+                                  onTap: () => helpDialogUnsettledPayments(context),
+                                  child:
+                                      const Icon(Icons.help_outline_outlined)),
+                            )
+                          : const SizedBox(width: 0),
+                           ref.watch(routeProvider).currentPage == ("settle_up")
+                          ? Container(
+                              width: MediaQuery.of(context).size.width - 20.0,
+                              alignment: Alignment.centerRight,
+                              child: GestureDetector(
+                                  onTap: () => helpDialogSettleUp(context),
+                                  child:
+                                      const Icon(Icons.help_outline_outlined)),
+                            )
+                          : const SizedBox(width: 0),
                         ref.watch(routeProvider).currentPage == ("account")
                             ? Container(
                                 width: MediaQuery.of(context).size.width - 20.0,
@@ -115,6 +135,14 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
             ]))
           ],
         ));
+
+Future<void> _signOut(WidgetRef ref) async {
+  ref.read(routeProvider).clearRouteProvider();
+  ref.read(groupListProvider).clearGroupListProvider();
+  ref.read(friendProvider).clearFriendProvider();
+  ref.read(authProvider).clearAuthProvider();
+  ref.read(addExpenseProvider).clearAddExpenseProvider();
+}
 
 helpDialogUnsettledPayments(context) {
   showDialog(

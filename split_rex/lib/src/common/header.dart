@@ -142,11 +142,11 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
         ));
 
 Future<void> _signOut(WidgetRef ref) async {
-  ref.read(routeProvider).clearRouteProvider();
   ref.read(groupListProvider).clearGroupListProvider();
   ref.read(friendProvider).clearFriendProvider();
   ref.read(authProvider).clearAuthProvider();
-  ref.read(addExpenseProvider).clearAddExpenseProvider();
+  ref.read(addExpenseProvider).resetAll();
+  ref.read(routeProvider).clearRouteProvider();
 }
 
 helpDialogUnsettledPayments(context) {

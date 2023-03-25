@@ -49,22 +49,7 @@ class GroupListProvider extends ChangeNotifier {
         color: currMember["color"],
       ));
     }
-
-        List<Friend> memberList = <Friend>[];
-        for (int i = 0; i < dataMemberList.length; i++) {
-          var currMember = dataMemberList[i];
-          memberList.add(Friend(
-            userId: currMember["member_id"],
-            name: currMember["name"],
-            username: currMember["username"],
-          ));
-        }
-
-        groups[i].name = groupDetail["name"];
-        groupsLoaded[i].name = groupDetail["name"];
-        break;
-      }
-    }
+    currGroup.members = memberList;
   }
 
   void loadGroupData(dynamic modelList) {

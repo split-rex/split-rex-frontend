@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
+import 'package:logger/logger.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 
@@ -58,5 +59,27 @@ class GroupServices {
         await rootBundle.loadString('assets/groupLent.json');
     var data = await json.decode(response);
     // ref.read(groupListProvider).loadGroupData(data["data"]);
+  }
+
+  Future<void> editGroupInfo(WidgetRef ref, String groupId, String newGroupName) async {
+    Response resp = await post(
+      Uri.parse("$endpoint/editGroupInfo"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+      body: jsonEncode({
+        "group_id": groupId,
+        "name": newGroupName,
+      }),
+    );
+    var data = jsonDecode(resp.body);
+    var logger = Logger();
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      await getGroupDetail(ref, groupId);
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
   }
 }

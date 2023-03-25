@@ -23,6 +23,10 @@ import 'package:split_rex/src/screens/expense/edit_items.dart';
 import 'package:split_rex/src/screens/expense/split_bill.dart';
 
 import '../screens/groups/group_setting.dart';
+import '../providers/camera.dart';
+import '../screens/scan_bill.dart';
+import '../screens/settle/settle_up.dart';
+import '../screens/settle/unsettled_payments.dart';
 
 class PageRouting extends ConsumerWidget {
   const PageRouting({super.key});
@@ -82,8 +86,28 @@ class PageRouting extends ConsumerWidget {
           group: ref.watch(groupListProvider).currGroup,
         );
 
+      case "group_settings_edit":
+        return const GroupSettingsEdit();
+
       case "choose_friend_group_settings":
         return const ChooseFriendInGroupSetting();
+      // camera
+      case "scan_bill":
+        return CameraPage(
+          cameras: ref.watch(cameraProvider).cameras
+        );
+      case "preview_image":
+        return PreviewPage(
+          picture: ref.watch(cameraProvider).picture,
+        );
+
+        // settle payment
+      case "settle_up":
+        return const SettleUp();
+        
+      case "unsettled_payments":
+        return const UnsettledPayments();
+
 
       // home
       default:

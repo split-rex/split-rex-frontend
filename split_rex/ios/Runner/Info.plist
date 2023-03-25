@@ -47,5 +47,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>ESplit-Rex needs to access your camera to scan bill.</string>
 </dict>
 </plist>

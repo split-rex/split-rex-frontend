@@ -1,9 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import '../../providers/friend.dart';
 import '../../providers/routes.dart';
 import '../friends/friends.dart';
+
+var logger = Logger();
+
+class GroupNameSection extends ConsumerWidget {
+  const GroupNameSection({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+        height: 60,
+        width: MediaQuery.of(context).size.width - 40.0,
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            Text(
+              ref.watch(groupListProvider).currGroup.name,
+              style: const TextStyle(
+                  fontSize: 27,
+                  color: Color(0xFF4F4F4F),
+                  fontWeight: FontWeight.bold),
+            ),
+            const Spacer(),
+            InkWell(
+              onTap: () => {
+                logger.d("tapped"),
+                ref.watch(routeProvider).changePage("group_settings_edit"),
+              },
+              child: const Icon(
+                Icons.edit,
+                color: Colors.grey,
+              ),
+            )
+          ],
+        ));
+  }
+}
+
+class GroupNameSectionEdit extends ConsumerStatefulWidget {
+  const GroupNameSectionEdit({super.key});
+
+  @override
+  ConsumerState<GroupNameSectionEdit> createState() => _GroupNameSectionEdit();
+}
+
+class _GroupNameSectionEdit extends ConsumerState<GroupNameSectionEdit> {
+  final nameController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: 60,
+        width: MediaQuery.of(context).size.width - 40.0,
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            TextField(
+                key: UniqueKey(),
+                controller: nameController,
+                cursorColor: const Color(0xFF59C4B0),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                decoration: InputDecoration(
+                    filled: true,
+                    hintText: ref.watch(groupListProvider).currGroup.name,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    suffixIcon: const Icon(Icons.edit, color: Colors.grey)))
+          ],
+        ));
+  }
+}
 
 class AddGroupMembersSection extends ConsumerWidget {
   const AddGroupMembersSection({super.key});
@@ -84,13 +158,22 @@ class GroupMembers extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ListView.separated(
-                itemCount: ref.watch(groupListProvider).currGroup.members.length,
+                itemCount:
+                    ref.watch(groupListProvider).currGroup.members.length,
                 padding: const EdgeInsets.only(top: 12),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return FriendList(
-                    name: ref.watch(groupListProvider).currGroup.members[index].name,
-                    color: ref.watch(groupListProvider).currGroup.members[index].color,
+                    name: ref
+                        .watch(groupListProvider)
+                        .currGroup
+                        .members[index]
+                        .name,
+                    color: ref
+                        .watch(groupListProvider)
+                        .currGroup
+                        .members[index]
+                        .color,
                   );
                 },
                 separatorBuilder: (context, index) => const Divider(

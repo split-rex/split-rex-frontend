@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/group.dart';
+import 'package:camera/camera.dart';
+
+import '../providers/camera.dart';
+
 
 class Navbar extends ConsumerWidget {
   const Navbar({super.key});
@@ -105,8 +109,15 @@ class _PopupExpense extends ConsumerWidget {
                         const Divider(
                             thickness: 1, height: 24, color: Color(0XFFDCDCDC)),
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             // take photo
+                            if (ref.watch(cameraProvider).cameras == null) {
+                              await availableCameras().then((value) {
+                                ref.read(cameraProvider).setCameras(value);
+                              });
+                            }
+                            ref.read(routeProvider).changePage("scan_bill");
+                            // ignore: use_build_context_synchronously
                             Navigator.pop(context);
                           },
                           child: const Text("Take Photo"),

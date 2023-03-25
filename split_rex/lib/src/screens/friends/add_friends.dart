@@ -11,6 +11,7 @@ class AddFriends extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(errorProvider).changeError("");
     return header(
       context,
       ref,
@@ -25,9 +26,7 @@ class AddFriends extends ConsumerWidget {
                   : const SizedBox(
                       height: 0,
                     )
-              : const Center(heightFactor: 2, child: FriendsSearched()),
-         
-         // TODO; adding notify for friend sent
+              : const Center(heightFactor: 2, child: FriendsSearched()),         
         ],
       ),
     );

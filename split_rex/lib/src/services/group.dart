@@ -61,18 +61,20 @@ class GroupServices {
     if (data["message"] == "SUCCESS") {
       var transactions = data["data"];
       List<Transaction> newTransList = [];
-      for (var i = 0; i < transactions.length; i++) {
-        var currTrans = transactions[i];
-        var tempTrans = Transaction();
-        tempTrans.billOwner = currTrans["bill_owner"];
-        tempTrans.groupId = currTrans["group_id"];
-        tempTrans.name = currTrans["name"];
-        tempTrans.total = currTrans["total"];
-        newTransList.add(tempTrans);
+      if (transactions != null) {
+        for (var i = 0; i < transactions.length; i++) {
+          var currTrans = transactions[i];
+          var tempTrans = Transaction();
+          tempTrans.billOwner = currTrans["bill_owner"];
+          tempTrans.groupId = currTrans["group_id"];
+          tempTrans.name = currTrans["name"];
+          tempTrans.total = currTrans["total"];
+          newTransList.add(tempTrans);
+        }
+        ref.watch(groupListProvider).changeCurrGroupTransactions(newTransList);
+      } else {
+        ref.read(errorProvider).changeError(data["message"]);
       }
-      ref.watch(groupListProvider).changeCurrGroupTransactions(newTransList);
-    } else {
-      ref.read(errorProvider).changeError(data["message"]);
     }
   }
 

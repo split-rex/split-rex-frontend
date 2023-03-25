@@ -208,7 +208,7 @@ class FriendRequestsBody extends ConsumerWidget {
                               .name,
                           color: ref
                               .watch(friendProvider)
-                              .friendList[index]
+                              .friendSentList[index]
                               .color);
                     },
                     separatorBuilder: (context, index) => const Divider(

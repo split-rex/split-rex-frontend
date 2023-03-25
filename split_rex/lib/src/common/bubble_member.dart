@@ -16,7 +16,7 @@ getBubbleMember(memberList) {
           Positioned(
               child: CircleAvatar(
             backgroundColor: getProfileTextColor(memberList[0].color),
-            radius: 17,
+            radius: 15,
             child: Initicon(
               text: memberList[0].name,
               size: 30,
@@ -37,7 +37,7 @@ getBubbleMember(memberList) {
               left: 20,
               child: CircleAvatar(
                 backgroundColor: getProfileTextColor(memberList[0].color),
-                radius: 17,
+                radius: 15,
                 child: Initicon(
                   text: memberList[0].name,
                   size: 30,
@@ -49,7 +49,7 @@ getBubbleMember(memberList) {
           Positioned(
               child: CircleAvatar(
             backgroundColor: getProfileTextColor(memberList[1].color),
-            radius: 17,
+            radius: 15,
             child: Initicon(
               text: memberList[1].name,
               size: 30,
@@ -70,7 +70,7 @@ getBubbleMember(memberList) {
               left: 40,
               child: CircleAvatar(
                 backgroundColor: getProfileTextColor(memberList[0].color),
-                radius: 17,
+                radius: 15,
                 child: Initicon(
                   text: memberList[0].name,
                   size: 30,
@@ -83,7 +83,7 @@ getBubbleMember(memberList) {
               left: 20,
               child: CircleAvatar(
                 backgroundColor: getProfileTextColor(memberList[1].color),
-                radius: 17,
+                radius: 15,
                 child: Initicon(
                   text: memberList[1].name,
                   size: 30,
@@ -95,7 +95,7 @@ getBubbleMember(memberList) {
           Positioned(
               child: CircleAvatar(
             backgroundColor: getProfileTextColor(memberList[2].color),
-            radius: 17,
+            radius: 15,
             child: Initicon(
               text: memberList[2].name,
               size: 30,

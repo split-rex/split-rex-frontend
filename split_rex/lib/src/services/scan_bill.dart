@@ -1,34 +1,26 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/providers/auth.dart';
-import 'package:split_rex/src/providers/error.dart';
-
-
-import '../common/logger.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:http/http.dart';
+import 'package:path/path.dart';
+import 'package:split_rex/src/common/logger.dart';
 
 class ScanBillServices {
-  String endpoint = "";
+  String endpoint = "http://9723-34-83-153-36.ngrok.io/ocr";
+
 
   Future<void> postBill(WidgetRef ref, File file) async {
+    var stream = ByteStream(file.openRead());
+    stream.cast();
+    var length = await file.length();
+    MultipartRequest request = MultipartRequest("POST", Uri.parse(endpoint));
+    request.files.add(MultipartFile('image', stream, length, filename: basename(file.path), contentType: MediaType('image', 'jpg')));
+    StreamedResponse response = await request.send();
 
-    Response resp = await post(Uri.parse("$endpoint/"),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
-      },
-      body: jsonEncode(<String, dynamic>{
-        "name": "tes"
-      }
-    ));
-    var data = jsonDecode(resp.body);
-    logger.d(data);
-    if (data["message"] == "SUCCESS") {
-      
-    } else {
-      ref.read(errorProvider).changeError(data["message"]);
-    }
+    response.stream.transform(utf8.decoder).listen((value) {
+      logger.d(value);
+    });
   }
 }

@@ -49,9 +49,8 @@ class _CameraPageState extends ConsumerState<CameraPage> {
     try {
       XFile picture = await _cameraController.takePicture();
       ref.read(cameraProvider).setPicture(picture);
-      // TODO: PETORIKU DESU
       await ScanBillServices().postBill(ref, File(ref.watch(cameraProvider).picture.path));
-      ref.read(routeProvider).changePage("preview_image");
+      ref.read(routeProvider).changePage("add_expense");
     } on CameraException catch (e) {
       debugPrint('Error occured while taking picture: $e');
       return null;

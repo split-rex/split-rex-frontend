@@ -222,7 +222,7 @@ Widget listItem(WidgetRef ref) => ListView.separated(
 
 Widget addItem(WidgetRef ref) => InkWell(
   onTap: () {
-    ref.read(addExpenseProvider).addItem();
+    ref.read(addExpenseProvider).addEmptyItem();
   },
   child: Row(
     children: const [

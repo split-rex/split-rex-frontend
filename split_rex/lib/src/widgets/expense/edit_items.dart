@@ -190,10 +190,15 @@ Widget itemCard(WidgetRef ref, int index) => Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                padding: const EdgeInsets.only(top: 8.0, right: 8.0), 
+                margin: const EdgeInsets.only(top: 4.0),
+                padding: const EdgeInsets.all(8.0), 
                 alignment: Alignment.centerRight, 
                 child: Text(
-                  "Total: Rp ${ref.watch(addExpenseProvider).items[index].total.toString()}", textAlign: TextAlign.right
+                  "Total: Rp ${ref.watch(addExpenseProvider).items[index].total.toString()}", 
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                  )
                 )
               )
             ],

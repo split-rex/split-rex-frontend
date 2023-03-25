@@ -91,7 +91,7 @@ class GroupServices {
 
   Future<void> getGroupLent(WidgetRef ref) async {
     Response response = await get(
-      Uri.parse("$endpoint/userGroupOwed"),
+      Uri.parse("$endpoint/userGroupLent"),
       headers: <String, String>{
         'Content-Type': 'application/json',
         "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
@@ -99,7 +99,7 @@ class GroupServices {
     );
     var data = await json.decode(response.body);
     logger.d(data["data"]);
-    return data["data"]["list_group"].isNotEmpty;
+    ref.watch(groupListProvider).updateHasLentGroups(data["data"]["list_group"].isNotEmpty);
   }
 
   Future<void> editGroupInfo(WidgetRef ref, String groupId, String newGroupName) async {

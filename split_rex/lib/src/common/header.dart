@@ -116,10 +116,135 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
           ],
         ));
 
-Future<void> _signOut(WidgetRef ref) async {
-  ref.read(groupListProvider).clearGroupListProvider();
-  ref.read(friendProvider).clearFriendProvider();
-  ref.read(authProvider).clearAuthProvider();
-  ref.read(addExpenseProvider).clearAddExpenseProvider();
-  ref.read(routeProvider).clearRouteProvider();
+helpDialogUnsettledPayments(context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => Dialog(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(children: [
+              const Spacer(),
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const Icon(
+                  Icons.close,
+                  color: Color(0xFF15808D),
+                ),
+              )
+            ]),
+            const Icon(
+              Icons.question_answer_rounded,
+              color: Color(0xFF38AFA2),
+              size: 58,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text('How do we calculate these balances?',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text(
+              'Balances are calculated using a graph algorithm.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Text(
+              'The algorithm goals is to minimize the amount of money transfers among group members. There will be no circular debts after the transaction is simplified.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Text(
+              '  These balances will automatically change after making new transaction.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 15),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+// TODO: delete kalo gaperlu buat settle up
+helpDialogSettleUp(context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => Dialog(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(children: [
+              const Spacer(),
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const Icon(
+                  Icons.close,
+                  color: Color(0xFF15808D),
+                ),
+              )
+            ]),
+            const Icon(
+              Icons.question_answer_rounded,
+              color: Color(0xFF38AFA2),
+              size: 58,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text('How do we calculate these balances?',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text(
+              'Balances are calculated using a graph algorithm.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Text(
+              'The algorithm goals is to minimize the amount of money transfers among group members. There will be no circular debts after the transaction is simplified.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Text(
+              '  These balances will automatically change after making new transaction.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 15),
+          ],
+        ),
+      ),
+    ),
+  );
 }

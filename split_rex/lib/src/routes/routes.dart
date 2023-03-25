@@ -87,7 +87,7 @@ class PageRouting extends ConsumerWidget {
 
       // home
       default:
-        return const Home();
+        return const UnsettledPayments();
     }
   }
 }

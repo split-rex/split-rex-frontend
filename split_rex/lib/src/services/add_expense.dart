@@ -6,7 +6,6 @@ import 'package:split_rex/src/model/add_expense.dart';
 
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
-import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 
 import './group.dart';
@@ -19,8 +18,6 @@ class FriendServices {
 
   Future<void> createGroup(WidgetRef ref) async {
     NewGroup newGroup = ref.watch(addExpenseProvider).newGroup;
-    // TODO: cek bener ga ini
-    // newGroup.memberId.add(ref.watch(authProvider).userData.userId);
 
     Response resp = await post(Uri.parse("$endpoint/userCreateGroup"),
         headers: <String, String>{
@@ -30,14 +27,13 @@ class FriendServices {
         body: jsonEncode(<String, dynamic>{
           "name": newGroup.name,
           "member_id": newGroup.memberId,
-          // TODO: utc
-          "start_date": newGroup.startDate,
-          "end_date": newGroup.endDate
+          "start_date": DateTime.parse(newGroup.startDate).toUtc().toIso8601String(),
+          "end_date": DateTime.parse(newGroup.endDate).toUtc().toIso8601String()
         }));
     var data = jsonDecode(resp.body);
     logger.d(data);
     if (data["message"] == "SUCCESS") {
-      ref.read(groupListProvider).changeCurrGroup(data["data"]);
+      await GroupServices().getGroupDetail(ref, data["data"]);
       ref.read(addExpenseProvider).clearAddExpenseProvider();
       ref.read(routeProvider).changeNavbarIdx(1);
       ref.read(routeProvider).changePage("group_detail");

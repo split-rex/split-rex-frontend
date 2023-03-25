@@ -30,7 +30,14 @@ class GroupListProvider extends ChangeNotifier {
   }
 
   void changeCurrGroupDetail(dynamic groupDetail) {
-    var dataMemberList = groupDetail["list_member"];
+    currGroup.groupId = groupDetail["group_id"];
+    currGroup.name = groupDetail["name"];
+    currGroup.startDate = groupDetail["start_date"].toString();
+    currGroup.endDate = groupDetail["end_date"].toString();
+    currGroup.type = groupDetail["type"];
+    currGroup.totalUnpaid = groupDetail["total_unpaid"];
+    currGroup.totalExpense = groupDetail["total_expense"];
+    var dataMemberList = groupDetail["list_memberr"];
 
     List<Friend> memberList = <Friend>[];
     for (int i = 0; i < dataMemberList.length; i++) {
@@ -39,6 +46,7 @@ class GroupListProvider extends ChangeNotifier {
         userId: currMember["member_id"],
         name: currMember["name"],
         username: currMember["username"],
+        color: currMember["color"],
       ));
     }
 

@@ -4,13 +4,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/model/group_model.dart';
 
 import '../common/logger.dart';
+import '../model/add_expense.dart';
 import '../model/friends.dart';
 
 class GroupListProvider extends ChangeNotifier {
+  bool hasOwedGroups = false;
+  bool hasLentGroups = false;
   List<GroupListModel> groups = <GroupListModel>[];
   List<GroupListModel> groupsLoaded = <GroupListModel>[];
   GroupListModel currGroup = GroupListModel("", "", [], "", "", "", 0, 0);
   bool isOwed = true;
+
+  void updateHasOwedGroups(bool val) {
+    hasOwedGroups = val;
+    notifyListeners();
+  }
+
+  void updateHasLentGroups(bool val) {
+    hasLentGroups = val;
+    notifyListeners();
+  }
 
   void clearGroupListProvider() {
     groups = <GroupListModel>[];
@@ -27,6 +40,10 @@ class GroupListProvider extends ChangeNotifier {
 
   void changeCurrGroup(GroupListModel group) {
     currGroup = group;
+  }
+
+  void changeCurrGroupTransactions(List<Transaction> transactions){
+    currGroup.transactions = transactions;
   }
 
   void changeCurrGroupDetail(dynamic groupDetail) {

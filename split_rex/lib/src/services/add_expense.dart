@@ -165,6 +165,7 @@ class AddExpenseServices {
       logger.d("SUKSESSSSSSS");
       ref.watch(addExpenseProvider).resetAll();      
       ref.read(routeProvider).changeNavbarIdx(1);
+      await GroupServices().getGroupTransactions(ref);
       ref.read(routeProvider).changePage("group_detail");
     } else {
       ref.read(errorProvider).changeError(data["message"]);

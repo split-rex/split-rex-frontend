@@ -61,7 +61,7 @@ class GroupInfo extends ConsumerWidget {
             child: Row(
               children: [
                 Text(
-                  "Rp.$totalExpense",
+                  "Rp${ref.watch(groupListProvider).currGroup.totalExpense}",
                   style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 20,
@@ -79,7 +79,7 @@ class GroupInfo extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  convertDate(startDate) + "-" + convertDate(endDate),
+                  convertDate(ref.watch(groupListProvider).currGroup.startDate) + " - " + convertDate(ref.watch(groupListProvider).currGroup.endDate),
                   style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     color: Colors.white,
@@ -121,12 +121,29 @@ class BalanceInfo extends ConsumerWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w400),
                         children: [
-                          const TextSpan(text: "You owe "),
+                          TextSpan(text: 
+                            ref.watch(groupListProvider).currGroup.type == "EQUAL" 
+                            ? "You are all settled up "
+                            : ref.watch(groupListProvider).currGroup.type == "LENT" 
+                              ? "You lent "
+                              : "You owe "
+                          ),
                           TextSpan(
-                              text: totalUnpaid.toString(),
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w700)),
-                          const TextSpan(text: " in total!"),
+                              text:
+                              ref.watch(groupListProvider).currGroup.type == "EQUAL"
+                              ? ""
+                              : "Rp${ref.watch(groupListProvider).currGroup.totalUnpaid.toString().replaceAll('-', '')}",
+                              style:  TextStyle(
+                                color: 
+                                ref.watch(groupListProvider).currGroup.type == "OWED"
+                                ? const Color(0XFFF10D0D)
+                                : const Color(0xFF4F9A99),
+                                fontWeight: FontWeight.w800,
+                              )),
+                          TextSpan(text: 
+                          ref.watch(groupListProvider).currGroup.type == "EQUAL"
+                          ? ""
+                          : " in total"),
                         ]),
                   ),
                 ],
@@ -203,9 +220,9 @@ class GroupDetailContent extends ConsumerWidget {
               Expanded(
                   child: ListView.builder(
                       padding: EdgeInsets.zero,
-                      itemCount: ref.watch(groupListProvider).groups.length,
+                      itemCount: ref.watch(groupListProvider).currGroup.transactions.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return const TransactionItem();
+                        return TransactionItem(key: UniqueKey(), listIdx: index);
                       })),
             ],
           ),
@@ -213,11 +230,18 @@ class GroupDetailContent extends ConsumerWidget {
   }
 }
 
-class TransactionItem extends ConsumerWidget {
-  const TransactionItem({super.key});
+class TransactionItem extends ConsumerStatefulWidget {
+  final int listIdx;
+  const TransactionItem({super.key, required this.listIdx});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  TransactionItemState createState() => TransactionItemState();
+}
+
+class TransactionItemState extends ConsumerState<TransactionItem> {
+  @override
+  Widget build(BuildContext context) {
+    print(widget.listIdx);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -266,13 +290,26 @@ class TransactionItem extends ConsumerWidget {
           const SizedBox(
             width: 20,
           ),
-          const Text(
-            "Francesco paid Luka Rp.120.000",
-            style: TextStyle(
-              color: Color(0XFF9A9AB0),
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].name,
+                style: const TextStyle(
+                  color: Color(0XFF9A9AB0),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                "Rp${ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].total}",
+                style: const TextStyle(
+                  color: Color(0XFF9A9AB0),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           )
         ],
       ),

@@ -71,13 +71,24 @@ class AddExpenseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  addBillSubtotalTotal(int val) {
+    newBill.total += val;
+    newBill.subtotal += val;
+    notifyListeners();
+  }
+
   changeBillTotal(int val) {
     newBill.total = val;
     notifyListeners();
   }
 
-  addItem() {
+  addEmptyItem() {
     items.add(Items());
+    notifyListeners();
+  }
+
+  addItem(Items item) {
+    items.add(item);
     notifyListeners();
   }
 

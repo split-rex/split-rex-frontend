@@ -58,13 +58,36 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
       width: MediaQuery.of(context).size.width - 40.0,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Expanded(
-            child: ListView.builder(
+            child: 
+            ref.watch(routeProvider).currentPage == "group_list"
+            ||
+            ((
+              ref.watch(groupListProvider).hasLentGroups
+              && !(ref.watch(groupListProvider).isOwed))
+            || 
+            (
+              ref.watch(groupListProvider).hasOwedGroups
+              && (ref.watch(groupListProvider).isOwed)
+            )
+            && ref.watch(routeProvider).currentPage == "home")
+          ?
+          ListView.builder(
           padding: EdgeInsets.zero,
           // shrinkWrap: true,
           // padding: const EdgeInsets.symmetric(vertical: 8.0),
           itemCount: ref.watch(groupListProvider).groups.length,
           itemBuilder: (BuildContext context, int index) {
-            return Container(
+            return 
+            ref.watch(routeProvider).currentPage == "group_list"
+            ||
+            ((ref.watch(groupListProvider).isOwed 
+            && ref.watch(groupListProvider).groups[index].type == "OWED")
+            ||
+            ((!ref.watch(groupListProvider).isOwed) 
+            && ref.watch(groupListProvider).groups[index].type == "LENT")
+            && ref.watch(routeProvider).currentPage == "home") 
+            ?
+            Container(
                 margin: const EdgeInsets.symmetric(vertical: 8.0),
                 padding: const EdgeInsets.all(16.0),
                 decoration: const BoxDecoration(
@@ -77,6 +100,7 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                   onTap: () async {
                     var currGroup = ref.watch(groupListProvider).groups[index];
                     ref.read(groupListProvider).changeCurrGroup(currGroup);
+                    await GroupServices().getGroupTransactions(ref);
                     ref.read(routeProvider).changePage("group_detail");
                     // Navigator.push(
                     //     context,
@@ -106,7 +130,7 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                         .watch(groupListProvider)
                                         .groups[index]
                                         .startDate) +
-                                    "-" +
+                                    " - " +
                                     convertDate(ref
                                         .watch(groupListProvider)
                                         .groups[index]
@@ -124,15 +148,29 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                         color: Color(0XFF4f4f4f),
                                         fontWeight: FontWeight.w400),
                                     children: [
-                                      const TextSpan(text: "You owe "),
+                                      TextSpan(text: 
+                                        ref.watch(groupListProvider).groups[index].type == "EQUAL" 
+                                        ? "You are all settled up "
+                                        : ref.watch(groupListProvider).groups[index].type == "LENT" 
+                                          ? "You lent "
+                                          : "You owe "
+                                      ),
                                       TextSpan(
                                           text:
-                                              "Rp${ref.watch(groupListProvider).groups[index].totalUnpaid}",
-                                          style: const TextStyle(
-                                            color: Color(0XFFF10D0D),
+                                          ref.watch(groupListProvider).groups[index].type == "EQUAL"
+                                          ? ""
+                                          : "Rp${ref.watch(groupListProvider).groups[index].totalUnpaid.toString().replaceAll('-', '')}",
+                                          style:  TextStyle(
+                                            color: 
+                                            ref.watch(groupListProvider).groups[index].type == "OWED"
+                                            ? const Color(0XFFF10D0D)
+                                            : const Color(0xFF4F9A99),
                                             fontWeight: FontWeight.w800,
                                           )),
-                                      const TextSpan(text: " in total"),
+                                      TextSpan(text: 
+                                      ref.watch(groupListProvider).groups[index].type == "EQUAL"
+                                      ? ""
+                                      : " in total"),
                                     ]),
                               ),
                             ]),
@@ -149,8 +187,13 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                               getBubbleMember(ref.watch(groupListProvider).groups[index].members),
                             ]),
                       ]),
-                ));
+                ))
+              : const SizedBox();
           },
+        ):
+        Center(child: 
+          Text("You have no ${ref.watch(groupListProvider).isOwed ? "owed" : "lent"} groups"
         ))
+        )
       ]));
 }

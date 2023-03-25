@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../model/profile_color.dart';
 
 convertDate(inputDate) {
-  final inputFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSZZZZZ");
+  final inputFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
   final outputFormat = DateFormat("dd MMM yyyy");
 
   final date = inputFormat.parse(inputDate);

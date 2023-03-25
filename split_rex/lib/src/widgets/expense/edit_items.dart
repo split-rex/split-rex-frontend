@@ -1,27 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-Widget dateTimeField(WidgetRef ref) => TextField(
-  onChanged: (val) {
-    ref.read(addExpenseProvider).changeStartDate(DateTime.now().toUtc().toIso8601String());
-    ref.read(addExpenseProvider).changeEndDate(DateTime.now().toUtc().toIso8601String());
-  },
-  style: const TextStyle(
-    fontWeight: FontWeight.w900,
-  ),
-  decoration: InputDecoration(
-    contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16.0),
-    hintText: "${DateTime.now().day.toString()}/${DateTime.now().month.toString()}/${DateTime.now().year.toString()}\t\t\t\t|\t\t\t\t${DateTime.now().hour.toString()}:${DateTime.now().minute.toString()}",
-    filled: true,
-    fillColor: const Color(0XFFF6F6F6),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: BorderSide.none
+class DateTimeField extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return TextField(
+    onChanged: (val) {
+      showDialog(
+        barrierColor: const Color.fromARGB(82, 0, 0, 0),
+        context: context,
+        builder: (BuildContext dialogContext) {
+          final DateRangePickerController dateController = DateRangePickerController();
+          dateController.selectedRange = PickerDateRange(DateTime.now(), DateTime.now().add(Duration(days: 3)));
+          return Center(
+            child: Container(
+              // padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              // width: MediaQuery.of(context).size.width - 60.0,
+              // height: MediaQuery.of(context).size.height - 275.0,
+              // decoration: BoxDecoration(
+              //   color: Colors.white,
+              //   borderRadius: BorderRadius.circular(8.0),
+              // ),
+              // child: 
+              //   Column(
+              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //     children: [
+              //     const Text("Select start and end date"),
+              //     SfDateRangePicker(
+              //       controller: dateController,
+              //       view: DateRangePickerView.month,
+              //       selectionMode: DateRangePickerSelectionMode.range,
+              //       onSelectionChanged: (args) {
+              //         if (ref.watch(addExpenseProvider).isNewGroup) {
+              //           ref.read(addExpenseProvider).changenew(args.value.startDate);
+              //           ref.read(addExpenseProvider).changeEndDate(args.value.endDate ?? args.value.startDate);
+              //         }
+              //       },
+              //     )
+              //   ])
+            )
+          );
+        }
+      );
+      // ref.read(addExpenseProvider).changeStartDate(DateTime.now().toUtc().toIso8601String());
+      // ref.read(addExpenseProvider).changeEndDate(DateTime.now().toUtc().toIso8601String());
+    },
+    style: const TextStyle(
+      fontWeight: FontWeight.w900,
     ),
-  ),
-);
+    decoration: InputDecoration(
+      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16.0),
+      hintText: "${DateTime.now().day.toString()}/${DateTime.now().month.toString()}/${DateTime.now().year.toString()}\t\t\t\t|\t\t\t\t${DateTime.now().hour.toString()}:${DateTime.now().minute.toString()}",
+      filled: true,
+      fillColor: const Color(0XFFF6F6F6),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        borderSide: BorderSide.none
+      ),
+    ),
+  );
+}
+}
 
 Widget itemCard(WidgetRef ref, int index) => Row(
   children: [

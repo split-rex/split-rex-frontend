@@ -36,9 +36,14 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                 alignment: Alignment.centerLeft,
                                 padding: const EdgeInsets.only(left: 20),
                                 child: InkWell(
-                                  onTap: () => ref
+                                  onTap: () { 
+                                    if (prevPage == "add_expense") {
+                                      ref.read(addExpenseProvider).resetNewGroup();
+                                    }
+                                    ref
                                       .watch(routeProvider)
-                                      .changePage(prevPage),
+                                      .changePage(prevPage);
+                                  },
                                   child: const Icon(Icons.navigate_before,
                                       color: Color(0XFF4F4F4F), size: 35),
                                 ))

@@ -7,14 +7,27 @@ import '../model/group_model.dart';
 
 class AddExpenseProvider extends ChangeNotifier {
   List<Items> items = [];
+  bool isNewGroup = false;
   NewGroup newGroup = NewGroup();
+  Transaction newBill = Transaction();
   GroupListModel existingGroup = GroupListModel("", "", [], "", "", "", 0, 0);
 
   clearAddExpenseProvider() {
     items.clear();
+    isNewGroup = false;
     newGroup = NewGroup();
     existingGroup = GroupListModel("", "", [], "", "", "", 0, 0);
     notifyListeners();
+  }
+
+  resetNewGroup() {
+    newGroup.name = "";
+    newGroup.startDate = "";
+    newGroup.endDate = "";
+  }
+
+  changeBillName(val) {
+    newBill.name = val;
   }
 
   addItem() {
@@ -54,20 +67,27 @@ class AddExpenseProvider extends ChangeNotifier {
     } else {
       newGroup.memberId.add(member.userId);
     }
+
+    if (newGroup.memberId.isEmpty) {
+      isNewGroup = false;
+    } else {
+      isNewGroup = true;
+    }
+
     notifyListeners();
   }
 
-  changeBillName(val) {
+  changeNewGroupName(val) {
     newGroup.name = val;
     notifyListeners();
   }
 
-  changeStartDate(val) {
+  changeNewGroupStartDate(val) {
     newGroup.startDate = val;
     notifyListeners();
   }
 
-  changeEndDate(val) {
+  changeNewGroupEndDate(val) {
     newGroup.endDate = val;
     notifyListeners();
   }

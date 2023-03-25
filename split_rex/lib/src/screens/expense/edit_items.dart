@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/header.dart';
+import 'package:split_rex/src/providers/add_expense.dart';
 
 import 'package:split_rex/src/widgets/expense/edit_items.dart';
 
@@ -13,7 +14,7 @@ class EditItems extends ConsumerWidget {
       context, 
       ref,
       "Edit Items",
-      "add_expense",
+      ref.watch(addExpenseProvider).isNewGroup ? "new_group" : "add_expense",
       Stack(
         children: [
       SingleChildScrollView(
@@ -40,7 +41,7 @@ class EditItems extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            dateTimeField(ref),
+                            DateTimeField(),
                             const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(30, 79, 79, 79)),
                             listItem(ref),
                             const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(30, 79, 79, 79)),

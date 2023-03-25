@@ -11,6 +11,7 @@ import 'package:split_rex/src/screens/friends/choose_friend.dart';
 import 'package:split_rex/src/screens/friends/friend_requests.dart';
 import 'package:split_rex/src/screens/groups/group_detail.dart';
 import 'package:split_rex/src/screens/groups/group_list.dart';
+import 'package:split_rex/src/screens/groups/new_group.dart';
 
 import 'package:split_rex/src/screens/home.dart';
 import 'package:split_rex/src/screens/auth/sign_in.dart';
@@ -59,6 +60,8 @@ class PageRouting extends ConsumerWidget {
         return const EditItems();
       case "split_bill":
         return const SplitBill();
+      case "new_group":
+        return const CreateNewGroup();
 
       // group detail
       case "group_detail":

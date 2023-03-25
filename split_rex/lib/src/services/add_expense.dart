@@ -19,7 +19,8 @@ class FriendServices {
 
   Future<void> createGroup(WidgetRef ref) async {
     NewGroup newGroup = ref.watch(addExpenseProvider).newGroup;
-    newGroup.memberId.add(ref.watch(authProvider).userData.userId);
+    // TODO: cek bener ga ini
+    // newGroup.memberId.add(ref.watch(authProvider).userData.userId);
 
     Response resp = await post(Uri.parse("$endpoint/userCreateGroup"),
         headers: <String, String>{
@@ -29,6 +30,7 @@ class FriendServices {
         body: jsonEncode(<String, dynamic>{
           "name": newGroup.name,
           "member_id": newGroup.memberId,
+          // TODO: utc
           "start_date": newGroup.startDate,
           "end_date": newGroup.endDate
         }));

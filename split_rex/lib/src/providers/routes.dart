@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RouteProvider extends ChangeNotifier {
-  String currentPage = "settle_up";
+  String currentPage = "unsettled_payments";
   int currentNavbarIdx = 0;
   bool isNavbarRevealed = false;
 
@@ -20,7 +20,7 @@ class RouteProvider extends ChangeNotifier {
     "account",
   ];
 
-  void changePage(value){
+  void changePage(value) {
     currentPage = value;
     if (_pagesWithNavbar.contains(value)) {
       isNavbarRevealed = true;
@@ -32,7 +32,7 @@ class RouteProvider extends ChangeNotifier {
 
   void changeNavbarIdx(value) {
     currentNavbarIdx = value;
-    switch(value) {
+    switch (value) {
       case 0:
         changePage("home");
         break;

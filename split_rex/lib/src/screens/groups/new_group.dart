@@ -35,85 +35,88 @@ class _CreateNewGroupState extends ConsumerState<CreateNewGroup> {
       ref,
       "Create New Group",
       "add_expense",
-      Container(
-        padding: const EdgeInsets.all(16.0),
-        decoration: const BoxDecoration(
-        ),
-        width: double.infinity,
-        child: Column(
-          children:[
-            Container(
-              padding: const EdgeInsets.only(left: 24, right: 24, bottom: 16),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(8.0))
+      SingleChildScrollView(
+        child:
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          decoration: const BoxDecoration(
+          ),
+          width: double.infinity,
+          child: Column(
+            children:[
+              Container(
+                padding: const EdgeInsets.only(left: 24, right: 24, bottom: 16),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(8.0))
+                ),
+                child: Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Group Name",
+                          style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF4F4F4F),
+                        )),
+                        const SizedBox(height: 8.0,),
+                        TextField(
+                          key: UniqueKey(),
+                          controller: nameController,
+                          cursorColor: const Color(0xFF59C4B0),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          decoration: InputDecoration(
+                            filled: true,
+                            hintText: ref.watch(addExpenseProvider).newGroup.name,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            suffixIcon: const Icon(Icons.edit, color: Colors.grey)
+                          )
+                        ),
+                        const SizedBox(height: 24),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Select start and end date",
+                              style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF4F4F4F),
+                            )),
+                            const SizedBox(height: 8.0),
+                            Center(
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                width: MediaQuery.of(context).size.width - 60.0,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child:
+                                  SfDateRangePicker(
+                                    controller: dateController,
+                                    view: DateRangePickerView.month,
+                                    selectionMode: DateRangePickerSelectionMode.range,
+                                ),
+                              )
+                            ),
+                          ],
+                        ),
+                        NextButton(key: UniqueKey(), nameController: nameController, dateController: dateController),
+                      ],
+                    ),
+                  ]
+                )
               ),
-              child: Stack(
-                alignment: Alignment.topRight,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Group Name",
-                        style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF4F4F4F),
-                      )),
-                      const SizedBox(height: 8.0,),
-                      TextField(
-                        key: UniqueKey(),
-                        controller: nameController,
-                        cursorColor: const Color(0xFF59C4B0),
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                        decoration: InputDecoration(
-                          filled: true,
-                          hintText: ref.watch(addExpenseProvider).newGroup.name,
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          suffixIcon: const Icon(Icons.edit, color: Colors.grey)
-                        )
-                      ),
-                      const SizedBox(height: 24),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Select start and end date",
-                            style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF4F4F4F),
-                          )),
-                          const SizedBox(height: 8.0),
-                          Center(
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              width: MediaQuery.of(context).size.width - 60.0,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child:
-                                SfDateRangePicker(
-                                  controller: dateController,
-                                  view: DateRangePickerView.month,
-                                  selectionMode: DateRangePickerSelectionMode.range,
-                              ),
-                            )
-                          ),
-                        ],
-                      ),
-                      NextButton(key: UniqueKey(), nameController: nameController, dateController: dateController),
-                    ],
-                  ),
-                ]
-              )
-            ),
-          ]
-        )
-      ),
+            ]
+          )
+        ),
+      )
     );
   }
 }

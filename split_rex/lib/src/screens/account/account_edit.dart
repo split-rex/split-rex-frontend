@@ -91,25 +91,26 @@ class _EditAccountState extends ConsumerState<EditAccount> {
                               )),
                             ],
                           ),
-                          const SizedBox(height: 20.0,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text("Email",
-                                style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF4F4F4F),
-                              )),
-                              SizedBox(height: 4.0),
-                              Text("placeholder@email.com",
-                                style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.red,
-                              )),
-                            ],
-                          ),
+                          // TODO: uncomment ini di bawah when email is ready in getprofile
+                          // const SizedBox(height: 20.0,),
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: const [
+                          //     Text("Email",
+                          //       style: TextStyle(
+                          //       fontSize: 16,
+                          //       fontWeight: FontWeight.bold,
+                          //       color: Color(0xFF4F4F4F),
+                          //     )),
+                          //     SizedBox(height: 4.0),
+                          //     Text("placeholder@email.com",
+                          //       style: TextStyle(
+                          //       fontSize: 16,
+                          //       fontWeight: FontWeight.w300,
+                          //       color: Colors.red,
+                          //     )),
+                          //   ],
+                          // ),
                         ],
                       )
                     ),

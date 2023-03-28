@@ -12,7 +12,7 @@ import 'package:split_rex/src/providers/add_expense.dart';
 
 // TODO masi janky
 class ScanBillServices {
-  String endpoint = "http://3271-34-91-67-56.ngrok.io/ocr";
+  String endpoint = "http://847a-35-204-185-137.ngrok.io/ocr";
 
   Future<void> postBill(WidgetRef ref, File file) async {
     var stream = ByteStream(file.openRead());

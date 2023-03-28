@@ -71,6 +71,8 @@ class EditItems extends ConsumerWidget {
                                 ],
                               ),
                             ),
+                            const SizedBox(height: 24.0),
+                            confirmButton(ref)
                           ],
                         ),
                       ),
@@ -83,10 +85,6 @@ class EditItems extends ConsumerWidget {
           )
                   
                 ),
-                Align(alignment: Alignment.bottomCenter,
-                child: 
-          confirmButton(ref)
-                )
         ],
       )
           

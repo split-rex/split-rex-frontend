@@ -310,15 +310,8 @@ Widget confirmButton(WidgetRef ref) => GestureDetector(
     height: 72,
     child:
     Container(
-      decoration: const BoxDecoration(
-        boxShadow: [BoxShadow(
-          offset: Offset(0, 5.0),
-          blurRadius: 15,
-          color: Color.fromARGB(59, 0, 0, 0),
-        )],
-        color: Colors.white,
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 18.0),
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Container(
         padding: const EdgeInsets.all(16.0),
         alignment: Alignment.center,

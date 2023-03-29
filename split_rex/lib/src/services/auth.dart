@@ -133,14 +133,13 @@ class ApiServices {
       ref.read(authProvider).changeJwtToken(data["data"]);
       ref.read(errorProvider).changeError(data["message"]);
       await getProfile(ref);
+      await GroupServices().userGroupList(ref);
       await FriendServices().userFriendList(ref);
       await FriendServices().friendRequestReceivedList(ref);
       await FriendServices().friendRequestSentList(ref);
-      GroupServices().getGroupOwed(ref.watch(authProvider).jwtToken).then((val) async {
-        ref.read(groupListProvider).updateHasOwedGroups(val);
-        await GroupServices().userGroupList(ref);
-        ref.read(routeProvider).changePage("home");
-      });
+      ref.read(routeProvider).changePage("home");
+      AsyncValue<bool> val = ref.refresh(getGroupOwedLent(true));
+      ref.read(groupListProvider).updateHasOwedGroups(val as bool);
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

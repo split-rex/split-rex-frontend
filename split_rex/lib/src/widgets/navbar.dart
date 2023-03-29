@@ -33,7 +33,7 @@ class Navbar extends ConsumerWidget {
               if (ref.watch(groupListProvider).isOwed) {
                 await GroupServices().getGroupOwed(ref.watch(authProvider).jwtToken);
               } else {
-                await GroupServices().getGroupLent(ref);
+                await GroupServices().getGroupLent(ref.watch(authProvider).jwtToken);
               }
             }
             if (value == 1)  {

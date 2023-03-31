@@ -38,9 +38,14 @@ class UserDetail extends ConsumerWidget {
           ),
           Text(
             ref.watch(authProvider).userData.name,
-            style: const TextStyle(
+            style:  TextStyle(
               fontWeight: FontWeight.w700,
-              fontSize: 28,
+              fontSize: 
+               ref.watch(authProvider).userData.name.length > 15
+                  ? 12
+                  : ref.watch(authProvider).userData.name.length > 10
+                      ? 14
+                      : 20,
               color: Colors.white,
             ),
           )

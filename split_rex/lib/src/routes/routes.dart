@@ -6,6 +6,7 @@ import 'package:split_rex/src/screens/account/account.dart';
 import 'package:split_rex/src/screens/activity.dart';
 import 'package:split_rex/src/screens/account/account_edit.dart';
 import 'package:split_rex/src/screens/account/change_password.dart';
+import 'package:split_rex/src/screens/auth/username_fill.dart';
 import 'package:split_rex/src/screens/friends/add_friends.dart';
 import 'package:split_rex/src/screens/friends/choose_friend.dart';
 import 'package:split_rex/src/screens/friends/friend_requests.dart';
@@ -80,6 +81,8 @@ class PageRouting extends ConsumerWidget {
         return const EditAccount();
       case "change_password":
         return const ChangePassword();
+      case "fill_username":
+        return UsernameFill();
 
       case "group_settings":
         return GroupSettings(

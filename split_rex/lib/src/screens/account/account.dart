@@ -163,7 +163,7 @@ class PaymentInfoDetail extends ConsumerWidget {
             ),
           ),
           TextButton(
-              onPressed: () => friendInfoDialog(context),
+              onPressed: () => editPaymentInfoDialog(context),
               child: const Text(
                 "Edit",
                 style: TextStyle(color: Color(0xff2E9281)),
@@ -499,8 +499,9 @@ deletePaymentInfoDialog(context) {
             const SizedBox(height: 30),
             Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
               InkWell(
-                // onTap: () async =>
-                //     await FriendServices().rejectFriendRequest(ref, userId),
+                onTap: () {
+                  Navigator.pop(context);
+                },
                 child: Container(
                   alignment: Alignment.center,
                   width: 140,
@@ -647,7 +648,7 @@ class FriendPaymentInfoDetail extends ConsumerWidget {
 }
 
 // TODO : ini modal sem yang confirm/deny settle
-confirmOrDenyPayemnt(context) {
+confirmOrDenyPayment(context) {
   showDialog(
     context: context,
     builder: (BuildContext context) => Dialog(
@@ -708,8 +709,9 @@ confirmOrDenyPayemnt(context) {
             const SizedBox(height: 20),
             Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
               InkWell(
-                // onTap: () async =>
-                //     await FriendServices().rejectFriendRequest(ref, userId),
+                onTap: () {
+                  Navigator.pop(context);
+                },
                 child: Container(
                   alignment: Alignment.center,
                   width: 140,

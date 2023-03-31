@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/common/bubble_member.dart';
 import 'package:split_rex/src/common/functions.dart';
 
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/services/group.dart';
 
-import '../common/profile_picture.dart';
 
 Widget searchBar(BuildContext context, WidgetRef ref) => Container(
-    margin: const EdgeInsets.only(left: 20, right: 20, top: 17),
+    width: MediaQuery.of(context).size.width - 40.0,
+    margin: const EdgeInsets.only(top: 17),
     decoration: BoxDecoration(
       color: const Color(0XFFFFFFFF),
       border: Border.all(
@@ -52,16 +54,40 @@ Widget searchBar(BuildContext context, WidgetRef ref) => Container(
     );
 
 Widget showGroups(BuildContext context, WidgetRef ref) {
-  return Container(
-      padding: const EdgeInsets.only(left: 18.0, right: 18.0),
+  return SizedBox(
+      width: MediaQuery.of(context).size.width - 40.0,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Expanded(
-            child: ListView.builder(
+            child: 
+            ref.watch(routeProvider).currentPage == "group_list"
+            ||
+            ((
+              ref.watch(groupListProvider).hasLentGroups
+              && !(ref.watch(groupListProvider).isOwed))
+            || 
+            (
+              ref.watch(groupListProvider).hasOwedGroups
+              && (ref.watch(groupListProvider).isOwed)
+            )
+            && ref.watch(routeProvider).currentPage == "home")
+          ?
+          ListView.builder(
+          padding: EdgeInsets.zero,
           // shrinkWrap: true,
           // padding: const EdgeInsets.symmetric(vertical: 8.0),
           itemCount: ref.watch(groupListProvider).groups.length,
           itemBuilder: (BuildContext context, int index) {
-            return Container(
+            return 
+            ref.watch(routeProvider).currentPage == "group_list"
+            ||
+            ((ref.watch(groupListProvider).isOwed 
+            && ref.watch(groupListProvider).groups[index].type == "OWED")
+            ||
+            ((!ref.watch(groupListProvider).isOwed) 
+            && ref.watch(groupListProvider).groups[index].type == "LENT")
+            && ref.watch(routeProvider).currentPage == "home") 
+            ?
+            Container(
                 margin: const EdgeInsets.symmetric(vertical: 8.0),
                 padding: const EdgeInsets.all(16.0),
                 decoration: const BoxDecoration(
@@ -71,9 +97,10 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                 key: ValueKey(
                     ref.watch(groupListProvider).groups[index].groupId),
                 child: InkWell(
-                  onTap: () {
-                    ref.read(groupListProvider).changeCurrGroup(
-                        ref.watch(groupListProvider).groups[index]);
+                  onTap: () async {
+                    var currGroup = ref.watch(groupListProvider).groups[index];
+                    ref.read(groupListProvider).changeCurrGroup(currGroup);
+                    await GroupServices().getGroupTransactions(ref);
                     ref.read(routeProvider).changePage("group_detail");
                     // Navigator.push(
                     //     context,
@@ -103,7 +130,7 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                         .watch(groupListProvider)
                                         .groups[index]
                                         .startDate) +
-                                    "-" +
+                                    " - " +
                                     convertDate(ref
                                         .watch(groupListProvider)
                                         .groups[index]
@@ -121,15 +148,29 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                         color: Color(0XFF4f4f4f),
                                         fontWeight: FontWeight.w400),
                                     children: [
-                                      const TextSpan(text: "You owe "),
+                                      TextSpan(text: 
+                                        ref.watch(groupListProvider).groups[index].type == "EQUAL" 
+                                        ? "You are all settled up "
+                                        : ref.watch(groupListProvider).groups[index].type == "LENT" 
+                                          ? "You lent "
+                                          : "You owe "
+                                      ),
                                       TextSpan(
                                           text:
-                                              "Rp${ref.watch(groupListProvider).groups[index].totalUnpaid}",
-                                          style: const TextStyle(
-                                            color: Color(0XFFF10D0D),
+                                          ref.watch(groupListProvider).groups[index].type == "EQUAL"
+                                          ? ""
+                                          : "Rp${ref.watch(groupListProvider).groups[index].totalUnpaid.toString().replaceAll('-', '')}",
+                                          style:  TextStyle(
+                                            color: 
+                                            ref.watch(groupListProvider).groups[index].type == "OWED"
+                                            ? const Color(0XFFF10D0D)
+                                            : const Color(0xFF4F9A99),
                                             fontWeight: FontWeight.w800,
                                           )),
-                                      const TextSpan(text: " in total"),
+                                      TextSpan(text: 
+                                      ref.watch(groupListProvider).groups[index].type == "EQUAL"
+                                      ? ""
+                                      : " in total"),
                                     ]),
                               ),
                             ]),
@@ -143,50 +184,16 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                   fontSize: 18,
                                 ),
                               ),
-                              Stack(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: CircleAvatar(
-                                        radius: 18,
-                                        backgroundColor: Colors.red,
-                                        child: profilePicture("Pak Fitra",
-                                            24.0), // Provide your custom image
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: CircleAvatar(
-                                        radius: 18,
-                                        backgroundColor: Colors.red,
-                                        child: profilePicture("Michael Jordan",
-                                            24.0), // Provide your custom image
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: CircleAvatar(
-                                        radius: 18,
-                                        backgroundColor: Colors.red,
-                                        child: profilePicture("John Doe",
-                                            24.0), // Provide your custom image
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              getBubbleMember(ref.watch(groupListProvider).groups[index].members),
                             ]),
                       ]),
-                ));
+                ))
+              : const SizedBox();
           },
+        ):
+        Center(child: 
+          Text("You have no ${ref.watch(groupListProvider).isOwed ? "owed" : "lent"} groups"
         ))
+        )
       ]));
 }

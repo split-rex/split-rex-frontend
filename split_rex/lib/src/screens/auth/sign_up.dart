@@ -6,11 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/screens/auth/username_fill.dart';
 import 'package:split_rex/src/screens/home.dart';
 import 'package:split_rex/src/services/auth.dart';
 import 'package:split_rex/src/widgets/auth.dart';
-
-
 
 class SignUpScreen extends ConsumerWidget {
   const SignUpScreen({super.key});
@@ -23,26 +22,27 @@ class SignUpScreen extends ConsumerWidget {
         builder: (context, snapshot) {
           // add async here
           if (snapshot.hasData) {
-           
-            () async {
-              log("gegegegegege");
-              final user = FirebaseAuth.instance.currentUser;
-              ref.read(authProvider).changeSignUpData(user?.displayName,
-                  user?.displayName, user?.email, user?.uid, user?.uid);
-              log(ref.watch(authProvider).signUpData.name);
-              await ApiServices().postRegister(ref);
-              log("gotohome");
-              if (ref.watch(errorProvider).errorType == "ERROR_EMAIL_EXISTED")
-              {
-                ref
-                    .read(authProvider)
-                    .changeSignInData(user?.email, user?.uid);
-                await ApiServices().postLogin(ref);
-              }
+            // ref.read(routeProvider).changePage("fill_username");
 
-              
-            }();
-            return const Text("Signed in");
+            //  () async {
+            // final user = FirebaseAuth.instance.currentUser;
+            //   ref.read(authProvider).changeSignUpData(user?.displayName,
+            //       user?.displayName, user?.email, user?.uid, user?.uid);
+            //   await ApiServices().postRegister(ref);
+            //   if (ref.watch(errorProvider).errorType == "ERROR_EMAIL_EXISTED")
+            //   {
+            //     ref
+            //         .read(authProvider)
+            //         .changeSignInData(user?.email, user?.uid);
+            //     await ApiServices().postLogin(ref);
+            //   }}();
+            return SingleChildScrollView(
+                child: Column(
+              children: const [
+                UsernameFill(),
+                
+              ],
+            ));
             // ignore: use_build_context_synchronously
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             // log("Waiting");

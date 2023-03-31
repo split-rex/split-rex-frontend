@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/screens/account.dart';
+import 'package:split_rex/src/screens/account/account.dart';
 import 'package:split_rex/src/screens/activity.dart';
+import 'package:split_rex/src/screens/account/account_edit.dart';
+import 'package:split_rex/src/screens/account/change_password.dart';
+import 'package:split_rex/src/screens/auth/username_fill.dart';
 import 'package:split_rex/src/screens/friends/add_friends.dart';
 import 'package:split_rex/src/screens/friends/choose_friend.dart';
 import 'package:split_rex/src/screens/friends/friend_requests.dart';
 import 'package:split_rex/src/screens/groups/group_detail.dart';
 import 'package:split_rex/src/screens/groups/group_list.dart';
+import 'package:split_rex/src/screens/groups/new_group.dart';
 
 import 'package:split_rex/src/screens/home.dart';
 import 'package:split_rex/src/screens/auth/sign_in.dart';
@@ -18,6 +22,12 @@ import 'package:split_rex/src/screens/friends/friends.dart';
 
 import 'package:split_rex/src/screens/expense/edit_items.dart';
 import 'package:split_rex/src/screens/expense/split_bill.dart';
+
+import '../screens/groups/group_setting.dart';
+import '../providers/camera.dart';
+import '../screens/scan_bill.dart';
+import '../screens/settle/settle_up.dart';
+import '../screens/settle/unsettled_payments.dart';
 
 class PageRouting extends ConsumerWidget {
   const PageRouting({super.key});
@@ -55,14 +65,52 @@ class PageRouting extends ConsumerWidget {
         return const EditItems();
       case "split_bill":
         return const SplitBill();
+      case "new_group":
+        return const CreateNewGroup();
 
-        // group detail
+      // group detail
       case "group_detail":
         return GroupDetail(
           group: ref.watch(groupListProvider).currGroup,
         );
       case "choose_friend":
         return const ChooseFriend();
+
+      // edit account
+      case "edit_account":
+        return const EditAccount();
+      case "change_password":
+        return const ChangePassword();
+      case "fill_username":
+        return UsernameFill();
+
+      case "group_settings":
+        return GroupSettings(
+          group: ref.watch(groupListProvider).currGroup,
+        );
+
+      case "group_settings_edit":
+        return const GroupSettingsEdit();
+
+      case "choose_friend_group_settings":
+        return const ChooseFriendInGroupSetting();
+      // camera
+      case "scan_bill":
+        return CameraPage(
+          cameras: ref.watch(cameraProvider).cameras
+        );
+      case "preview_image":
+        return PreviewPage(
+          picture: ref.watch(cameraProvider).picture,
+        );
+
+        // settle payment
+      case "settle_up":
+        return const SettleUp();
+        
+      case "unsettled_payments":
+        return const UnsettledPayments();
+
 
       // home
       default:

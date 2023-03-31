@@ -1,11 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/services/friend.dart';
+
+import '../../common/functions.dart';
 
 class AddFriendSearchSection extends ConsumerWidget {
   const AddFriendSearchSection({super.key});
@@ -55,12 +55,14 @@ class FriendsSearched extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        // TODO: save the color!!!
         Initicon(
             text: ref.watch(friendProvider).addFriend.name,
             size: 114,
-            backgroundColor:
-                Colors.primaries[Random().nextInt(Colors.primaries.length)]),
+            backgroundColor: getProfileBgColor(ref.watch(friendProvider).addFriend.color),
+            style: TextStyle(
+              color: getProfileTextColor(ref.watch(friendProvider).addFriend.color)
+            ),
+        ),
         const SizedBox(height: 10),
         Text(ref.watch(friendProvider).addFriend.name,
             style: const TextStyle(
@@ -83,14 +85,44 @@ class AddBtn extends ConsumerWidget {
 
     if (errorType == "ERROR_CANNOT_ADD_SELF" ||
         errorType == "ERROR_ALREADY_FRIEND" ||
-        errorType == "ERROR_USER_NOT_FOUND") {
+        errorType == "ERROR_USER_NOT_FOUND" ||
+        errorType == "ERROR_ALREADY_REQUESTED_SENT" ||
+        errorType == "ERROR_ALREADY_REQUESTED_RECEIVED") {
       return Text(errorMsg);
     }
 
     return GestureDetector(
       onTap: () async {
-        FriendServices()
-            .addFriend(ref, ref.watch(friendProvider).addFriend.userId);
+        await FriendServices()
+            .addFriend(ref, ref.watch(friendProvider).addFriend.userId).then((value) async {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Container(
+              padding: const EdgeInsets.all(16),
+              height: 70,
+              decoration: const BoxDecoration(
+                  color: Color(0xFF6DC7BD),
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "Friend request sent!",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ));
+          await Future.delayed(const Duration(seconds: 4));
+          ref.read(errorProvider).changeError("");
+        });
       },
       child: Container(
         alignment: Alignment.center,

@@ -14,16 +14,19 @@ class Friends extends ConsumerWidget {
         ref,
         "Friends",
         "group_list",
-        Column(
-          children: const [
-            SizedBox(height: 15),
-            AddFriendsSection(),
-            SizedBox(height: 15),
-            FriendRequestSection(),
-            SizedBox(height: 15),
-            // TODO: sort for friends
-            FriendsSection()
-          ],
-        ));
-  }
+        SingleChildScrollView(
+          child:Column(
+            children: const [
+              SizedBox(height: 15),
+              AddFriendsSection(),
+              SizedBox(height: 15),
+              FriendRequestSection(),
+              SizedBox(height: 15),
+              // TODO: sort for friends
+              FriendsSection()
+            ],
+          )
+        )
+      );
+    }
 }

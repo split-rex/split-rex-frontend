@@ -3,6 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/group.dart';
+import 'package:camera/camera.dart';
+
+import '../providers/auth.dart';
+import '../providers/camera.dart';
+
 
 class Navbar extends ConsumerWidget {
   const Navbar({super.key});
@@ -26,7 +31,7 @@ class Navbar extends ConsumerWidget {
           } else {
             if (value == 0) {
               if (ref.watch(groupListProvider).isOwed) {
-                await GroupServices().getGroupOwed(ref);
+                await GroupServices().getGroupOwed(ref.watch(authProvider).jwtToken);
               } else {
                 await GroupServices().getGroupLent(ref);
               }
@@ -105,8 +110,15 @@ class _PopupExpense extends ConsumerWidget {
                         const Divider(
                             thickness: 1, height: 24, color: Color(0XFFDCDCDC)),
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             // take photo
+                            if (ref.watch(cameraProvider).cameras == null) {
+                              await availableCameras().then((value) {
+                                ref.read(cameraProvider).setCameras(value);
+                              });
+                            }
+                            ref.read(routeProvider).changePage("scan_bill");
+                            // ignore: use_build_context_synchronously
                             Navigator.pop(context);
                           },
                           child: const Text("Take Photo"),

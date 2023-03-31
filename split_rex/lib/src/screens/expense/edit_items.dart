@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/header.dart';
+import 'package:split_rex/src/providers/add_expense.dart';
 
 import 'package:split_rex/src/widgets/expense/edit_items.dart';
+
+import '../../providers/auth.dart';
 
 class EditItems extends ConsumerWidget {
   const EditItems({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(addExpenseProvider).selectedMember = (ref.watch(authProvider).userData.userId);
+    
     return header(
       context, 
       ref,
       "Edit Items",
-      "add_expense",
+      ref.watch(addExpenseProvider).isNewGroup ? "new_group" : "add_expense",
       Stack(
         children: [
       SingleChildScrollView(
@@ -40,7 +45,7 @@ class EditItems extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            dateTimeField(ref),
+                            const DateTimeField(),
                             const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(30, 79, 79, 79)),
                             listItem(ref),
                             const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(30, 79, 79, 79)),
@@ -51,22 +56,23 @@ class EditItems extends ConsumerWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                summaryField("Subtotal"),
-                                summaryField("Tax"),
-                                summaryField("Service charge"),
-                                summaryField("Discounts"),
+                                summaryField(ref, "Subtotal"),
+                                summaryField(ref, "Tax"),
+                                summaryField(ref, "Service charge"),
                                 const SizedBox(height: 14.0),
                             ]),
                             Container(
                               margin: const EdgeInsets.only(right: 8.0),    
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text("Total amount", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
-                                  Text("150.000", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                                children: [
+                                  const Text("Total amount", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+                                  Text(ref.watch(addExpenseProvider).newBill.total.toString(), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                                 ],
                               ),
                             ),
+                            const SizedBox(height: 24.0),
+                            confirmButton(ref)
                           ],
                         ),
                       ),
@@ -79,10 +85,6 @@ class EditItems extends ConsumerWidget {
           )
                   
                 ),
-                Align(alignment: Alignment.bottomCenter,
-                child: 
-          confirmButton(ref)
-                )
         ],
       )
           

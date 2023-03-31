@@ -10,23 +10,41 @@ class ChooseFriend extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return header(
-      context,
-      ref, 
-      "Choose Friends",
-      "group_detail",
-          Container(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: 
-              Column(
-                children: [
-                  searchBar(),
-                  Expanded(
-                    flex: 7, 
-                    child: addFriendToGroup(context, ref)
-                  ),
-                  
-                ],
-              ),
-          ));
+        context,
+        ref,
+        "Choose Friends",
+        "group_detail",
+        Container(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            children: [
+              searchBar(),
+              Expanded(flex: 7, child: addFriendToGroup(context, ref)),
+            ],
+          ),
+        ));
   }
 }
+
+class ChooseFriendInGroupSetting extends ConsumerWidget {
+  const ChooseFriendInGroupSetting({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return header(
+        context,
+        ref,
+        "Choose Friends",
+        "group_settings",
+        Container(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            children: [
+              searchBar(),
+              Expanded(flex: 7, child: addFriendToGroup(context, ref)),
+            ],
+          ),
+        ));
+  }
+}
+

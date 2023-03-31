@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/common/profile_picture.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
 import 'package:split_rex/src/providers/friend.dart';
+import 'package:flutter_initicon/flutter_initicon.dart';
+
+import '../common/functions.dart';
 
 
 Widget searchBar() => Container(
@@ -49,13 +51,12 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
                     bottomRight: Radius.circular(4.0)),
               ),
               child: ListView.separated(
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding: EdgeInsets.zero,
                 itemCount: ref.watch(friendProvider).friendList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty
+                      onTap: ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty
                           ? null
                           : () {
                               ref
@@ -66,12 +67,27 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(children: [
-                            profilePicture(
-                                ref
+                            Initicon(
+                              text: ref
                                     .watch(friendProvider)
                                     .friendList[index]
                                     .name,
-                                24),
+                              size: 40,
+                              backgroundColor: getProfileBgColor(
+                                ref
+                                    .watch(friendProvider)
+                                    .friendList[index]
+                                    .color
+                                ),
+                              style: TextStyle(
+                                color: getProfileTextColor(
+                                  ref
+                                    .watch(friendProvider)
+                                    .friendList[index]
+                                    .color
+                                )
+                              ), 
+                            ),
                             const SizedBox(width: 16),
                             Text(
                                 ref
@@ -81,11 +97,12 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 16,
-                                  color: ref
+                                  color: 
+                                  ref
                                           .watch(addExpenseProvider)
-                                          .existingGroup.memberId.isNotEmpty
-                                      ? const Color.fromARGB(130, 79, 79, 79)
-                                      : const Color(0XFF4F4F4F),
+                                          .existingGroup.members.isNotEmpty
+                                      ? const Color.fromARGB(130, 79, 79, 79) :
+                                       const Color(0XFF4F4F4F),
                                 ))
                           ]),
                           Checkbox(
@@ -96,7 +113,7 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
                                   ? true
                                   : false,
                               onChanged:
-                                  ref.watch(addExpenseProvider).existingGroup.memberId.isNotEmpty
+                                  ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty
                                       ? null
                                       : (bool? value) {
                                           ref

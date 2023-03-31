@@ -8,6 +8,8 @@ import 'package:split_rex/src/model/user.dart';
 class AuthProvider extends ChangeNotifier {
   SignUpModel signUpData = SignUpModel();
   SignInModel signInData = SignInModel();
+  UserUpdate newUserData = UserUpdate();
+  UserUpdatePass newPass = UserUpdatePass();
   User userData = User();
 
   String jwtToken = "";
@@ -34,6 +36,42 @@ class AuthProvider extends ChangeNotifier {
     signInData.pass = pass;
   }
 
+  void changeUserColor(color) {
+    newUserData.color = color;
+    notifyListeners();
+  }
+
+  void changeUserName(name) {
+    newUserData.name = name;
+  }
+
+  void changeOldPass(pass) {
+    newPass.oldPass = pass;
+  }
+
+  void changeNewPass(pass) {
+    newPass.newPass = pass;
+  }
+
+  void changeConfNewPass(pass) {
+    newPass.confNewPass = pass;
+  }
+
+  void resetNewPass() {
+    newPass.oldPass = "";
+    newPass.newPass = "";
+    newPass.confNewPass = "";
+  }
+
+  void resetNewUserData() {
+    newUserData.name = userData.name;
+    newUserData.color = userData.color;
+  }
+
+  void resetColor() {
+    newUserData.color = userData.color;
+  }
+
   void changeVisibility() {
     isVisible = !isVisible;
     notifyListeners();
@@ -47,6 +85,9 @@ class AuthProvider extends ChangeNotifier {
     userData.name = data["fullname"];
     userData.username = data["username"];
     userData.userId = data["user_id"];
+    // userData.email = data["email"];
+    userData.color = data["color"];
+    newUserData.color = data["color"];
   }
 }
 

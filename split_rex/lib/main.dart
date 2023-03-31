@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart';      
 
 import 'package:split_rex/src/widgets/navbar.dart';
 import 'package:split_rex/src/routes/routes.dart';
@@ -31,7 +31,13 @@ class MyApp extends ConsumerWidget {
         ),
       ),
       home: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: 
+          ref.watch(routeProvider).currentPage == "change_password" ||
+          ref.watch(routeProvider).currentPage == "edit_account" ||
+          ref.watch(routeProvider).currentPage == "new_group" ||
+          ref.watch(routeProvider).currentPage == "edit_items"
+          ? true 
+          : false,
         bottomNavigationBar: 
           ref.watch(routeProvider).isNavbarRevealed 
           ? const Navbar() : null,

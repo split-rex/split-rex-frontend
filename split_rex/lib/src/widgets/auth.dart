@@ -16,7 +16,7 @@ final Widget svg = SvgPicture.asset(assetName, semanticsLabel: 'Acme Logo');
 Widget mainJumbotron(String type) => Container(
       margin: const EdgeInsets.only(left: 20, right: 20, top: 50),
       child: Text(
-        type == "signin" ? "Sign In" : "Sign Up",
+        type == "signin" ? "Sign In" : type == "signup" ? "Sign Up" : "Create your username",
         style: const TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w900,
@@ -29,7 +29,8 @@ Widget subJumbotron(String type) => Container(
       child: Text(
         type == "signin"
             ? "We’re happy to see you again. To use your account, you should sign in first."
-            : "Enter the fields below to get started.",
+            : type == "signup" ? "Enter the fields below to get started."
+            : "Enter your username to continue. This will be your username on Split Rex.",
         textAlign: TextAlign.center,
         style: const TextStyle(
           fontSize: 14,
@@ -37,6 +38,8 @@ Widget subJumbotron(String type) => Container(
         ),
       ),
     );
+
+
 
 class SignInForm extends StatefulWidget {
   const SignInForm({super.key});
@@ -95,6 +98,8 @@ class _SignInFormState extends State<SignInForm> {
         ]));
   }
 }
+
+
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -397,7 +402,7 @@ class FormFill extends ConsumerWidget {
                   ? 0xFFF44336
                   : 0xffEEEEEE))),
       child: TextField(
-        key: Key(placeholderText),
+        key: key,
         controller: controller,
         cursorColor: const Color(0xFF59C4B0),
         decoration: InputDecoration(
@@ -456,7 +461,7 @@ class PasswordField extends ConsumerWidget {
                   ? 0xFFF44336
                   : 0xffEEEEEE))),
       child: TextField(
-        key: Key(placeholderText),
+        key: key,
         obscureText: passwordVisible,
         controller: controller,
         cursorColor: const Color(0xFF59C4B0),
@@ -485,3 +490,4 @@ class PasswordField extends ConsumerWidget {
     );
   }
 }
+

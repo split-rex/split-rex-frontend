@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
+import 'package:logger/logger.dart';
+import 'package:split_rex/src/model/add_expense.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 
+import '../common/logger.dart';
 import '../providers/auth.dart';
 
 class GroupServices {
@@ -37,27 +40,99 @@ class GroupServices {
     );
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-      // userFriendList(ref);
-      // friendRequestReceivedList(ref);
-      // friendRequestSentList(ref);
+      ref.read(groupListProvider).changeCurrGroupDetail(data["data"]);
+      await getGroupTransactions(ref);
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
   }
 
-  Future<void> getGroupOwed(WidgetRef ref) async {
-    final String response =
-        await rootBundle.loadString('assets/groupsOwed.json');
-    var data = await json.decode(response);
+  Future<void> getGroupTransactions(WidgetRef ref) async {
+    String groupId = ref.watch(groupListProvider).currGroup.groupId;
+    Response resp = await get(
+      Uri.parse("$endpoint/groupTransactions?id=$groupId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+    );
+    var data = jsonDecode(resp.body);
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      var transactions = data["data"];
+      List<Transaction> newTransList = [];
+      if (transactions != null) {
+        for (var i = 0; i < transactions.length; i++) {
+          var currTrans = transactions[i];
+          var tempTrans = Transaction();
+          tempTrans.billOwner = currTrans["bill_owner"];
+          tempTrans.groupId = currTrans["group_id"];
+          tempTrans.name = currTrans["name"];
+          tempTrans.total = currTrans["total"];
+          newTransList.add(tempTrans);
+        }
+        ref.watch(groupListProvider).changeCurrGroupTransactions(newTransList);
+      } else {
+        ref.read(errorProvider).changeError(data["message"]);
+      }
+    }
+  }
 
-    ref.read(groupListProvider).loadGroupData(data["data"]);
-
+  Future<bool> getGroupOwed(String jwtToken) async {
+    Response response = await get(
+      Uri.parse("$endpoint/userGroupOwed"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $jwtToken"
+      },
+    );
+    var data = await json.decode(response.body);
+    logger.d(data["data"]);
+    return data["data"]["list_group"].isNotEmpty;
   }
 
   Future<void> getGroupLent(WidgetRef ref) async {
-    final String response =
-        await rootBundle.loadString('assets/groupLent.json');
-    var data = await json.decode(response);
-    ref.read(groupListProvider).loadGroupData(data["data"]);
+    Response response = await get(
+      Uri.parse("$endpoint/userGroupLent"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+    );
+    var data = await json.decode(response.body);
+    logger.d(data["data"]);
+    ref.watch(groupListProvider).updateHasLentGroups(data["data"]["list_group"].isNotEmpty);
+  }
+
+  Future<void> editGroupInfo(WidgetRef ref, String groupId, String newGroupName) async {
+    Response resp = await post(
+      Uri.parse("$endpoint/editGroupInfo"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+      body: jsonEncode({
+        "group_id": groupId,
+        "name": newGroupName,
+      }),
+    );
+    var data = jsonDecode(resp.body);
+    var logger = Logger();
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      await getGroupDetail(ref, groupId);
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
   }
 }
+
+final groupServicesProvider = Provider<GroupServices>(
+  (ref) => GroupServices()
+);
+
+final getGroupOwed = FutureProvider<bool>((ref) async {
+  return ref.read(groupServicesProvider).getGroupOwed(
+    ref.watch(authProvider).jwtToken
+  );
+});

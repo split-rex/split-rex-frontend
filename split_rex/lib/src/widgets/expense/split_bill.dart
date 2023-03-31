@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
+import 'package:split_rex/src/providers/group_list.dart';
 
-import '../../common/profile_picture.dart';
+import '../../common/functions.dart';
+import '../../model/friends.dart';
 import '../../providers/auth.dart';
 import '../../providers/friend.dart';
 import '../../services/add_expense.dart';
@@ -48,7 +50,10 @@ Widget billNameField(WidgetRef ref) => Container(
       const Icon(Icons.edit, size: 20, color: Color.fromARGB(150, 79, 79, 79))
     ],),
     const Divider(thickness: 1, height: 8.0, color: Color.fromARGB(30, 79, 79, 79)),
-    Text("${DateTime.now().day.toString()}/${DateTime.now().month.toString()}/${DateTime.now().year.toString()}\t\t\t\t|\t\t\t\t${DateTime.now().hour.toString()}:${DateTime.now().minute.toString()}", style: const TextStyle(fontWeight: FontWeight.w700))
+    Text(
+      "${DateTime.parse(ref.watch(addExpenseProvider).newBill.date).day.toString()}/${DateTime.parse(ref.watch(addExpenseProvider).newBill.date).month.toString()}/${DateTime.parse(ref.watch(addExpenseProvider).newBill.date).year.toString()}", 
+      style: const TextStyle(fontWeight: FontWeight.w500)
+    )
   ],)
 );
 
@@ -58,19 +63,53 @@ Widget membersScrollView(WidgetRef ref) => SingleChildScrollView(
   Row(children: [
     Row(children: [
         Column(children: [
-          profilePicture(ref.watch(authProvider).userData.name, 32.0),
+          InkWell(
+            onTap: () {
+              ref.read(addExpenseProvider).changeSelectedMember(ref.watch(authProvider).userData.userId);
+            },
+            child: memberIcon(ref, ref.watch(authProvider).userData),
+          ),
           const Text("You", style: TextStyle(fontSize: 12)),
       ]), 
       const SizedBox(width: 12.0),
       Row(children: [
-        for (String memberId in ref.watch(addExpenseProvider).newGroup.memberId) 
-          Row(children: [
-            Column(children: [
-              profilePicture((ref.watch(friendProvider).getFriend(memberId)).name, 32.0),
-              Text((ref.watch(friendProvider).getFriend(memberId)).name, style: const TextStyle(fontSize: 12)),
-          ]), 
-          const SizedBox(width: 12.0)
-        ])
+        if (ref.watch(addExpenseProvider).isNewGroup) ...[
+          for (String memberId in ref.watch(addExpenseProvider).newGroup.memberId) 
+            Row(children: [
+              Column(children: [
+                InkWell(
+                  onTap: () {
+                    ref.read(addExpenseProvider).changeSelectedMember(ref.watch(friendProvider).getFriend(memberId).userId);
+                  },
+                  child: memberIcon(
+                    ref, 
+                    (ref.watch(friendProvider).getFriend(memberId))
+                  ),
+                ),
+                Text((ref.watch(friendProvider).getFriend(memberId)).name, style: const TextStyle(fontSize: 12)),
+            ]), 
+            const SizedBox(width: 12.0)
+          ])
+        ] else ...[
+          for (Friend members in ref.watch(groupListProvider).currGroup.members) 
+           members.userId == ref.watch(authProvider).userData.userId
+           ? const SizedBox()
+           : Row(children: [
+              Column(children: [
+                InkWell(
+                  onTap: () {
+                    ref.read(addExpenseProvider).changeSelectedMember(members.userId);
+                  },
+                  child: memberIcon(
+                    ref, 
+                    (ref.watch(friendProvider).getFriend(members.userId))
+                  ),
+                ),
+                Text((ref.watch(friendProvider).getFriend(members.userId)).name, style: const TextStyle(fontSize: 12)),
+            ]), 
+            const SizedBox(width: 12.0)
+          ])
+        ],
       ])
   ],)
 ]));
@@ -89,24 +128,32 @@ Widget itemSplitCard(WidgetRef ref, int index) => Row(
             style: const TextStyle(
               color: Color(0XFF4F4F4F),
           ),),
-          value: ref.watch(addExpenseProvider).items[index].selected,
+          value: ref.watch(addExpenseProvider).items[index].consumer.contains(ref.watch(addExpenseProvider).selectedMember)
+          ,
           tileColor: Colors.white,
           onChanged: (val) {
-            ref.read(addExpenseProvider).changeItemSelected(index);
+            ref.read(addExpenseProvider).changeItemConsumer(index, ref.watch(addExpenseProvider).selectedMember);
           },
         ),
         SizedBox(
           width: 340,
           child: 
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("${ref.watch(addExpenseProvider).items[index].qty} x"),
-              const SizedBox(width: 36),
-              Text("Rp ${ref.watch(addExpenseProvider).items[index].price}", style: const TextStyle(fontWeight: FontWeight.w700)),
+              Text(
+                "Total: Rp${ref.watch(addExpenseProvider).items[index].total}"
+              ),
+              Row(
+                children: [
+                  Text("${ref.watch(addExpenseProvider).items[index].qty} x"),
+                  const SizedBox(width: 36),
+                  Text("Rp ${ref.watch(addExpenseProvider).items[index].price}", style: const TextStyle(fontWeight: FontWeight.w700)),
+                ]
+              ),
             ],
           )
-        )
+        ),
     ],)
   )],
 );
@@ -126,7 +173,17 @@ Widget summarySplit(WidgetRef ref, String title) => Column(children: [
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(title, textAlign: TextAlign.left, style: const TextStyle(fontWeight: FontWeight.w600)),
-      const Text("120.000", style: TextStyle(fontWeight: FontWeight.w600)),
+      Text(
+        title == "Subtotal"
+        ? ref.watch(addExpenseProvider).newBill.subtotal.toString()
+        : title == "Tax"
+          ? ref.watch(addExpenseProvider).newBill.tax.toString()
+          : ref.watch(addExpenseProvider).newBill.service.toString()
+        , 
+        style: const TextStyle(
+          fontWeight: FontWeight.w600
+        )
+      ),
     ]
   ),
   const SizedBox(height: 12.0)
@@ -134,8 +191,14 @@ Widget summarySplit(WidgetRef ref, String title) => Column(children: [
 
 Widget splitButton(WidgetRef ref) => GestureDetector(
   onTap: () async {
-    ref.watch(addExpenseProvider).newGroup.name == "" ? null :
-    await FriendServices().createGroup(ref);
+    if (ref.watch(addExpenseProvider).newGroup.name == "" && ref.watch(addExpenseProvider).isNewGroup) {
+      null;
+    } else {
+      if (ref.watch(addExpenseProvider).isNewGroup) {
+        await AddExpenseServices().createGroup(ref);
+      }
+      await AddExpenseServices().createTransaction(ref);
+    }
   },
   child: Container(
     alignment: Alignment.bottomCenter,
@@ -156,10 +219,31 @@ Widget splitButton(WidgetRef ref) => GestureDetector(
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-          color: ref.watch(addExpenseProvider).newGroup.name == "" ? const Color.fromARGB(50, 79, 79, 79) : const Color(0XFF6DC7BD),
+          color: ref.watch(addExpenseProvider).newGroup.name == "" && ref.watch(addExpenseProvider).isNewGroup 
+                ? const Color.fromARGB(50, 79, 79, 79) 
+                : const Color(0XFF6DC7BD),
         ),
         child: const Text("Add Expense", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700))
       )
     )
   )
 );
+
+Widget memberIcon(WidgetRef ref, member) {
+  return CircleAvatar(
+    backgroundColor: 
+      ref.watch(addExpenseProvider).selectedMember == member.userId 
+      ? getProfileTextColor(member.color)
+      : getProfileBgColor(member.color),
+    radius: 32,
+    child:
+    Initicon(
+      text: member.name, 
+      size: 56.0,
+      backgroundColor: getProfileBgColor(member.color),
+      style: TextStyle(
+        color: getProfileTextColor(member.color)
+      ),
+    ),
+  );
+}

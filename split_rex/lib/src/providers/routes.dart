@@ -20,7 +20,7 @@ class RouteProvider extends ChangeNotifier {
     "account",
   ];
 
-  void changePage(value){
+  void changePage(value) {
     currentPage = value;
     if (_pagesWithNavbar.contains(value)) {
       isNavbarRevealed = true;
@@ -32,7 +32,7 @@ class RouteProvider extends ChangeNotifier {
 
   void changeNavbarIdx(value) {
     currentNavbarIdx = value;
-    switch(value) {
+    switch (value) {
       case 0:
         changePage("home");
         break;

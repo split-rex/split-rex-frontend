@@ -7,6 +7,7 @@ import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/services/group.dart';
 import 'package:split_rex/src/widgets/group_list.dart';
 
+import '../common/functions.dart';
 import '../providers/routes.dart';
 import '../services/friend.dart';
 
@@ -17,7 +18,14 @@ class UserDetail extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        Initicon(text: ref.watch(authProvider).userData.name, size: 55),
+        Initicon(
+          text: ref.watch(authProvider).userData.name, 
+          size: 55,
+          backgroundColor: getProfileBgColor(ref.watch(authProvider).userData.color),
+          style: TextStyle(
+            color: getProfileTextColor(ref.watch(authProvider).userData.color)
+          ),
+        ),
         const SizedBox(width: 12),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Text(
@@ -52,9 +60,6 @@ class FriendRequest extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    () async {
-      FriendServices().friendRequestReceivedList(ref);
-    }();
     return Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
@@ -110,6 +115,7 @@ class FriendRequest extends ConsumerWidget {
               await FriendServices().friendRequestSentList(ref);
 
               ref.watch(friendProvider).resetAddFriend();
+              ref.read(routeProvider).changeNavbarIdx(1);
               ref.watch(routeProvider).changePage("friend_requests");
             },
             child: const Text("Review",
@@ -154,137 +160,153 @@ class HomeFooter extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-          colors: [
-            Color(0xFFFFFFFF),
-            Color(0XFFE0F2F1),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        )),
-        child: Container(
-          margin: const EdgeInsets.only(top: 55.0, left: 28.0, right: 28.0),
-          child: Column(
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  color: Color(0XFFF9F7F7),
-                  borderRadius: BorderRadius.all(Radius.circular(24.0)),
-                ),
-                padding: const EdgeInsets.all(10.0),
-                child: Row(children: [
-                  (ref.watch(groupListProvider).isOwed)
-                      ? Expanded(
-                          flex: 5,
-                          child: InkWell(
-                            onTap: () {
-                              ref.watch(groupListProvider).changeIsOwed(true);
-                              GroupServices().getGroupOwed(ref);
-                            },
-                            child: Container(
-                              // color: Colors.white,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(24.0)),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: const Color(0XFF4F4F4F)
-                                          .withOpacity(0.1),
-                                      spreadRadius: 0.0,
-                                      blurRadius: 5.0,
-                                      offset: Offset.zero),
-                                ],
-                              ),
-                              child: const Text(
-                                "Owed",
-                                style: TextStyle(fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ))
-                      : Expanded(
-                          flex: 5,
-                          child: InkWell(
-                            onTap: () {
-                              ref.watch(groupListProvider).changeIsOwed(true);
-                              GroupServices().getGroupOwed(ref);
-                            },
-                            child: Container(
-                              // color: Colors.white,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(8.0),
-                              child: const Text(
-                                "Owed",
-                                style: TextStyle(fontWeight: FontWeight.w400),
-                              ),
-                            ),
-                          )),
-                  (ref.watch(groupListProvider).isOwed)
-                      ? Expanded(
-                          flex: 5,
-                          child: InkWell(
-                            onTap: () {
-                              ref.watch(groupListProvider).changeIsOwed(false);
-                              GroupServices().getGroupLent(ref);
-                            },
-                            child: Container(
-                              // color: Colors.white,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(8.0),
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(24.0)),
-                              ),
-                              child: const Text(
-                                "Lent",
-                                style: TextStyle(fontWeight: FontWeight.w400),
-                              ),
-                            ),
-                          ))
-                      : Expanded(
-                          flex: 5,
-                          child: InkWell(
-                            onTap: () {
-                              ref.watch(groupListProvider).changeIsOwed(false);
-                              GroupServices().getGroupLent(ref);
-                            },
-                            child: Container(
-                              // color: Colors.white,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(24.0)),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: const Color(0XFF4F4F4F)
-                                          .withOpacity(0.1),
-                                      spreadRadius: 0.0,
-                                      blurRadius: 5.0,
-                                      offset: Offset.zero),
-                                ],
-                              ),
-                              child: const Text(
-                                "Lent",
-                                style: TextStyle(fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ),
-                        )
-                ]),
-              ),
+    AsyncValue<bool> getGroupOwedResp = ref.watch(getGroupOwed);
 
-              searchBar(context, ref),
-              Expanded(flex: 5, child: showGroups(context, ref)),
-             
-            ],
-          ),
-        ));
+    return 
+    getGroupOwedResp.when(data: (data) {
+      Future(() {ref.read(groupListProvider).updateHasOwedGroups(data);});
+        return Expanded(
+          child: 
+        Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+              colors: [
+                Color(0xFFFFFFFF),
+                Color(0XFFE0F2F1),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            )),
+            child: Container(
+              margin: const EdgeInsets.only(top: 55.0),
+              child: Column(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width - 40.0,
+                    decoration: const BoxDecoration(
+                      color: Color(0XFFF9F7F7),
+                      borderRadius: BorderRadius.all(Radius.circular(24.0)),
+                    ),
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(children: [
+                      (ref.watch(groupListProvider).isOwed)
+                          ? Expanded(
+                              flex: 5,
+                              child: InkWell(
+                                onTap: () {
+                                  ref.watch(groupListProvider).changeIsOwed(true);
+                                  getGroupOwedResp = ref.refresh(getGroupOwed);
+                                },
+                                child: Container(
+                                  // color: Colors.white,
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(24.0)),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: const Color(0XFF4F4F4F)
+                                              .withOpacity(0.1),
+                                          spreadRadius: 0.0,
+                                          blurRadius: 5.0,
+                                          offset: Offset.zero),
+                                    ],
+                                  ),
+                                  child: const Text(
+                                    "Owed",
+                                    style: TextStyle(fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                              ))
+                          : Expanded(
+                              flex: 5,
+                              child: InkWell(
+                                onTap: () {
+                                  ref.watch(groupListProvider).changeIsOwed(true);
+                                  getGroupOwedResp = ref.refresh(getGroupOwed);
+                                },
+                                child: Container(
+                                  // color: Colors.white,
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: const Text(
+                                    "Owed",
+                                    style: TextStyle(fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              )),
+                      (ref.watch(groupListProvider).isOwed)
+                          ? Expanded(
+                              flex: 5,
+                              child: InkWell(
+                                onTap: () {
+                                  ref.watch(groupListProvider).changeIsOwed(false);
+                                  GroupServices().getGroupLent(ref);
+                                },
+                                child: Container(
+                                  // color: Colors.white,
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(24.0)),
+                                  ),
+                                  child: const Text(
+                                    "Lent",
+                                    style: TextStyle(fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              ))
+                          : Expanded(
+                              flex: 5,
+                              child: InkWell(
+                                onTap: () {
+                                  ref.watch(groupListProvider).changeIsOwed(false);
+                                  GroupServices().getGroupLent(ref);
+                                },
+                                child: Container(
+                                  // color: Colors.white,
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(24.0)),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: const Color(0XFF4F4F4F)
+                                              .withOpacity(0.1),
+                                          spreadRadius: 0.0,
+                                          blurRadius: 5.0,
+                                          offset: Offset.zero),
+                                    ],
+                                  ),
+                                  child: const Text(
+                                    "Lent",
+                                    style: TextStyle(fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                              ),
+                            )
+                    ]),
+                  ),
+
+                  searchBar(context, ref),
+                  Expanded(flex: 5, child: showGroups(context, ref)),
+                ],
+              ),
+            ))
+
+            );
+          }, error: ((error, stackTrace) {
+            return Text('Error: ${error.toString()}');
+          }), loading: (() {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }));
   }
 }

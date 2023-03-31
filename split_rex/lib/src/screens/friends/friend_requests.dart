@@ -15,12 +15,15 @@ class FriendRequests extends ConsumerWidget {
         ref,
         "Friend Requests",
         "friends",
-        Column(
-          children: const [
-            FriendRequestSectionPicker(), // change to appbar
-            SizedBox(height: 18),
-            FriendRequestsBody(),
-          ],
-        ));
+        SingleChildScrollView(
+          child: Column(
+            children: const [
+              FriendRequestSectionPicker(), // change to appbar
+              SizedBox(height: 18),
+              FriendRequestsBody(),
+            ],
+          )
+        )
+      );
   }
 }

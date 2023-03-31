@@ -163,7 +163,7 @@ class PaymentInfoDetail extends ConsumerWidget {
             ),
           ),
           TextButton(
-              onPressed: () => confirmOrDenyPayemnt(context),
+              onPressed: () => friendInfoDialog(context),
               child: const Text(
                 "Edit",
                 style: TextStyle(color: Color(0xff2E9281)),
@@ -551,6 +551,100 @@ deletePaymentInfoDialog(context) {
 
 // TODO : move it to group
 // friend payment info modal
+friendInfoDialog(context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => Dialog(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0))),
+      child: Container(
+        padding: const EdgeInsets.all(25.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(children: [
+              const Spacer(),
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const Icon(
+                  Icons.close,
+                  color: Color(0xFF15808D),
+                ),
+              )
+            ]),
+            Row(
+              children: [
+                const Initicon(
+                  text: "Nama Orangnya",
+                  size: 57,
+                  backgroundColor: Colors.black,
+                  // backgroundColor: getProfileBgColor(memberList[1].color),
+                  // style: TextStyle(color: getProfileTextColor(memberList[1].color)),
+                ),
+                const SizedBox(
+                  width: 25,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    // TODO: handle overflow
+                    Text("Fifi Purnama",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
+                    Text("Fifiimutt", style: TextStyle(fontSize: 14))
+                  ],
+                )
+              ],
+            ),
+            const Divider(thickness: 1, height: 30.0, color: Color(0xFFE1F3F2)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text("Payment Info",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                SizedBox(
+                  height: 5,
+                ),
+                FriendPaymentInfoDetail(),
+                FriendPaymentInfoDetail()
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            )
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+class FriendPaymentInfoDetail extends ConsumerWidget {
+  const FriendPaymentInfoDetail({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+        padding: EdgeInsets.symmetric(vertical: 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text("BCA",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+            SizedBox(
+              height: 5,
+            ),
+            Text("1234124213 a.n. Fifi Kurang Imut W",
+                style: TextStyle(fontSize: 14))
+          ],
+        ));
+  }
+}
 
 // TODO : ini modal sem yang confirm/deny settle
 confirmOrDenyPayemnt(context) {
@@ -656,7 +750,10 @@ confirmOrDenyPayemnt(context) {
                   ),
                 ),
               ),
-            ])
+            ]),
+            const SizedBox(
+              height: 20,
+            )
           ],
         ),
       ),

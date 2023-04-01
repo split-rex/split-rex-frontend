@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/model/add_expense.dart';
+import 'package:split_rex/src/model/friends.dart';
 
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
@@ -183,6 +184,7 @@ class AddExpenseServices {
     // var data = jsonDecode(resp.body);
     // logger.d(data);
     // if (data["message"] == "SUCCESS") {
+      
       // TODO: ini
       Items itemA = Items();
       Items itemB = Items();
@@ -195,6 +197,41 @@ class AddExpenseServices {
       itemA.price = 62000;
       itemB.price = 52000;
       itemC.price = 42000;
+
+      Friend friendA = Friend();
+      friendA.userId = "b74ae4ed-36cb-456c-b1dd-8fede426f244";
+      friendA.name = "nando";
+      friendA.color = 6;
+
+      Friend friendB = Friend();
+      friendB.userId = "183e04d7-c653-4c7d-aa66-3d751d4d7358";
+      friendB.name = "ubay";
+      friendB.color = 7;
+
+      Friend user = Friend();
+      user.userId = ref.watch(authProvider).userData.userId;
+      user.name = ref.watch(authProvider).userData.name;
+      user.color = ref.watch(authProvider).userData.color;
+
+      itemA.consumerDetails = [
+        user,
+        friendA,
+        friendB,
+      ];
+
+      itemB.consumerDetails = [
+        user,
+        friendA,
+      ];
+
+      itemC.consumerDetails = [
+        friendB,
+        user,
+        friendA,
+        friendB,
+        user,
+      ];
+
 
       itemA.total = 62000;
       itemB.total = 52000;
@@ -216,7 +253,7 @@ class AddExpenseServices {
       newTrans.tax = 2;
       newTrans.service = 3;
       newTrans.total = 4;
-      
+
       ref.read(transactionProvider).changeTrans(newTrans);
       ref.read(routeProvider).changePage("transaction_detail");
     // } else {

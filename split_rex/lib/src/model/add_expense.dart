@@ -1,3 +1,5 @@
+import 'package:split_rex/src/model/friends.dart';
+
 class NewGroup {
   String name;
   List<String> memberId = [];
@@ -17,6 +19,7 @@ class Items {
   int price;
   int total;
   List<String> consumer = [];
+  List<Friend> consumerDetails = [];
 
   Items({
     this.name = "",

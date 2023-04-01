@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/common/bubble_member.dart';
+import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/providers/transaction.dart';
 
 
@@ -71,52 +74,158 @@ Widget transactionInfo(WidgetRef ref) => Container(
   ],)
 );
 
-Widget itemsList(WidgetRef ref, int index) => Row(
-  mainAxisSize: MainAxisSize.max,
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    Expanded(child: Column(
-      mainAxisSize: MainAxisSize.min,
+Widget itemsList(WidgetRef ref, int index, BuildContext context) => 
+  InkWell(
+    onTap: () {
+      showDialog(
+    context: context,
+    builder: (BuildContext context) => Dialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0))
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Container(
+          padding: const EdgeInsets.all(8.0),
+          alignment: Alignment.topLeft,
+          height: MediaQuery.of(context).size.height - 300.0,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(children: [
+                  const Spacer(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Icon(
+                      Icons.close,
+                      color: Color(0xFF15808D),
+                    ),
+                  )
+                ]),
+                Text(
+                  ref.watch(transactionProvider).currTrans.items[index].name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 18,
+                  )
+                ),
+                const SizedBox(
+                  height: 32,
+                ),
+                ListView.separated(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  itemCount: ref.watch(transactionProvider).currTrans.items[index].consumerDetails.length,
+                  itemBuilder: (BuildContext context, int consumerIdx) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(children: [
+                          Initicon(
+                            text: ref
+                                  .watch(transactionProvider)
+                                  .currTrans.items[index].consumerDetails[consumerIdx]
+                                  .name,
+                            size: 40,
+                            backgroundColor: getProfileBgColor(
+                              ref
+                                  .watch(transactionProvider)
+                                  .currTrans.items[index].consumerDetails[consumerIdx]
+                                  .color
+                              ),
+                            style: TextStyle(
+                              color: getProfileTextColor(
+                                ref
+                                  .watch(transactionProvider)
+                                  .currTrans.items[index].consumerDetails[consumerIdx]
+                                  .color
+                              )
+                            ), 
+                          ),
+                          const SizedBox(width: 16),
+                          Text(
+                            ref
+                                .watch(transactionProvider)
+                                .currTrans.items[index].consumerDetails[consumerIdx]
+                                .name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              color: Color(0XFF4F4F4F),
+                            )
+                          )
+                        ]
+                      ),
+                    ]
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(
+                        thickness: 1, height: 28.0, color: Color(0XFFE1F3F2)),
+                ),
+              ],
+            )
+          ))
+        )
+      ));
+    },
+    child:
+      Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            ref.watch(transactionProvider).currTrans.items[index].name, 
-            style: const TextStyle(
-              fontSize: 16,
-              color: Color(0XFF4F4F4F),
+        Expanded(child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                ref.watch(transactionProvider).currTrans.items[index].name, 
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Color(0XFF4F4F4F),
+                ),
+              ),
             ),
-          ),
-        ),
-        SizedBox(
-          height: 40,
-          child: 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Total: Rp${ref.watch(transactionProvider).currTrans.items[index].total}"
-              ),
+            SizedBox(
+              height: 40,
+              child: 
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("${ref.watch(transactionProvider).currTrans.items[index].qty} x"),
-                  const SizedBox(width: 36),
-                  Text("Rp ${ref.watch(transactionProvider).currTrans.items[index].price}", style: const TextStyle(fontWeight: FontWeight.w700)),
-                ]
-              ),
-            ],
-          )
-        ),
-    ],)
-  )],
-);
+                  Text(
+                    "Total: Rp${ref.watch(transactionProvider).currTrans.items[index].total}"
+                  ),
+                  Row(
+                    children: [
+                      Text("${ref.watch(transactionProvider).currTrans.items[index].qty} x"),
+                      const SizedBox(width: 36),
+                      Text("Rp ${ref.watch(transactionProvider).currTrans.items[index].price}", style: const TextStyle(fontWeight: FontWeight.w700)),
+                    ]
+                  ),
+                ],
+              )
+            ),
+            Container(
+              alignment: Alignment.centerRight,
+              child: getBubbleMember(ref.watch(transactionProvider).currTrans.items[index].consumerDetails),
+            )
+        ],)
+      )],
+    )
+  );
 
 Widget listItems(WidgetRef ref) => ListView.separated(
   shrinkWrap: true,
   padding: const EdgeInsets.only(bottom: 12.0),
   itemCount: ref.watch(transactionProvider).currTrans.items.length,
   itemBuilder: (BuildContext context, int index) {
-    return itemsList(ref, index);
+    return itemsList(ref, index, context);
   },
   separatorBuilder: (BuildContext context, int index) => const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(30, 79, 79, 79)),
 );

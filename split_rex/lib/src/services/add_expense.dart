@@ -8,6 +8,7 @@ import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/providers/transaction.dart';
 
 import './group.dart';
 
@@ -162,7 +163,6 @@ class AddExpenseServices {
     var data = jsonDecode(resp.body);
     logger.d(data);
     if (data["message"] == "SUCCESS") {
-      logger.d("SUKSESSSSSSS");
       ref.watch(addExpenseProvider).resetAll();      
       ref.read(routeProvider).changeNavbarIdx(1);
       await GroupServices().getGroupTransactions(ref);
@@ -170,5 +170,57 @@ class AddExpenseServices {
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
+  }
+
+  Future<void> getTransactionDetail(WidgetRef ref, String transactionId) async {
+    // String currGroupId = ref.watch(groupListProvider).currGroup.groupId;
+
+    // Response resp = await get(Uri.parse("$endpoint/getTransactionDetail?transaction_id=$transactionId"),
+    //     headers: <String, String>{
+    //       'Content-Type': 'application/json',
+    //       "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+    //     });
+    // var data = jsonDecode(resp.body);
+    // logger.d(data);
+    // if (data["message"] == "SUCCESS") {
+      // TODO: ini
+      Items itemA = Items();
+      Items itemB = Items();
+      Items itemC = Items();
+
+      itemA.name = "Item A";
+      itemB.name = "Item B";
+      itemC.name = "Item C";
+
+      itemA.price = 62000;
+      itemB.price = 52000;
+      itemC.price = 42000;
+
+      itemA.total = 62000;
+      itemB.total = 52000;
+      itemC.total = 42000;
+
+      itemA.qty = 1;
+      itemB.qty = 1;
+      itemC.qty = 1;
+
+      Transaction newTrans = Transaction();
+
+      newTrans.name = "Transaksi Shay";
+      newTrans.groupName = "Group shay";
+      newTrans.date = "03 Feb 2023";
+
+      newTrans.items = [itemA, itemB, itemC];
+
+      newTrans.subtotal = 1;
+      newTrans.tax = 2;
+      newTrans.service = 3;
+      newTrans.total = 4;
+      
+      ref.read(transactionProvider).changeTrans(newTrans);
+      ref.read(routeProvider).changePage("transaction_detail");
+    // } else {
+    //   ref.read(errorProvider).changeError(data["message"]);
+    // }
   }
 }

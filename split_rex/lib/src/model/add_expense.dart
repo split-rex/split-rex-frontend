@@ -27,9 +27,11 @@ class Items {
 }
 
 class Transaction {
+  String transactionId;
   String name;
   String desc;
   String groupId;
+  String groupName;
   String date = DateTime.now().toUtc().toIso8601String();
   int subtotal;
   int tax;
@@ -39,9 +41,11 @@ class Transaction {
   List<Items> items = []; 
 
   Transaction({
+    this.transactionId = "",
     this.name = "",
     this.desc = "",
     this.groupId = "",
+    this.groupName = "",
     this.subtotal = 0,
     this.tax = 0,
     this.service = 0,

@@ -5,6 +5,7 @@ import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/model/group_model.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
+import 'package:split_rex/src/services/add_expense.dart';
 
 import '../providers/group_list.dart';
 
@@ -241,78 +242,85 @@ class TransactionItem extends ConsumerStatefulWidget {
 class TransactionItemState extends ConsumerState<TransactionItem> {
   @override
   Widget build(BuildContext context) {
-    print(widget.listIdx);
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        children: [
-          const SizedBox(
-            width: 10,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Text(
-                "Feb",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Color(0XFF9A9AB0),
-                  fontSize: 20,
-                ),
-              ),
-              Text(
-                "12",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  color: Color(0XFF9A9AB0),
-                  fontSize: 28,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xffcff2ff),
-              ),
-              height: 35,
-              width: 35,
-              child: const Initicon(
-                text: "Muhammad Ali", 
-                size: 16.0,
-              )
+    return InkWell(
+      onTap: () async {
+        await AddExpenseServices().getTransactionDetail(ref, ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].transactionId);
+        ref.read(routeProvider).changePage("transaction_detail");
+      },
+      child: 
+      Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            const SizedBox(
+              width: 10,
             ),
-          const SizedBox(
-            width: 20,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].name,
-                style: const TextStyle(
-                  color: Color(0XFF9A9AB0),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Text(
+                  "Feb",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Color(0XFF9A9AB0),
+                    fontSize: 20,
+                  ),
                 ),
-              ),
-              Text(
-                "Rp${ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].total}",
-                style: const TextStyle(
-                  color: Color(0XFF9A9AB0),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                Text(
+                  "12",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    color: Color(0XFF9A9AB0),
+                    fontSize: 28,
+                  ),
                 ),
+              ],
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            Container(
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xffcff2ff),
+                ),
+                height: 35,
+                width: 35,
+                child: const Initicon(
+                  text: "Muhammad Ali", 
+                  size: 16.0,
+                )
               ),
-            ],
-          )
-        ],
-      ),
+            const SizedBox(
+              width: 20,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].name,
+                  style: const TextStyle(
+                    color: Color(0XFF9A9AB0),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  "Rp${ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].total}",
+                  style: const TextStyle(
+                    color: Color(0XFF9A9AB0),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      )
     );
+    
   }
 }

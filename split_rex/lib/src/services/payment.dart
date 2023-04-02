@@ -1,0 +1,79 @@
+import 'dart:convert';
+
+import 'package:http/http.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/model/confirm_payment.dart';
+
+import 'package:split_rex/src/providers/auth.dart';
+import 'package:split_rex/src/providers/error.dart';
+import 'package:split_rex/src/widgets/groups/group_settings.dart';
+
+import '../providers/payment.dart';
+
+
+class PaymentServices {
+  String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
+
+  Future<void> getUnconfirmedPayment(WidgetRef ref) async {
+    Response resp =
+        await get(Uri.parse("$endpoint/getUnconfirmedPayment"), headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+    });
+    var data = jsonDecode(resp.body);
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      ref.read(paymentProvider).clearUnconfirmedPayments();
+      try {
+        for (var data in data["data"]) {
+          ConfirmationPayment tempPayment = ConfirmationPayment();
+          tempPayment.paymentId = data["payment_id"];
+          tempPayment.userId = data["user_id"];
+          tempPayment.name = data["fullname"];
+          tempPayment.color = data["color"];
+          tempPayment.totalPaid = data["total_paid"];
+          ref.read(paymentProvider).addUnconfirmedPayment(tempPayment);
+        }
+      } catch (error) {
+        logger.d(error);
+      }
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> confirmSettle(WidgetRef ref, String paymentId) async {
+    Response resp = await post(Uri.parse("$endpoint/confirmSettle"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+      },
+      body: jsonEncode({
+        "payment_id": paymentId,
+      }));
+    var data = jsonDecode(resp.body);
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      await getUnconfirmedPayment(ref);
+    } else {
+        ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> denySettle(WidgetRef ref, String paymentId) async {
+    Response resp = await post(Uri.parse("$endpoint/denySettle"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+      },
+      body: jsonEncode({
+        "payment_id": paymentId,
+      }));
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      await getUnconfirmedPayment(ref);
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+}

@@ -7,6 +7,8 @@ import 'package:split_rex/src/screens/activity.dart';
 import 'package:split_rex/src/screens/account/account_edit.dart';
 import 'package:split_rex/src/screens/account/change_password.dart';
 import 'package:split_rex/src/screens/auth/username_fill.dart';
+import 'package:split_rex/src/screens/expense/confirm_payment.dart';
+import 'package:split_rex/src/screens/expense/transaction_detail.dart';
 import 'package:split_rex/src/screens/friends/add_friends.dart';
 import 'package:split_rex/src/screens/friends/choose_friend.dart';
 import 'package:split_rex/src/screens/friends/friend_requests.dart';
@@ -82,7 +84,7 @@ class PageRouting extends ConsumerWidget {
       case "change_password":
         return const ChangePassword();
       case "fill_username":
-        return UsernameFill();
+        return const UsernameFill();
 
       case "group_settings":
         return GroupSettings(
@@ -110,6 +112,13 @@ class PageRouting extends ConsumerWidget {
         
       case "unsettled_payments":
         return const UnsettledPayments();
+
+      // transaction detail
+      case "transaction_detail":
+        return const TransactionDetail();
+
+      case "confirm_payment":
+        return const ConfirmPayment();
 
 
       // home

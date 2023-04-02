@@ -189,6 +189,7 @@ Widget itemsList(WidgetRef ref, int index, BuildContext context) =>
                 style: const TextStyle(
                   fontSize: 16,
                   color: Color(0XFF4F4F4F),
+                  fontWeight: FontWeight.w700
                 ),
               ),
             ),
@@ -199,21 +200,32 @@ Widget itemsList(WidgetRef ref, int index, BuildContext context) =>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Total: Rp${ref.watch(transactionProvider).currTrans.items[index].total}"
+                    "Total: Rp${ref.watch(transactionProvider).currTrans.items[index].total}",
                   ),
                   Row(
                     children: [
                       Text("${ref.watch(transactionProvider).currTrans.items[index].qty} x"),
                       const SizedBox(width: 36),
-                      Text("Rp ${ref.watch(transactionProvider).currTrans.items[index].price}", style: const TextStyle(fontWeight: FontWeight.w700)),
+                      Text("Rp ${ref.watch(transactionProvider).currTrans.items[index].price}"),
                     ]
                   ),
                 ],
               )
             ),
-            Container(
-              alignment: Alignment.centerRight,
-              child: getBubbleMember(ref.watch(transactionProvider).currTrans.items[index].consumerDetails),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const Text(
+                  "See all consumers", 
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12,
+                    color: Color(0XFF2E9281)
+                  )
+                ),
+                getBubbleMember(ref.watch(transactionProvider).currTrans.items[index].consumerDetails)
+              ],
             )
         ],)
       )],

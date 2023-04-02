@@ -136,7 +136,38 @@ class GroupListProvider extends ChangeNotifier {
     logger.d(groupsLoaded);
     notifyListeners();
   }
+
+  void searchGroupNameOne(String name) {
+    // int len = groupsLoaded.length;
+    // List<GroupListModel> builder = [];
+    // List<GroupListModel> groupsLoad = groupsLoaded;
+
+    // // print(groupsLoad);
+    // for (int i = 0; i < len; i++) {
+    //   if (groupsLoaded[i].name.toLowerCase().contains(name.toLowerCase())) {
+    //     print("here");
+    //     builder.add(groupsLoaded[i]);
+    //   }
+    // }
+    // // print(groupsLoad[1].name);
+    // groups = builder;
+    // groups = groups;
+    // print(groups);
+    // notifyListeners();
+    int len = groupsLoaded.length;
+
+    // print(groupsLoad);
+    for (int i = 0; i < len; i++) {
+      if (groupsLoaded[i].name.toLowerCase().contains(name.toLowerCase())) {
+        currGroup = groupsLoaded[i];
+      }
+    }
+ 
+    notifyListeners();
+  }
 }
+
+
 
 final groupListProvider = ChangeNotifierProvider((ref) => GroupListProvider());
 

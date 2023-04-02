@@ -33,7 +33,7 @@ class SignInScreen extends ConsumerWidget {
 
               
             }();
-          return const Text("Signed in");
+          return const Center(child: CircularProgressIndicator());
           
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

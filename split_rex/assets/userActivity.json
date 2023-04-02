@@ -1,0 +1,42 @@
+{
+    "message": "SUCCESS",
+    "data": [
+      {
+        "activity_id": "09018221-755a-4c2f-a0b1-7efa4a3153a0",
+        "activity_type": "PAYMENT",
+        "date": "2023-03-31T15:01:08.576797+07:00",
+        "redirect_id": "0b865d7f-e40e-4440-905e-eccf2caaa6ed",
+        "detail": {
+          "payment_activity_id": "3b1d5f08-6f74-46b2-8ae0-146f0fc8198e",
+          "name": "patrick",
+          "status": "CONFIRMED",
+          "amount": 10000,
+          "group_name": "New Group Yeay"
+        }
+      },
+      {
+        "activity_id": "7aaffef4-9be6-4002-acd6-d7ecac0e7bdb",
+        "activity_type": "PAYMENT",
+        "date": "2023-03-31T14:40:44.456772+07:00",
+        "redirect_id": "0b865d7f-e40e-4440-905e-eccf2caaa6ed",
+        "detail": {
+          "payment_activity_id": "191c1390-3dcc-419a-b8aa-305f06070682",
+          "name": "patrick",
+          "status": "CONFIRMED",
+          "amount": 10000,
+          "group_name": "New Group Yeay"
+        }
+      },
+      {
+        "activity_id": "1316885f-5caa-460e-b994-8d49cf1655ac",
+        "activity_type": "TRANSACTION",
+        "date": "2023-03-31T14:29:09.284994+07:00",
+        "redirect_id": "343abc2a-1f54-4e37-bad9-55579be107dd",
+        "detail": {
+          "transaction_activity_id": "120e78ef-9c58-4bf4-aa87-3b052f4e0c05",
+          "name": "ubay",
+          "group_name": "New Group Yeay"
+        }
+      }
+    ]
+  }

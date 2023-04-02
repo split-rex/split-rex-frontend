@@ -59,9 +59,7 @@ Widget transactionInfo(WidgetRef ref) => Container(
           width: 240,
           child:
           Text(
-            ref.watch(transactionProvider).currTrans.date,
-            // TODO: uncomment yg dibawah
-            // "${DateTime.parse(ref.watch(transactionProvider).currTrans.date).day.toString()}/${DateTime.parse(ref.watch(transactionProvider).currTrans.date).month.toString()}/${DateTime.parse(ref.watch(transactionProvider).currTrans.date).year.toString()}",
+            "${DateTime.parse(ref.watch(transactionProvider).currTrans.date).day.toString()}/${DateTime.parse(ref.watch(transactionProvider).currTrans.date).month.toString()}/${DateTime.parse(ref.watch(transactionProvider).currTrans.date).year.toString()}",
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,

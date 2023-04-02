@@ -10,6 +10,7 @@ import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/friend.dart';
+import 'package:split_rex/src/services/group.dart';
 
 Widget header(BuildContext context, WidgetRef ref, String pagename,
         String prevPage, Widget widget) =>
@@ -40,9 +41,13 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                 alignment: Alignment.centerLeft,
                                 padding: const EdgeInsets.only(left: 20),
                                 child: InkWell(
-                                  onTap: () { 
+                                  onTap: () async { 
                                     if (prevPage == "add_expense") {
                                       ref.read(addExpenseProvider).resetNewGroup();
+                                    }
+                                    if (prevPage == "group_detail") {
+                                      await GroupServices().userGroupList(ref);
+                                      await GroupServices().getGroupDetail(ref, ref.watch(groupListProvider).currGroup.groupId);
                                     }
                                     ref
                                       .watch(routeProvider)

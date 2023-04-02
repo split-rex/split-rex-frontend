@@ -242,11 +242,10 @@ class TransactionItem extends ConsumerStatefulWidget {
 class TransactionItemState extends ConsumerState<TransactionItem> {
   @override
   Widget build(BuildContext context) {
-    print(widget.listIdx);
-    // TODO: intinya nambahin inkwell ajah #KaloKonflik
     return InkWell(
-      onTap: () {
-        AddExpenseServices().getTransactionDetail(ref, ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].transactionId);
+      onTap: () async {
+        await AddExpenseServices().getTransactionDetail(ref, ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].transactionId);
+        ref.read(routeProvider).changePage("transaction_detail");
       },
       child: 
       Container(

@@ -174,90 +174,46 @@ class AddExpenseServices {
   }
 
   Future<void> getTransactionDetail(WidgetRef ref, String transactionId) async {
-    // String currGroupId = ref.watch(groupListProvider).currGroup.groupId;
-
-    // Response resp = await get(Uri.parse("$endpoint/getTransactionDetail?transaction_id=$transactionId"),
-    //     headers: <String, String>{
-    //       'Content-Type': 'application/json',
-    //       "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
-    //     });
-    // var data = jsonDecode(resp.body);
-    // logger.d(data);
-    // if (data["message"] == "SUCCESS") {
-      
-      // TODO: ini
-      Items itemA = Items();
-      Items itemB = Items();
-      Items itemC = Items();
-
-      itemA.name = "Item A";
-      itemB.name = "Item B";
-      itemC.name = "Item C";
-
-      itemA.price = 62000;
-      itemB.price = 52000;
-      itemC.price = 42000;
-
-      Friend friendA = Friend();
-      friendA.userId = "b74ae4ed-36cb-456c-b1dd-8fede426f244";
-      friendA.name = "nando";
-      friendA.color = 6;
-
-      Friend friendB = Friend();
-      friendB.userId = "183e04d7-c653-4c7d-aa66-3d751d4d7358";
-      friendB.name = "ubay";
-      friendB.color = 7;
-
-      Friend user = Friend();
-      user.userId = ref.watch(authProvider).userData.userId;
-      user.name = ref.watch(authProvider).userData.name;
-      user.color = ref.watch(authProvider).userData.color;
-
-      itemA.consumerDetails = [
-        user,
-        friendA,
-        friendB,
-      ];
-
-      itemB.consumerDetails = [
-        user,
-        friendA,
-      ];
-
-      itemC.consumerDetails = [
-        friendB,
-        user,
-        friendA,
-        friendB,
-        user,
-      ];
-
-
-      itemA.total = 62000;
-      itemB.total = 52000;
-      itemC.total = 42000;
-
-      itemA.qty = 1;
-      itemB.qty = 1;
-      itemC.qty = 1;
+    Response resp = await get(Uri.parse("$endpoint/getTransactionDetail?transaction_id=$transactionId"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+        });
+    var data = jsonDecode(resp.body);
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      var trans = data["data"];
+      var transItem = trans["items"];
 
       Transaction newTrans = Transaction();
+      newTrans.name = trans["name"];
+      newTrans.groupName = trans["group_name"];
+      newTrans.date = trans["date"];
+      newTrans.subtotal = trans["subtotal"];
+      newTrans.tax = trans["tax"];
+      newTrans.service = trans["service"];
+      newTrans.total = trans["total"];
 
-      newTrans.name = "Transaksi Shay";
-      newTrans.groupName = "Group shay";
-      newTrans.date = "03 Feb 2023";
-
-      newTrans.items = [itemA, itemB, itemC];
-
-      newTrans.subtotal = 1;
-      newTrans.tax = 2;
-      newTrans.service = 3;
-      newTrans.total = 4;
-
+      for (var i = 0; i < transItem.length; i++) {
+        Items tempItem = Items();
+        tempItem.name = transItem[i]["name"];
+        tempItem.qty = transItem[i]["quantity"];
+        tempItem.price = transItem[i]["price"];
+        tempItem.total = transItem[i]["total_price"];
+        var transConsumer = transItem[i]["consumer"];
+        for (var j = 0; j < transConsumer.length; j++) {
+          Friend tempConsumer = Friend();
+          tempConsumer.userId = transConsumer[j]["user_id"];
+          tempConsumer.name = transConsumer[j]["name"];
+          tempConsumer.color = transConsumer[j]["color"];
+          tempItem.consumerDetails.add(tempConsumer);
+        }
+        newTrans.items.add(tempItem);
+      }
       ref.read(transactionProvider).changeTrans(newTrans);
       ref.read(routeProvider).changePage("transaction_detail");
-    // } else {
-    //   ref.read(errorProvider).changeError(data["message"]);
-    // }
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
   }
 }

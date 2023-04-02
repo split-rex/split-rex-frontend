@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
@@ -61,20 +60,23 @@ class GroupServices {
     if (data["message"] == "SUCCESS") {
       var transactions = data["data"];
       List<Transaction> newTransList = [];
-      if (transactions != null) {
+      try {
         for (var i = 0; i < transactions.length; i++) {
           var currTrans = transactions[i];
           var tempTrans = Transaction();
+          tempTrans.groupId = groupId;
+          tempTrans.transactionId = currTrans["transaction_id"];
           tempTrans.billOwner = currTrans["bill_owner"];
-          tempTrans.groupId = currTrans["group_id"];
           tempTrans.name = currTrans["name"];
-          tempTrans.total = currTrans["total"];
+          tempTrans.date = currTrans["date"];
           newTransList.add(tempTrans);
         }
         ref.watch(groupListProvider).changeCurrGroupTransactions(newTransList);
-      } else {
-        ref.read(errorProvider).changeError(data["message"]);
+      } catch (error) {
+        logger.d(error);
       }
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
     }
   }
 

@@ -86,7 +86,10 @@ Widget itemsList(WidgetRef ref, int index, BuildContext context) =>
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Container(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+            vertical: 16.0
+          ),
           alignment: Alignment.topLeft,
           height: MediaQuery.of(context).size.height - 300.0,
           child: SingleChildScrollView(
@@ -119,6 +122,7 @@ Widget itemsList(WidgetRef ref, int index, BuildContext context) =>
                 ),
                 ListView.separated(
                   shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   padding: EdgeInsets.zero,
                   itemCount: ref.watch(transactionProvider).currTrans.items[index].consumerDetails.length,
                   itemBuilder: (BuildContext context, int consumerIdx) {

@@ -105,10 +105,13 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   camera_avfoundation:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
+<<<<<<< HEAD
+=======
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
+>>>>>>> main
   Flutter:
     :path: Flutter
   flutter_facebook_auth:

@@ -106,7 +106,7 @@ class PageRouting extends ConsumerWidget {
           picture: ref.watch(cameraProvider).picture,
         );
 
-        // settle payment
+      // settle payment
       case "settle_up":
         return const SettleUp();
         

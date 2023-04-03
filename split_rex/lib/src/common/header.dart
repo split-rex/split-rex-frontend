@@ -1,11 +1,16 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
 import 'package:split_rex/src/providers/auth.dart';
+import 'package:split_rex/src/providers/firebaseauth.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/friend.dart';
+import 'package:split_rex/src/services/group.dart';
 
 Widget header(BuildContext context, WidgetRef ref, String pagename,
         String prevPage, Widget widget) =>
@@ -36,9 +41,13 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                 alignment: Alignment.centerLeft,
                                 padding: const EdgeInsets.only(left: 20),
                                 child: InkWell(
-                                  onTap: () { 
+                                  onTap: () async { 
                                     if (prevPage == "add_expense") {
                                       ref.read(addExpenseProvider).resetNewGroup();
+                                    }
+                                    if (prevPage == "group_detail") {
+                                      await GroupServices().userGroupList(ref);
+                                      await GroupServices().getGroupDetail(ref, ref.watch(groupListProvider).currGroup.groupId);
                                     }
                                     ref
                                       .watch(routeProvider)
@@ -84,26 +93,27 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                         ))),
                               )
                             : const SizedBox(width: 0),
-                            ref.watch(routeProvider).currentPage == ("settle_up")
-                          ? Container(
-                              width: MediaQuery.of(context).size.width - 20.0,
-                              alignment: Alignment.centerRight,
-                              child: GestureDetector(
-                                  onTap: () => helpDialogUnsettledPayments(context),
-                                  child:
-                                      const Icon(Icons.help_outline_outlined)),
-                            )
-                          : const SizedBox(width: 0),
-                           ref.watch(routeProvider).currentPage == ("settle_up")
-                          ? Container(
-                              width: MediaQuery.of(context).size.width - 20.0,
-                              alignment: Alignment.centerRight,
-                              child: GestureDetector(
-                                  onTap: () => helpDialogSettleUp(context),
-                                  child:
-                                      const Icon(Icons.help_outline_outlined)),
-                            )
-                          : const SizedBox(width: 0),
+                        ref.watch(routeProvider).currentPage == ("settle_up")
+                            ? Container(
+                                width: MediaQuery.of(context).size.width - 20.0,
+                                alignment: Alignment.centerRight,
+                                child: GestureDetector(
+                                    onTap: () =>
+                                        helpDialogUnsettledPayments(context),
+                                    child: const Icon(
+                                        Icons.help_outline_outlined)),
+                              )
+                            : const SizedBox(width: 0),
+                        ref.watch(routeProvider).currentPage == ("settle_up")
+                            ? Container(
+                                width: MediaQuery.of(context).size.width - 20.0,
+                                alignment: Alignment.centerRight,
+                                child: GestureDetector(
+                                    onTap: () => helpDialogSettleUp(context),
+                                    child: const Icon(
+                                        Icons.help_outline_outlined)),
+                              )
+                            : const SizedBox(width: 0),
                         ref.watch(routeProvider).currentPage == ("account")
                             ? Container(
                                 width: MediaQuery.of(context).size.width - 20.0,
@@ -111,6 +121,14 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                 padding: const EdgeInsets.only(right: 20),
                                 child: InkWell(
                                   onTap: () async {
+                                    if (FirebaseAuth.instance.currentUser !=
+                                        null) {
+                                      log("firebase logout");
+                                      await ref
+                                          .watch(googleSignInProvider)
+                                          .googleLogout();
+                                    }
+
                                     await _signOut(ref);
                                   },
                                   child: const Icon(Icons.logout,

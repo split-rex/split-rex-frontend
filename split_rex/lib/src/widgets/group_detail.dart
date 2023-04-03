@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart';
 import 'package:split_rex/src/common/bubble_member.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/model/group_model.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
+import 'package:split_rex/src/services/add_expense.dart';
+import 'package:split_rex/src/services/payment.dart';
 
 import '../providers/group_list.dart';
 
@@ -79,7 +82,11 @@ class GroupInfo extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  convertDate(ref.watch(groupListProvider).currGroup.startDate) + " - " + convertDate(ref.watch(groupListProvider).currGroup.endDate),
+                  convertDate(
+                          ref.watch(groupListProvider).currGroup.startDate) +
+                      " - " +
+                      convertDate(
+                          ref.watch(groupListProvider).currGroup.endDate),
                   style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     color: Colors.white,
@@ -121,29 +128,42 @@ class BalanceInfo extends ConsumerWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w400),
                         children: [
-                          TextSpan(text: 
-                            ref.watch(groupListProvider).currGroup.type == "EQUAL" 
-                            ? "You are all settled up "
-                            : ref.watch(groupListProvider).currGroup.type == "LENT" 
-                              ? "You lent "
-                              : "You owe "
-                          ),
                           TextSpan(
                               text:
-                              ref.watch(groupListProvider).currGroup.type == "EQUAL"
-                              ? ""
-                              : "Rp${ref.watch(groupListProvider).currGroup.totalUnpaid.toString().replaceAll('-', '')}",
-                              style:  TextStyle(
-                                color: 
-                                ref.watch(groupListProvider).currGroup.type == "OWED"
-                                ? const Color(0XFFF10D0D)
-                                : const Color(0xFF4F9A99),
+                                  ref.watch(groupListProvider).currGroup.type ==
+                                          "EQUAL"
+                                      ? "You are all settled up "
+                                      : ref
+                                                  .watch(groupListProvider)
+                                                  .currGroup
+                                                  .type ==
+                                              "LENT"
+                                          ? "You lent "
+                                          : "You owe "),
+                          TextSpan(
+                              text: ref
+                                          .watch(groupListProvider)
+                                          .currGroup
+                                          .type ==
+                                      "EQUAL"
+                                  ? ""
+                                  : "Rp${ref.watch(groupListProvider).currGroup.totalUnpaid.toString().replaceAll('-', '')}",
+                              style: TextStyle(
+                                color: ref
+                                            .watch(groupListProvider)
+                                            .currGroup
+                                            .type ==
+                                        "OWED"
+                                    ? const Color(0XFFF10D0D)
+                                    : const Color(0xFF4F9A99),
                                 fontWeight: FontWeight.w800,
                               )),
-                          TextSpan(text: 
-                          ref.watch(groupListProvider).currGroup.type == "EQUAL"
-                          ? ""
-                          : " in total"),
+                          TextSpan(
+                              text:
+                                  ref.watch(groupListProvider).currGroup.type ==
+                                          "EQUAL"
+                                      ? ""
+                                      : " in total"),
                         ]),
                   ),
                 ],
@@ -213,6 +233,61 @@ class GroupDetailContent extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                        color: Color(0xFFDFF2F0),
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 30),
+                    child: InkWell(
+                      onTap: () async => {
+                        await PaymentServices().getUnsettledPayment(ref),
+                        ref
+                            .watch(routeProvider)
+                            .changePage("unsettled_payments")
+                      },
+                      child: const Text(
+                        "Unsettled Payments",
+                        style: TextStyle(
+                            color: Color(0xFF2E9281),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12),
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  // TODO: confirm payments
+                  Container(
+                    decoration: const BoxDecoration(
+                        color: Color(0xFFDFF2F0),
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 30),
+                    child: const InkWell(
+                      // onTap: () async => {
+                      //   await PaymentServices().getUnsettledPayment(ref),
+                      //   ref
+                      //       .watch(routeProvider)
+                      //       .changePage("unsettled_payments")
+                      // },
+                      child: Text(
+                        "Confirm Payments",
+                        style: TextStyle(
+                            color: Color(0xFF2E9281),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12)
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // TODO: add lines
+              const SizedBox(
+                height: 10,),
               Text(
                 "February 2023",
                 style: Theme.of(context).textTheme.headlineSmall,
@@ -220,9 +295,14 @@ class GroupDetailContent extends ConsumerWidget {
               Expanded(
                   child: ListView.builder(
                       padding: EdgeInsets.zero,
-                      itemCount: ref.watch(groupListProvider).currGroup.transactions.length,
+                      itemCount: ref
+                          .watch(groupListProvider)
+                          .currGroup
+                          .transactions
+                          .length,
                       itemBuilder: (BuildContext context, int index) {
-                        return TransactionItem(key: UniqueKey(), listIdx: index);
+                        return TransactionItem(
+                            key: UniqueKey(), listIdx: index);
                       })),
             ],
           ),
@@ -241,78 +321,91 @@ class TransactionItem extends ConsumerStatefulWidget {
 class TransactionItemState extends ConsumerState<TransactionItem> {
   @override
   Widget build(BuildContext context) {
-    print(widget.listIdx);
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        children: [
-          const SizedBox(
-            width: 10,
+    return InkWell(
+        onTap: () async {
+          await AddExpenseServices().getTransactionDetail(
+              ref,
+              ref
+                  .watch(groupListProvider)
+                  .currGroup
+                  .transactions[widget.listIdx]
+                  .transactionId);
+          ref.read(routeProvider).changePage("transaction_detail");
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Text(
-                "Feb",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Color(0XFF9A9AB0),
-                  fontSize: 20,
-                ),
-              ),
-              Text(
-                "12",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  color: Color(0XFF9A9AB0),
-                  fontSize: 28,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xffcff2ff),
-              ),
-              height: 35,
-              width: 35,
-              child: const Initicon(
-                text: "Muhammad Ali", 
-                size: 16.0,
-              )
-            ),
-          const SizedBox(
-            width: 20,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(
-                ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].name,
-                style: const TextStyle(
-                  color: Color(0XFF9A9AB0),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                ),
+              const SizedBox(
+                width: 10,
               ),
-              Text(
-                "Rp${ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].total}",
-                style: const TextStyle(
-                  color: Color(0XFF9A9AB0),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Text(
+                    "Feb",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Color(0XFF9A9AB0),
+                      fontSize: 20,
+                    ),
+                  ),
+                  Text(
+                    "12",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: Color(0XFF9A9AB0),
+                      fontSize: 28,
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(
+                width: 20,
+              ),
+              Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xffcff2ff),
+                  ),
+                  height: 35,
+                  width: 35,
+                  child: const Initicon(
+                    text: "Muhammad Ali",
+                    size: 16.0,
+                  )),
+              const SizedBox(
+                width: 20,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    ref
+                        .watch(groupListProvider)
+                        .currGroup
+                        .transactions[widget.listIdx]
+                        .name,
+                    style: const TextStyle(
+                      color: Color(0XFF9A9AB0),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    "Rp${ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].total}",
+                    style: const TextStyle(
+                      color: Color(0XFF9A9AB0),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              )
             ],
-          )
-        ],
-      ),
-    );
+          ),
+        ));
   }
 }

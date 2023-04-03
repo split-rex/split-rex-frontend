@@ -2,14 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart';      
 
 import 'package:split_rex/src/widgets/navbar.dart';
 import 'package:split_rex/src/routes/routes.dart';
 
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+
+Future main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const ProviderScope(child: MyApp()));
 }
 

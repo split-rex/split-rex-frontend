@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/providers/payment.dart';
 
 class UnsettledPaymentsBody extends ConsumerWidget {
   const UnsettledPaymentsBody({super.key});
@@ -23,17 +24,37 @@ class UnsettledPaymentsBody extends ConsumerWidget {
             ),
           ],
         ),
-        child: const UnsettlePaymentDetail(
-          name: "samuel",
-          userId: "aksdjkasjjdskaasd",
-          oweOrLent: 1000,
-        ));
+        child: (ref.watch(paymentProvider).unsettledPayments.isEmpty)
+            ? Text("No unsettled payments!")
+            : ListView.separated(
+                itemCount: ref.watch(paymentProvider).unsettledPayments.length,
+                shrinkWrap: true,
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                itemBuilder: (context, index) {
+                  return UnsettlePaymentDetail(
+                      name: ref
+                          .watch(paymentProvider)
+                          .unsettledPayments[index]
+                          .name,
+                      userId: ref
+                          .watch(paymentProvider)
+                          .unsettledPayments[index]
+                          .userId,
+                      oweOrLent: ref
+                          .watch(paymentProvider)
+                          .unsettledPayments[index]
+                          .totalUnpaid);
+                },
+                separatorBuilder: (context, index) => const Divider(
+                      thickness: 1,
+                      indent: 20,
+                      color: Color(0xFFE1F3F2),
+                    )));
   }
 }
 
 class UnsettlePaymentDetail extends ConsumerWidget {
   const UnsettlePaymentDetail(
-      // TODO: GANTI INI OWEORLENT GATAU APA NAMANYAAA
       {super.key,
       required this.name,
       required this.userId,
@@ -71,34 +92,55 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                       fontWeight: FontWeight.w900),
                 ),
                 // TODO: ADA IF ELSENYA BEDA RICHTEXT!!!
-                RichText(
-                  text: TextSpan(
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF4F4F4F),
-                      ),
-                      children: [
-                        const TextSpan(text: "owes "),
-                        const TextSpan(
-                            text: "Rp.",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF6DC7BD))),
-                        TextSpan(
-                          // TODO: GANTI NAMA VAR
-                            text: oweOrLent.toString(),
+                (oweOrLent > 0)
+                    ? RichText(
+                        text: TextSpan(
                             style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF6DC7BD))),
-                        const TextSpan(text: " to "),
-                        const TextSpan(
-                            text: "You",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                            )),
-                      ]),
-                ),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF4F4F4F),
+                            ),
+                            children: [
+                              const TextSpan(text: "You owes "),
+                              const TextSpan(
+                                  text: "Rp. ",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF6DC7BD))), // TODO: change to red
+                              TextSpan(
+                                  text: (oweOrLent).toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF6DC7BD))),
+                            ]),
+                      )
+                    : RichText(
+                        text: TextSpan(
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF4F4F4F),
+                            ),
+                            children: [
+                              const TextSpan(text: "owes "),
+                              const TextSpan(
+                                  text: "Rp.",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF6DC7BD))),
+                              TextSpan(
+                                  text: (-1 * oweOrLent).toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF6DC7BD))),
+                              const TextSpan(text: " to "),
+                              const TextSpan(
+                                  text: "You",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                  )),
+                            ]),
+                      ),
                 const SizedBox(height: 8),
                 Row(children: [
                   InkWell(

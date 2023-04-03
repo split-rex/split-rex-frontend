@@ -89,7 +89,7 @@ class GroupServices {
       },
     );
     var data = await json.decode(response.body);
-    logger.d(data["data"]);
+    // logger.d(data["data"]);
     return data["data"]["list_group"].isNotEmpty;
   }
 
@@ -102,7 +102,7 @@ class GroupServices {
       },
     );
     var data = await json.decode(response.body);
-    logger.d(data["data"]);
+    // logger.d(data["data"]);
     ref.watch(groupListProvider).updateHasLentGroups(data["data"]["list_group"].isNotEmpty);
   }
 

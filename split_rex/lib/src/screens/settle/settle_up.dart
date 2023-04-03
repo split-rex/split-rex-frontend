@@ -13,7 +13,7 @@ class SettleUp extends ConsumerWidget {
       context,
       ref,
       "Settle Up",
-      "group_detail",
+      "unsettled_payments",
       Column(
         children: const [
           SettleUpBody()

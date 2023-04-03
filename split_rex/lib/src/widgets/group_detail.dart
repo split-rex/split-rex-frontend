@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:split_rex/src/common/bubble_member.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/model/group_model.dart';
+import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/services/add_expense.dart';
@@ -50,8 +54,11 @@ class GroupInfo extends ConsumerWidget {
               ),
               const Spacer(),
               InkWell(
-                onTap: () =>
-                    ref.watch(routeProvider).changePage("group_settings"),
+                onTap: () {
+                  
+                  
+                  ref.watch(routeProvider).changePage("group_settings");
+                },
                 child:
                     const Icon(Icons.settings, color: Colors.white, size: 30),
               )
@@ -80,7 +87,11 @@ class GroupInfo extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  convertDate(ref.watch(groupListProvider).currGroup.startDate) + " - " + convertDate(ref.watch(groupListProvider).currGroup.endDate),
+                  convertDate(
+                          ref.watch(groupListProvider).currGroup.startDate) +
+                      " - " +
+                      convertDate(
+                          ref.watch(groupListProvider).currGroup.endDate),
                   style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     color: Colors.white,
@@ -122,29 +133,42 @@ class BalanceInfo extends ConsumerWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w400),
                         children: [
-                          TextSpan(text: 
-                            ref.watch(groupListProvider).currGroup.type == "EQUAL" 
-                            ? "You are all settled up "
-                            : ref.watch(groupListProvider).currGroup.type == "LENT" 
-                              ? "You lent "
-                              : "You owe "
-                          ),
                           TextSpan(
                               text:
-                              ref.watch(groupListProvider).currGroup.type == "EQUAL"
-                              ? ""
-                              : "Rp${ref.watch(groupListProvider).currGroup.totalUnpaid.toString().replaceAll('-', '')}",
-                              style:  TextStyle(
-                                color: 
-                                ref.watch(groupListProvider).currGroup.type == "OWED"
-                                ? const Color(0XFFF10D0D)
-                                : const Color(0xFF4F9A99),
+                                  ref.watch(groupListProvider).currGroup.type ==
+                                          "EQUAL"
+                                      ? "You are all settled up "
+                                      : ref
+                                                  .watch(groupListProvider)
+                                                  .currGroup
+                                                  .type ==
+                                              "LENT"
+                                          ? "You lent "
+                                          : "You owe "),
+                          TextSpan(
+                              text: ref
+                                          .watch(groupListProvider)
+                                          .currGroup
+                                          .type ==
+                                      "EQUAL"
+                                  ? ""
+                                  : "Rp${ref.watch(groupListProvider).currGroup.totalUnpaid.toString().replaceAll('-', '')}",
+                              style: TextStyle(
+                                color: ref
+                                            .watch(groupListProvider)
+                                            .currGroup
+                                            .type ==
+                                        "OWED"
+                                    ? const Color(0XFFF10D0D)
+                                    : const Color(0xFF4F9A99),
                                 fontWeight: FontWeight.w800,
                               )),
-                          TextSpan(text: 
-                          ref.watch(groupListProvider).currGroup.type == "EQUAL"
-                          ? ""
-                          : " in total"),
+                          TextSpan(
+                              text:
+                                  ref.watch(groupListProvider).currGroup.type ==
+                                          "EQUAL"
+                                      ? ""
+                                      : " in total"),
                         ]),
                   ),
                 ],
@@ -201,7 +225,7 @@ class GroupDetailContent extends ConsumerWidget {
     return Material(
         type: MaterialType.transparency,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
           decoration: const BoxDecoration(
               gradient: LinearGradient(
             colors: [
@@ -214,16 +238,86 @@ class GroupDetailContent extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "February 2023",
-                style: Theme.of(context).textTheme.headlineSmall,
+              Container(
+                width: MediaQuery.of(context).size.width - 40.0,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                ),
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: [
+                    Flexible(
+                      flex: 7,
+                      child: InkWell(
+                        onTap: () {
+                          ref.watch(routeProvider).changePage("group_list");
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: const BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            color: Color(0xFFDFF2F0),
+                          ),
+                          child: const Text(
+                            "Unsettled Payments",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF4F9A99),
+                              fontSize: 11,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    Flexible(
+                      flex: 7,
+                      child: InkWell(
+                        onTap: () {
+                          ref.watch(routeProvider).changePage("group_list");
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: const BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            color: Color(0xFFDFF2F0),
+                          ),
+                          child: const Text(
+                            "Confirmed Payments",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF4F9A99),
+                              fontSize: 11,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Expanded(
                   child: ListView.builder(
                       padding: EdgeInsets.zero,
-                      itemCount: ref.watch(groupListProvider).currGroup.transactions.length,
+                      itemCount: ref
+                          .watch(groupListProvider)
+                          .currGroup
+                          .transactions
+                          .length,
                       itemBuilder: (BuildContext context, int index) {
-                        return TransactionItem(key: UniqueKey(), listIdx: index);
+                        return TransactionItem(
+                            key: UniqueKey(),
+                            listIdx: ref
+                                    .watch(groupListProvider)
+                                    .currGroup
+                                    .transactions
+                                    .length -
+                                1 -
+                                index);
                       })),
             ],
           ),
@@ -231,8 +325,27 @@ class GroupDetailContent extends ConsumerWidget {
   }
 }
 
+class MonthSeparator extends StatelessWidget {
+  final String month;
+
+  const MonthSeparator({required this.month});
+
+  @override
+  Widget build(BuildContext context) {
+    var currmonth = getFullMonthName(month);
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      child: Text(
+        "$currmonth 2023",
+        style: Theme.of(context).textTheme.headlineSmall,
+      ),
+    );
+  }
+}
+
 class TransactionItem extends ConsumerStatefulWidget {
   final int listIdx;
+
   const TransactionItem({super.key, required this.listIdx});
 
   @override
@@ -242,85 +355,102 @@ class TransactionItem extends ConsumerStatefulWidget {
 class TransactionItemState extends ConsumerState<TransactionItem> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        await AddExpenseServices().getTransactionDetail(ref, ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].transactionId);
-        ref.read(routeProvider).changePage("transaction_detail");
-      },
-      child: 
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            const SizedBox(
-              width: 10,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                Text(
-                  "Feb",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Color(0XFF9A9AB0),
-                    fontSize: 20,
-                  ),
-                ),
-                Text(
-                  "12",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    color: Color(0XFF9A9AB0),
-                    fontSize: 28,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xffcff2ff),
-                ),
-                height: 35,
-                width: 35,
-                child: const Initicon(
-                  text: "Muhammad Ali", 
-                  size: 16.0,
-                )
+    var transaction =
+        ref.watch(groupListProvider).currGroup.transactions[widget.listIdx];
+    var currentMonth = extractMonth(transaction.date);
+    log(widget.listIdx.toString());
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.listIdx ==
+                ref.watch(groupListProvider).currGroup.transactions.length -
+                    1 ||
+            currentMonth !=
+                extractMonth(ref
+                    .watch(groupListProvider)
+                    .currGroup
+                    .transactions[widget.listIdx + 1]
+                    .date))
+          MonthSeparator(month: currentMonth),
+        InkWell(
+            onTap: () async {
+              await AddExpenseServices()
+                  .getTransactionDetail(ref, transaction.transactionId);
+              ref.read(routeProvider).changePage("transaction_detail");
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
               ),
-            const SizedBox(
-              width: 20,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].name,
-                  style: const TextStyle(
-                    color: Color(0XFF9A9AB0),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 10,
                   ),
-                ),
-                Text(
-                  "Rp${ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].total}",
-                  style: const TextStyle(
-                    color: Color(0XFF9A9AB0),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        extractMonth(transaction.date),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Color(0XFF9A9AB0),
+                          fontSize: 20,
+                        ),
+                      ),
+                      Text(
+                        extractDate(transaction.date),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w800,
+                          color: Color(0XFF9A9AB0),
+                          fontSize: 28,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            )
-          ],
-        ),
-      )
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xffcff2ff),
+                      ),
+                      height: 35,
+                      width: 35,
+                      child: const Initicon(
+                        text: "",
+                        size: 16.0,
+                      )),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        transaction.name,
+                        style: const TextStyle(
+                          color: Color(0XFF9A9AB0),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        "Rp${transaction.total}",
+                        style: const TextStyle(
+                          color: Color(0XFF9A9AB0),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ))
+      ],
     );
-    
   }
 }

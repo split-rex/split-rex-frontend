@@ -83,3 +83,50 @@ getProfileColorCode(Color color) {
     }
   }
 }
+
+
+String extractMonth(String input) {
+  Map<int, String> monthMap = {
+    1: 'JAN',
+    2: 'FEB',
+    3: 'MAR',
+    4: 'APR',
+    5: 'MAY',
+    6: 'JUN',
+    7: 'JUL',
+    8: 'AUG',
+    9: 'SEP',
+    10: 'OCT',
+    11: 'NOV',
+    12: 'DEC'
+  };
+  int month = int.parse(input.substring(5, 7));
+  return monthMap[month]!;
+}
+
+String extractDate(String input) {
+  DateTime dateTime = DateTime.parse(input);
+  int day = dateTime.day;
+  String dayStr = day.toString().padLeft(2, '0');
+  return dayStr;
+}
+
+String getFullMonthName(String monthAbbr) {
+  final Map<String, String> monthMap = {
+    'JAN': 'January',
+    'FEB': 'February',
+    'MAR': 'March',
+    'APR': 'April',
+    'MAY': 'May',
+    'JUN': 'June',
+    'JUL': 'July',
+    'AUG': 'August',
+    'SEP': 'September',
+    'OCT': 'October',
+    'NOV': 'November',
+    'DEC': 'December',
+  };
+
+  return monthMap[monthAbbr.toUpperCase()] ?? '';
+}
+

@@ -56,7 +56,9 @@ class GroupServices {
       },
     );
     var data = jsonDecode(resp.body);
+    
     logger.d(data);
+    // logger.d(data["data"].sublist(0, data["data"].length)["date"]);
     if (data["message"] == "SUCCESS") {
       var transactions = data["data"];
       List<Transaction> newTransList = [];
@@ -103,10 +105,13 @@ class GroupServices {
     );
     var data = await json.decode(response.body);
     logger.d(data["data"]);
-    ref.watch(groupListProvider).updateHasLentGroups(data["data"]["list_group"].isNotEmpty);
+    ref
+        .watch(groupListProvider)
+        .updateHasLentGroups(data["data"]["list_group"].isNotEmpty);
   }
 
-  Future<void> editGroupInfo(WidgetRef ref, String groupId, String newGroupName) async {
+  Future<void> editGroupInfo(
+      WidgetRef ref, String groupId, String newGroupName) async {
     Response resp = await post(
       Uri.parse("$endpoint/editGroupInfo"),
       headers: <String, String>{
@@ -129,12 +134,10 @@ class GroupServices {
   }
 }
 
-final groupServicesProvider = Provider<GroupServices>(
-  (ref) => GroupServices()
-);
+final groupServicesProvider = Provider<GroupServices>((ref) => GroupServices());
 
 final getGroupOwed = FutureProvider<bool>((ref) async {
-  return ref.read(groupServicesProvider).getGroupOwed(
-    ref.watch(authProvider).jwtToken
-  );
+  return ref
+      .read(groupServicesProvider)
+      .getGroupOwed(ref.watch(authProvider).jwtToken);
 });

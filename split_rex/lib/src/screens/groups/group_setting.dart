@@ -24,8 +24,8 @@ class GroupSettings extends ConsumerWidget {
           children: const [
             GroupNameSection(),
             // TODO: bisa add new member ke group
-            // SizedBox(height: 15),
-            // AddGroupMembersSection(),
+            SizedBox(height: 15),
+            AddGroupMembersSection(),
             SizedBox(height: 15),
             GroupMembers(),
           ],

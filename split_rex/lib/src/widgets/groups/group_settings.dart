@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -87,6 +89,8 @@ class AddGroupMembersSection extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         ref.watch(friendProvider).resetAddFriend();
+        ref.watch(friendProvider).getFriendNotInGroup(
+                      ref.watch(groupListProvider).currGroup.members);
         ref.watch(routeProvider).changePage("choose_friend_group_settings");
       },
       child: Container(
@@ -124,10 +128,12 @@ class AddGroupMembersSection extends ConsumerWidget {
 }
 
 class GroupMembers extends ConsumerWidget {
+  
   const GroupMembers({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+   
     return Container(
       width: MediaQuery.of(context).size.width - 40.0,
       padding: const EdgeInsets.only(top: 25, bottom: 10, left: 20, right: 30),

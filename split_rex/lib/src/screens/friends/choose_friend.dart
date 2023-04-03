@@ -18,7 +18,7 @@ class ChooseFriend extends ConsumerWidget {
           padding: const EdgeInsets.only(top: 8.0),
           child: Column(
             children: [
-              searchBar(),
+              searchBar(context, ref),
               Expanded(flex: 7, child: addFriendToGroup(context, ref)),
             ],
           ),
@@ -40,8 +40,9 @@ class ChooseFriendInGroupSetting extends ConsumerWidget {
           padding: const EdgeInsets.only(top: 8.0),
           child: Column(
             children: [
-              searchBar(),
+              searchBarInSettings(context, ref),
               Expanded(flex: 7, child: addFriendToGroup(context, ref)),
+              addFriendToGroupButton(ref),
             ],
           ),
         ));

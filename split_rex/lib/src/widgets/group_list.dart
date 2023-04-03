@@ -4,6 +4,7 @@ import 'package:split_rex/src/common/bubble_member.dart';
 import 'package:split_rex/src/common/functions.dart';
 
 import 'package:split_rex/src/providers/group_list.dart';
+import 'package:split_rex/src/providers/group_settings.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/group.dart';
 
@@ -100,6 +101,7 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                   onTap: () async {
                     var currGroup = ref.watch(groupListProvider).groups[index];
                     ref.read(groupListProvider).changeCurrGroup(currGroup);
+                    ref.read(groupSettingsProvider).changeCurrGroup(currGroup);
                     await GroupServices().getGroupTransactions(ref);
                     ref.read(routeProvider).changePage("group_detail");
                     // Navigator.push(

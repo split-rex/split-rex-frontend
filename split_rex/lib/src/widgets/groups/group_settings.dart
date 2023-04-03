@@ -31,7 +31,7 @@ class GroupNameSection extends ConsumerWidget {
             InkWell(
               onTap: () => {
                 logger.d("tapped"),
-                ref.watch(routeProvider).changePage("group_settings_edit"),
+                ref.read(routeProvider).changePage("group_settings_edit"),
               },
               child: const Icon(
                 Icons.edit,
@@ -87,7 +87,7 @@ class AddGroupMembersSection extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         ref.watch(friendProvider).resetAddFriend();
-        ref.watch(routeProvider).changePage("choose_friend_group_settings");
+        ref.read(routeProvider).changePage("choose_friend_group_settings");
       },
       child: Container(
           height: 60,

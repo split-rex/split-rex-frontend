@@ -176,7 +176,7 @@ class SaveButton extends ConsumerWidget {
         : nameController.text
       );
       await ApiServices().updateProfile(ref);
-      ref.watch(routeProvider).changePage("account");
+      ref.read(routeProvider).changePage("account");
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Container(

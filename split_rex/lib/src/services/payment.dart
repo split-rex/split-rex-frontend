@@ -7,21 +7,22 @@ import 'package:split_rex/src/model/payment.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/group_list.dart';
+import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/widgets/groups/group_settings.dart';
 
 import '../providers/payment.dart';
-
 
 class PaymentServices {
   String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
 
   Future<void> getUnsettledPayment(WidgetRef ref) async {
     String groupId = ref.watch(groupListProvider).currGroup.groupId;
-    Response resp =
-        await get(Uri.parse("$endpoint/getUnsettledPayment?group_id=$groupId"), headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
-    });
+    Response resp = await get(
+        Uri.parse("$endpoint/getUnsettledPayment?group_id=$groupId"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        });
     var data = jsonDecode(resp.body);
     logger.d(data["data"]);
     if (data["message"] == "SUCCESS") {
@@ -45,11 +46,11 @@ class PaymentServices {
   }
 
   Future<void> getUnconfirmedPayment(WidgetRef ref) async {
-    Response resp =
-        await get(Uri.parse("$endpoint/getUnconfirmedPayment"), headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
-    });
+    Response resp = await get(Uri.parse("$endpoint/getUnconfirmedPayment"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        });
     var data = jsonDecode(resp.body);
     logger.d(data);
     if (data["message"] == "SUCCESS") {
@@ -72,33 +73,73 @@ class PaymentServices {
     }
   }
 
+  Future<void> settlePaymentOwed(
+      WidgetRef ref, String paymentId, int totalPaid) async {
+    Response resp = await post(Uri.parse("$endpoint/settlePaymentOwed"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        },
+        body: jsonEncode({
+          "payment_id": paymentId,
+          "total_paid": totalPaid,
+        }));
+    var data = jsonDecode(resp.body);
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      ref.read(routeProvider).changePage("group_detail");
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> settlePaymentLent(
+      WidgetRef ref, String paymentId, int totalPaid) async {
+    Response resp = await post(Uri.parse("$endpoint/settlePaymentLent"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        },
+        body: jsonEncode({
+          "payment_id": paymentId,
+          "total_paid": totalPaid,
+        }));
+    var data = jsonDecode(resp.body);
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      ref.read(routeProvider).changePage("group_detail");
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
   Future<void> confirmSettle(WidgetRef ref, String paymentId) async {
     Response resp = await post(Uri.parse("$endpoint/confirmSettle"),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
-      },
-      body: jsonEncode({
-        "payment_id": paymentId,
-      }));
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        },
+        body: jsonEncode({
+          "payment_id": paymentId,
+        }));
     var data = jsonDecode(resp.body);
     logger.d(data);
     if (data["message"] == "SUCCESS") {
       await getUnconfirmedPayment(ref);
     } else {
-        ref.read(errorProvider).changeError(data["message"]);
+      ref.read(errorProvider).changeError(data["message"]);
     }
   }
 
   Future<void> denySettle(WidgetRef ref, String paymentId) async {
     Response resp = await post(Uri.parse("$endpoint/denySettle"),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
-      },
-      body: jsonEncode({
-        "payment_id": paymentId,
-      }));
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        },
+        body: jsonEncode({
+          "payment_id": paymentId,
+        }));
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       await getUnconfirmedPayment(ref);

@@ -2,12 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter/services.dart';
+import 'package:split_rex/src/common/logger.dart';
+import 'package:split_rex/src/model/payment.dart';
+import 'package:split_rex/src/providers/auth.dart';
+import 'package:split_rex/src/providers/payment.dart';
+
+import '../../common/functions.dart';
+import '../../services/payment.dart';
 
 class SettleUpBody extends ConsumerWidget {
   const SettleUpBody({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    UnsettledPayment curr = ref.watch(paymentProvider).currUnsettledPayment;
+    TextEditingController amountController = TextEditingController();
+
     return Column(
       children: [
         const SizedBox(
@@ -17,30 +27,70 @@ class SettleUpBody extends ConsumerWidget {
           "Amount to settle with",
           style: TextStyle(fontSize: 16),
         ),
-        const Text(
-          "Lucinta Lumpia",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        Text(
+          curr.name,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         const SizedBox(
           height: 30,
         ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width - 180,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
-              Initicon(
-                  text: "ME", size: 79, backgroundColor: Color(0xFFFDE4DA)),
-              Icon(
-                Icons.arrow_right_alt_rounded,
-                color: Color(0xFFC0C6C5),
-                size: 50,
+        (curr.totalUnpaid > 0)
+            ? SizedBox(
+                width: MediaQuery.of(context).size.width - 180,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Initicon(
+                      text: ref.watch(authProvider).userData.name,
+                      size: 79,
+                      backgroundColor: getProfileBgColor(
+                          ref.watch(authProvider).userData.color),
+                      style: TextStyle(
+                          color: getProfileTextColor(
+                              ref.watch(authProvider).userData.color)),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward,
+                      color: Color(0xFFC0C6C5),
+                      size: 50,
+                    ),
+                    Initicon(
+                      text: curr.name,
+                      size: 79,
+                      backgroundColor: getProfileBgColor(curr.color),
+                      style: TextStyle(color: getProfileTextColor(curr.color)),
+                    ),
+                  ],
+                ),
+              )
+            : SizedBox(
+                width: MediaQuery.of(context).size.width - 180,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Initicon(
+                      text: ref.watch(authProvider).userData.name,
+                      size: 79,
+                      backgroundColor: getProfileBgColor(
+                          ref.watch(authProvider).userData.color),
+                      style: TextStyle(
+                          color: getProfileTextColor(
+                              ref.watch(authProvider).userData.color)),
+                    ),
+                    const Icon(
+                      Icons.arrow_back,
+                      color: Color(0xFFC0C6C5),
+                      size: 50,
+                    ),
+                    Initicon(
+                      text: curr.name,
+                      size: 79,
+                      backgroundColor: getProfileBgColor(curr.color),
+                      style: TextStyle(color: getProfileTextColor(curr.color)),
+                    ),
+                  ],
+                ),
               ),
-              Initicon(
-                  text: "FRIEND", size: 79, backgroundColor: Color(0xFFC1E9FF)),
-            ],
-          ),
-        ),
         const SizedBox(
           height: 30,
         ),
@@ -48,6 +98,7 @@ class SettleUpBody extends ConsumerWidget {
           width: MediaQuery.of(context).size.width - 200,
           child: TextField(
             // style: TextStyle(fontSize: 16),
+            controller: amountController,
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.digitsOnly
@@ -65,54 +116,75 @@ class SettleUpBody extends ConsumerWidget {
         const SizedBox(
           height: 10,
         ),
-        // TODO: buat if else lah pkknya owed or lent
-        RichText(
-          text: const TextSpan(
-              style: TextStyle(
-                  color: Color(0xFF4F4F4F),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400),
-              children: [
-                TextSpan(text: "out of "),
-                TextSpan(
-                    text: "Rp",
-                    style: TextStyle(
-                        color: Color(0xffFF0000), fontWeight: FontWeight.bold)),
-                TextSpan(
-                    text: "600.000",
-                    style: TextStyle(
-                        color: Color(0xffFF0000), fontWeight: FontWeight.bold)),
-                TextSpan(text: " you owed"),
-              ]),
-        ),
+        (curr.totalUnpaid > 0)
+            ? RichText(
+                text: TextSpan(
+                    style: const TextStyle(
+                        color: Color(0xFF4F4F4F),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400),
+                    children: [
+                      const TextSpan(text: "out of "),
+                      TextSpan(
+                          text: "Rp.${(curr.totalUnpaid).toString()}",
+                          style: const TextStyle(
+                              color: Color(0xffFF0000),
+                              fontWeight: FontWeight.bold)),
+                      const TextSpan(text: " you owed"),
+                    ]),
+              )
+            : RichText(
+                text: TextSpan(
+                    style: const TextStyle(
+                        color: Color(0xFF4F4F4F),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400),
+                    children: [
+                      const TextSpan(text: "out of "),
+                      TextSpan(
+                          text: "Rp.${(-1 * curr.totalUnpaid).toString()} ",
+                          style: const TextStyle(
+                              color: Color(0xFF6DC7BD),
+                              fontWeight: FontWeight.bold)),
+                      TextSpan(
+                          text: curr.name,
+                          style: const TextStyle(
+                              color: Color(0xFF6DC7BD),
+                              fontWeight: FontWeight.bold)),
+                      const TextSpan(text: " lent"),
+                    ]),
+              ),
         const SizedBox(height: 20),
-        const SettleUpButton()
+        SettleUpButton(amountController: amountController),
       ],
     );
   }
 }
 
 class SettleUpButton extends ConsumerWidget {
-  const SettleUpButton({super.key});
+  const SettleUpButton({super.key, required this.amountController});
+
+  final TextEditingController amountController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // var errorType = ref.watch(errorProvider).errorType;
-    // var errorMsg = ref.watch(errorProvider).errorMsg;
-
-    // if (errorType == "ERROR_CANNOT_ADD_SELF" ||
-    //     errorType == "ERROR_ALREADY_FRIEND" ||
-    //     errorType == "ERROR_USER_NOT_FOUND" ||
-    //     errorType == "ERROR_ALREADY_REQUESTED_SENT" ||
-    //     errorType == "ERROR_ALREADY_REQUESTED_RECEIVED") {
-    //   return Text(errorMsg);
-    // }
+    UnsettledPayment curr = ref.watch(paymentProvider).currUnsettledPayment;
 
     return GestureDetector(
-      // onTap: () async {
-      //   FriendServices()
-      //       .addFriend(ref, ref.watch(friendProvider).addFriend.userId);
-      // },
+      onTap: () async {
+        if (amountController.text.isEmpty) {
+          return;
+        }
+
+        int amount = int.parse(amountController.text);
+        if (curr.totalUnpaid > 0) {
+          await PaymentServices()
+              .settlePaymentOwed(ref, curr.paymentId, amount);
+        } else {
+          await PaymentServices()
+              .settlePaymentLent(ref, curr.paymentId, amount);
+        }
+      },
       child: Container(
         alignment: Alignment.center,
         margin: const EdgeInsets.only(left: 20, right: 20, top: 10),

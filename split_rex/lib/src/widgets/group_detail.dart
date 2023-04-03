@@ -38,7 +38,7 @@ class GroupInfo extends ConsumerWidget {
               InkWell(
                   onTap: () => {
                         ref.read(routeProvider).changeNavbarIdx(1),
-                        ref.watch(routeProvider).changePage(prevPage),
+                        ref.read(routeProvider).changePage(prevPage),
                       },
                   child: const Icon(Icons.navigate_before,
                       color: Colors.white, size: 35)),
@@ -53,7 +53,7 @@ class GroupInfo extends ConsumerWidget {
               const Spacer(),
               InkWell(
                 onTap: () =>
-                    ref.watch(routeProvider).changePage("group_settings"),
+                    ref.read(routeProvider).changePage("group_settings"),
                 child:
                     const Icon(Icons.settings, color: Colors.white, size: 30),
               )
@@ -154,7 +154,7 @@ class BalanceInfo extends ConsumerWidget {
                                             .currGroup
                                             .type ==
                                         "OWED"
-                                    ? const Color(0XFFF10D0D)
+                                    ? const Color(0xff4F4F4F)
                                     : const Color(0xFF4F9A99),
                                 fontWeight: FontWeight.w800,
                               )),
@@ -237,57 +237,57 @@ class GroupDetailContent extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                        color: Color(0xFFDFF2F0),
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 30),
-                    child: InkWell(
+                  InkWell(
                       onTap: () async => {
-                        await PaymentServices().getUnsettledPayment(ref),
-                        ref
-                            .watch(routeProvider)
-                            .changePage("unsettled_payments")
-                      },
-                      child: const Text(
-                        "Unsettled Payments",
-                        style: TextStyle(
-                            color: Color(0xFF2E9281),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12),
-                      ),
-                    ),
-                  ),
+                            await PaymentServices().getUnsettledPayment(ref),
+                            ref
+                                .watch(routeProvider)
+                                .changePage("unsettled_payments")
+                          },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            color: Color(0xFFDFF2F0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 30),
+                        child: const Text(
+                          "Unsettled Payments",
+                          style: TextStyle(
+                              color: Color(0xFF2E9281),
+                              fontWeight: FontWeight.w100,
+                              fontSize: 12),
+                        ),
+                      )),
                   const Spacer(),
-                  // TODO: confirm payments
-                  Container(
-                    decoration: const BoxDecoration(
-                        color: Color(0xFFDFF2F0),
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 30),
-                    child: const InkWell(
-                      // onTap: () async => {
-                      //   await PaymentServices().getUnsettledPayment(ref),
-                      //   ref
-                      //       .watch(routeProvider)
-                      //       .changePage("unsettled_payments")
-                      // },
-                      child: Text(
-                        "Confirm Payments",
-                        style: TextStyle(
-                            color: Color(0xFF2E9281),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12)
-                      ),
-                    ),
-                  ),
+                  InkWell(
+                      onTap: () async => {
+                            await PaymentServices().getUnconfirmedPayment(ref),
+                            ref
+                                .watch(routeProvider)
+                                .changePage("confirm_payment")
+                          },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            color: Color(0xFFDFF2F0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 30),
+                        child: const Text(
+                          "Confirm Payments",
+                          style: TextStyle(
+                              color: Color(0xFF2E9281),
+                              fontWeight: FontWeight.w100,
+                              fontSize: 12),
+                        ),
+                      )),
                 ],
               ),
               // TODO: add lines
               const SizedBox(
-                height: 10,),
+                height: 10,
+              ),
               Text(
                 "February 2023",
                 style: Theme.of(context).textTheme.headlineSmall,

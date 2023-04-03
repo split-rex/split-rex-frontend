@@ -14,7 +14,7 @@ class AddFriendsSection extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         ref.watch(friendProvider).resetAddFriend();
-        ref.watch(routeProvider).changePage("add_friends");
+        ref.read(routeProvider).changePage("add_friends");
       },
       child: Container(
         height: 60,
@@ -67,7 +67,7 @@ class FriendRequestSection extends ConsumerWidget {
     }
 
     return InkWell(
-      onTap: () => ref.watch(routeProvider).changePage("friend_requests"),
+      onTap: () => ref.read(routeProvider).changePage("friend_requests"),
       child: Container(
           height: 72,
           width: MediaQuery.of(context).size.width - 40.0,

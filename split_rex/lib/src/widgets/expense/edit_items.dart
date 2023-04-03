@@ -300,7 +300,7 @@ Widget confirmButton(WidgetRef ref) => GestureDetector(
       if (!ref.watch(addExpenseProvider).isNewGroup) {
         await GroupServices().getGroupDetail(ref, ref.watch(addExpenseProvider).existingGroup.groupId);
       }
-      ref.watch(routeProvider).changePage("split_bill");
+      ref.read(routeProvider).changePage("split_bill");
     } else {
       null;
     }

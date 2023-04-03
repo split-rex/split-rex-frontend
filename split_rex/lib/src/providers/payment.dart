@@ -4,7 +4,9 @@ import 'package:split_rex/src/model/payment.dart';
 
 class PaymentProvider extends ChangeNotifier {
   List<ConfirmationPayment> unconfirmedPayments = [];
+  ConfirmationPayment currUnconfirmedPayments = ConfirmationPayment();
   List<UnsettledPayment> unsettledPayments = [];
+  UnsettledPayment currUnsettledPayment = UnsettledPayment();
 
  void addUnsettledPayment(UnsettledPayment payment) {
     unsettledPayments.add(payment);
@@ -21,6 +23,11 @@ class PaymentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void changeCurrUnsettledPayment(int index) {
+    currUnsettledPayment = unsettledPayments[index];
+    notifyListeners();
+  }
+
   void addUnconfirmedPayment(ConfirmationPayment payment) {
     unconfirmedPayments.add(payment);
     notifyListeners();
@@ -33,6 +40,11 @@ class PaymentProvider extends ChangeNotifier {
 
   void clearUnconfirmedPayments() {
     unconfirmedPayments.clear();
+    notifyListeners();
+  }
+
+  void changeCurrUnconfirmedPayment(int index) {
+    currUnconfirmedPayments = unconfirmedPayments[index];
     notifyListeners();
   }
 }

@@ -2,15 +2,17 @@ class User {
   String userId;
   String name;
   String username;
-  // String email;
+  String email;
   int color;
+  late Map<String, Map<int, String>> paymentInfo;
+  late List<dynamic> flattenPaymentInfo;
   
   User({
     this.userId = "",
     this.name = "",
     this.username = "",
-    // this.email = "",
-    this.color = 1
+    this.email = "",
+    this.color = 1,
   });
 }
 

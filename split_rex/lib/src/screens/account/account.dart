@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/header.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
+import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/routes.dart';
 
@@ -17,123 +18,156 @@ class Account extends ConsumerWidget {
       ref,
       "Account",
       "home",
-      Container(
-          padding: const EdgeInsets.all(16.0),
-          decoration: const BoxDecoration(),
-          width: double.infinity,
-          child: Column(children: [
-            Container(
+      SingleChildScrollView(
+        child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: const BoxDecoration(),
+            width: double.infinity,
+            child: Column(children: [
+              Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                  child: Stack(alignment: Alignment.topRight, children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Initicon(
+                              text: ref.watch(authProvider).userData.name,
+                              size: 72,
+                              backgroundColor: getProfileBgColor(
+                                  ref.watch(authProvider).userData.color),
+                              style: TextStyle(
+                                  color: getProfileTextColor(
+                                      ref.watch(authProvider).userData.color)),
+                            ),
+                            const SizedBox(width: 16.0),
+                            Text(ref.watch(authProvider).userData.name,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF4F4F4F),
+                                )),
+                          ],
+                        ),
+                        const Divider(
+                            thickness: 1,
+                            height: 40.0,
+                            color: Color(0xFFE1F3F2)),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Username",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF4F4F4F),
+                                )),
+                            const SizedBox(height: 4.0),
+                            Text(ref.watch(authProvider).userData.username,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w300,
+                                  color: Color(0xFF4F4F4F),
+                                )),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Email",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF4F4F4F),
+                                )),
+                            const SizedBox(height: 4.0),
+                            Text(ref.watch(authProvider).userData.email,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.red,
+                                )),
+                          ],
+                        ),
+                      ],
+                    ),
+                    InkWell(
+                      onTap: () {
+                        ref.read(routeProvider).changePage("edit_account");
+                      },
+                      child: const Icon(
+                        Icons.edit,
+                        color: Colors.grey,
+                      ),
+                    )
+                  ])),
+              const SizedBox(height: 10),
+              Container(
                 padding: const EdgeInsets.all(24),
                 decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                child: Stack(alignment: Alignment.topRight, children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Initicon(
-                            text: ref.watch(authProvider).userData.name,
-                            size: 72,
-                            backgroundColor: getProfileBgColor(
-                                ref.watch(authProvider).userData.color),
-                            style: TextStyle(
-                                color: getProfileTextColor(
-                                    ref.watch(authProvider).userData.color)),
-                          ),
-                          const SizedBox(width: 16.0),
-                          Text(ref.watch(authProvider).userData.name,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF4F4F4F),
-                              )),
-                        ],
-                      ),
-                      const Divider(
-                          thickness: 1, height: 40.0, color: Color(0xFFE1F3F2)),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Username",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF4F4F4F),
-                              )),
-                          const SizedBox(height: 4.0),
-                          Text(ref.watch(authProvider).userData.username,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300,
-                                color: Color(0xFF4F4F4F),
-                              )),
-                        ],
-                      ),
-                      // TODO: uncomment ini di bawah when email is ready in getprofile
-                      // const SizedBox(height: 20.0,),
-                      // Column(
-                      //   crossAxisAlignment: CrossAxisAlignment.start,
-                      //   children: const [
-                      //     Text("Email",
-                      //       style: TextStyle(
-                      //       fontSize: 16,
-                      //       fontWeight: FontWeight.bold,
-                      //       color: Color(0xFF4F4F4F),
-                      //     )),
-                      //     SizedBox(height: 4.0),
-                      //     Text("placeholder@email.com",
-                      //       style: TextStyle(
-                      //       fontSize: 16,
-                      //       fontWeight: FontWeight.w300,
-                      //       color: Colors.red,
-                      //     )),
-                      //   ],
-                      // ),
-                    ],
-                  ),
-                  InkWell(
-                    onTap: () {
-                      ref.read(routeProvider).changePage("edit_account");
-                    },
-                    child: const Icon(
-                      Icons.edit,
-                      color: Colors.grey,
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text(
+                      "Payment Info",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
-                  )
-                ])),
-            const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(8.0))),
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Payment Info",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  const Divider(
-                      thickness: 1, height: 40.0, color: Color(0xFFE1F3F2)),
-                  PaymentInfoDetail(),
-                  PaymentInfoDetail(),
-                  PaymentInfoDetail(),
-                  AddNewPaymentInfoButton()
-                ],
+                    const Divider(
+                        thickness: 1, height: 40.0, color: Color(0xFFE1F3F2)),
+                    Container(
+                      padding: const EdgeInsets.all(0),
+                      height: MediaQuery.of(context).size.height - 548,
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        itemCount: ref
+                            .watch(authProvider)
+                            .userData
+                            .flattenPaymentInfo
+                            .length,
+                        itemBuilder: (context, index) {
+                          var curr = ref
+                              .watch(authProvider)
+                              .userData
+                              .flattenPaymentInfo[index];
+                          return PaymentInfoDetail(curr[0], curr[1], curr[2]);
+                        },
+                        separatorBuilder: (context, index) => const Divider(
+                          height: 5,
+                          thickness: 0,
+                        ),
+                      ),
+                    ),
+                    AddNewPaymentInfoButton()
+                  ],
+                ),
               ),
-            ),
-          ])),
+            ])),
+      ),
     );
   }
 }
 
 class PaymentInfoDetail extends ConsumerWidget {
-  const PaymentInfoDetail({super.key});
+  const PaymentInfoDetail(
+      this.paymentMethod, this.accountNumber, this.accountName,
+      {super.key});
+
+  final String paymentMethod;
+  final String accountNumber;
+  final String accountName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -143,7 +177,7 @@ class PaymentInfoDetail extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-            margin: EdgeInsets.only(right: 10),
+            margin: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () => deletePaymentInfoDialog(context),
               icon: const Icon(
@@ -156,9 +190,10 @@ class PaymentInfoDetail extends ConsumerWidget {
             width: MediaQuery.of(context).size.width - 210.0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text("BCA", style: TextStyle(fontWeight: FontWeight.bold)),
-                Text("Fifimut - 162728233")
+              children: [
+                Text(paymentMethod,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text("$accountNumber - $accountName"),
               ],
             ),
           ),

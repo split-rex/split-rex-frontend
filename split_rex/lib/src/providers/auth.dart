@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/model/user.dart';
 
+import '../common/logger.dart';
 
 class AuthProvider extends ChangeNotifier {
   SignUpModel signUpData = SignUpModel();
@@ -23,7 +24,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeSignUpData(name, username, email, pass, confPass){
+  void changeSignUpData(name, username, email, pass, confPass) {
     signUpData.name = name;
     signUpData.username = username;
     signUpData.email = email;
@@ -85,11 +86,29 @@ class AuthProvider extends ChangeNotifier {
     userData.name = data["fullname"];
     userData.username = data["username"];
     userData.userId = data["user_id"];
-    // userData.email = data["email"];
+    userData.email = data["email"];
     userData.color = data["color"];
+
+    userData.paymentInfo = {};
+    userData.flattenPaymentInfo = [];
+    var paymentInfo = data["payment_info"];
+    for (var paymentMethod in paymentInfo.keys) {
+      Map<int, String> listOfAcc = <int, String>{};
+      for (var accountNumber in paymentInfo[paymentMethod].keys) {
+        var accountName = paymentInfo[paymentMethod][accountNumber];
+        listOfAcc[int.parse(accountNumber)] = accountName;
+
+        userData.flattenPaymentInfo.add([
+          paymentMethod,
+          accountNumber,
+          accountName,
+        ]);
+      }
+      userData.paymentInfo[paymentMethod] = listOfAcc;
+    }
+
     newUserData.color = data["color"];
   }
 }
 
 final authProvider = ChangeNotifierProvider((ref) => AuthProvider());
-

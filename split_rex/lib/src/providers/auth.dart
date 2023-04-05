@@ -4,14 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/model/user.dart';
 
-import '../common/logger.dart';
-
 class AuthProvider extends ChangeNotifier {
   SignUpModel signUpData = SignUpModel();
   SignInModel signInData = SignInModel();
   UserUpdate newUserData = UserUpdate();
   UserUpdatePass newPass = UserUpdatePass();
   User userData = User();
+  String newPaymentMethodData = "Payment Method";
 
   String jwtToken = "";
   bool isVisible = true;
@@ -58,6 +57,15 @@ class AuthProvider extends ChangeNotifier {
     newPass.confNewPass = pass;
   }
 
+  void changePaymentMethod(data) {
+    newPaymentMethodData = data;
+    notifyListeners();
+  }
+
+  void changePaymentMethodNonListeners(data) {
+    newPaymentMethodData = data;
+  }
+
   void resetNewPass() {
     newPass.oldPass = "";
     newPass.newPass = "";
@@ -71,6 +79,11 @@ class AuthProvider extends ChangeNotifier {
 
   void resetColor() {
     newUserData.color = userData.color;
+  }
+
+  void resetPaymentMethod() {
+    newPaymentMethodData = "Payment Method";
+    notifyListeners();
   }
 
   void changeVisibility() {
@@ -108,6 +121,7 @@ class AuthProvider extends ChangeNotifier {
     }
 
     newUserData.color = data["color"];
+    notifyListeners();
   }
 }
 

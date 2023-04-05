@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/group_list.dart';
@@ -27,8 +28,6 @@ class ApiServices {
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       ref.read(authProvider).loadUserData(data["data"]);
-      log("getProfile");
-      ref.read(errorProvider).changeError(data["message"]);
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
@@ -119,9 +118,6 @@ class ApiServices {
         await FriendServices().friendRequestSentList(ref);
         ref.read(routeProvider).changePage("home");
       } else {
-        log("iiiijiji");
-
-        print(data["message"]);
         ref.read(errorProvider).changeError(data["message"]);
         // print(ref.watch(errorProvider).errorType);
       }
@@ -151,6 +147,99 @@ class ApiServices {
         await GroupServices().userGroupList(ref);
         ref.read(routeProvider).changePage("home");
       });
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> addPaymentInfo(
+    WidgetRef ref,
+    BuildContext context,
+    String accountName,
+    int accountNumber,
+  ) async {
+    // meaning still default
+    if (ref.watch(authProvider).newPaymentMethodData == "Payment Method") {
+      ref.read(errorProvider).changeError("INVALID_PAYMENT_METHOD");
+      return;
+    }
+
+    Response resp = await post(Uri.parse("$endpoint/addPaymentInfo"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        },
+        body: jsonEncode({
+          "payment_method": ref.watch(authProvider).newPaymentMethodData,
+          "account_number": accountNumber,
+          "account_name": accountName,
+        }));
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      Navigator.of(context).pop();
+      getProfile(ref);
+      ref.read(authProvider).resetPaymentMethod();
+      ref.read(routeProvider).changePage("account");
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> editPaymentInfo(
+      WidgetRef ref,
+      BuildContext context,
+      String paymentMethod,
+      int accountNumber,
+      String accountName,
+      int index) async {
+    var curPinfo = ref.watch(authProvider).userData.flattenPaymentInfo[index];
+
+    Response resp = await post(Uri.parse("$endpoint/editPaymentInfo"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        },
+        body: jsonEncode({
+          "old_payment_method": curPinfo[0],
+          "old_account_number": int.parse(curPinfo[1]),
+          "old_account_name": curPinfo[2],
+          "new_payment_method": paymentMethod,
+          "new_account_number": accountNumber,
+          "new_account_name": accountName,
+        }));
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      getProfile(ref);
+      ref.read(authProvider).resetPaymentMethod();
+      ref.read(routeProvider).changePage("account");
+      Navigator.of(context).pop();
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> deletePaymentInfo(
+    WidgetRef ref,
+    BuildContext context,
+    String paymentMethod,
+    int accountNumber,
+    String accountName,
+  ) async {
+    Response resp = await post(Uri.parse("$endpoint/deletePaymentInfo"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        },
+        body: jsonEncode({
+          "payment_method": paymentMethod,
+          "account_number": accountNumber,
+          "account_name": accountName,
+        }));
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      getProfile(ref);
+      ref.read(routeProvider).changePage("account");
+      Navigator.of(context).pop();
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

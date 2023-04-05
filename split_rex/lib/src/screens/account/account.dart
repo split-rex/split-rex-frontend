@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/header.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
-import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/services/auth.dart';
 
 import '../../common/functions.dart';
+import '../../common/logger.dart';
 
 class Account extends ConsumerWidget {
   const Account({super.key});
@@ -93,7 +95,7 @@ class Account extends ConsumerWidget {
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w300,
-                                  color: Colors.red,
+                                  color: Color(0xFF4F4F4F),
                                 )),
                           ],
                         ),
@@ -126,30 +128,42 @@ class Account extends ConsumerWidget {
                     ),
                     const Divider(
                         thickness: 1, height: 40.0, color: Color(0xFFE1F3F2)),
-                    Container(
-                      padding: const EdgeInsets.all(0),
-                      height: MediaQuery.of(context).size.height - 548,
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        itemCount: ref
+                    (ref
                             .watch(authProvider)
                             .userData
                             .flattenPaymentInfo
-                            .length,
-                        itemBuilder: (context, index) {
-                          var curr = ref
-                              .watch(authProvider)
-                              .userData
-                              .flattenPaymentInfo[index];
-                          return PaymentInfoDetail(curr[0], curr[1], curr[2]);
-                        },
-                        separatorBuilder: (context, index) => const Divider(
-                          height: 5,
-                          thickness: 0,
-                        ),
-                      ),
-                    ),
+                            .isEmpty)
+                        ? const Text(
+                            "You have no payment info.",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          )
+                        : Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              ListView.separated(
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                itemCount: ref
+                                    .watch(authProvider)
+                                    .userData
+                                    .flattenPaymentInfo
+                                    .length,
+                                itemBuilder: (context, index) {
+                                  var curr = ref
+                                      .watch(authProvider)
+                                      .userData
+                                      .flattenPaymentInfo[index];
+                                  return PaymentInfoDetail(
+                                      curr[0], curr[1], curr[2], index);
+                                },
+                                separatorBuilder: (context, index) =>
+                                    const Divider(
+                                  height: 5,
+                                  thickness: 0,
+                                ),
+                              )
+                            ],
+                          ),
                     AddNewPaymentInfoButton()
                   ],
                 ),
@@ -162,12 +176,13 @@ class Account extends ConsumerWidget {
 
 class PaymentInfoDetail extends ConsumerWidget {
   const PaymentInfoDetail(
-      this.paymentMethod, this.accountNumber, this.accountName,
+      this.paymentMethod, this.accountNumber, this.accountName, this.index,
       {super.key});
 
   final String paymentMethod;
   final String accountNumber;
   final String accountName;
+  final int index;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -179,7 +194,7 @@ class PaymentInfoDetail extends ConsumerWidget {
           Container(
             margin: const EdgeInsets.only(right: 10),
             child: IconButton(
-              onPressed: () => deletePaymentInfoDialog(context),
+              onPressed: () => deletePaymentInfoDialog(context, ref, index),
               icon: const Icon(
                 Icons.delete_outline_rounded,
                 color: Color(0xff2E9281),
@@ -193,12 +208,12 @@ class PaymentInfoDetail extends ConsumerWidget {
               children: [
                 Text(paymentMethod,
                     style: const TextStyle(fontWeight: FontWeight.bold)),
-                Text("$accountNumber - $accountName"),
+                Text("$accountNumber a.n. $accountName"),
               ],
             ),
           ),
           TextButton(
-              onPressed: () => editPaymentInfoDialog(context),
+              onPressed: () => editPaymentInfoDialog(context, ref, index),
               child: const Text(
                 "Edit",
                 style: TextStyle(color: Color(0xff2E9281)),
@@ -213,7 +228,7 @@ class AddNewPaymentInfoButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-        onTap: () => addNewPaymentInfoDialog(context),
+        onTap: () => addNewPaymentInfoDialog(context, ref),
         child: Container(
             padding: const EdgeInsets.all(16.0),
             margin: const EdgeInsets.only(top: 10),
@@ -230,7 +245,9 @@ class AddNewPaymentInfoButton extends ConsumerWidget {
 
 // ---------------------------- ADD NEW PAYMENT INFO ----------------------------
 // Add new payment info modal
-addNewPaymentInfoDialog(context) {
+addNewPaymentInfoDialog(context, ref) {
+  ref.read(authProvider).resetPaymentMethod();
+
   showDialog(
     context: context,
     builder: (BuildContext context) => Dialog(
@@ -272,49 +289,119 @@ class AddPaymentInfoForm extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text(
-                "Payment Method",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              DropDownBankName()
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
-              Text("Account Name",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              // TODO: textfield
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
-              Text("Account Number",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              // TODO: textfield
-            ],
-          ),
-          AddPaymentInfoButton()
-        ],
-      ),
+    TextEditingController accountNameController = TextEditingController();
+    TextEditingController accountNumberController = TextEditingController();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 15),
+        const Divider(height: 5, thickness: 1),
+        const SizedBox(height: 10),
+        const Text(
+          "Payment Method",
+          textAlign: TextAlign.left,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            // const Text(
+            //   "Payment Method",
+            //   style: TextStyle(fontWeight: FontWeight.bold),
+            // ),
+            Expanded(
+              child: DropDownBankName(),
+            )
+          ],
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          "Account Name",
+          textAlign: TextAlign.left,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            // const Text("Account Name",
+            //     style: TextStyle(fontWeight: FontWeight.bold)),
+            // const Spacer(),
+            Expanded(
+              child: TextField(
+                  key: UniqueKey(),
+                  controller: accountNameController,
+                  cursorColor: const Color(0xFF59C4B0),
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.bold),
+                  decoration: const InputDecoration(
+                      filled: true,
+                      hintText: "account name",
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      suffixIcon: Icon(Icons.edit, color: Colors.grey))),
+            )
+          ],
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          "Account Number",
+          textAlign: TextAlign.left,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            // const Text("Account Number",
+            //     style: TextStyle(fontWeight: FontWeight.bold)),
+            // const Spacer(),
+            Expanded(
+                child: TextField(
+              key: UniqueKey(),
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly
+              ],
+              controller: accountNumberController,
+              cursorColor: const Color(0xFF59C4B0),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              decoration: const InputDecoration(
+                  filled: true,
+                  hintText: "account number",
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  suffixIcon: Icon(Icons.edit, color: Colors.grey)),
+            ))
+          ],
+        ),
+        const SizedBox(height: 5),
+        AddPaymentInfoButton(accountNameController, accountNumberController)
+      ],
     );
   }
 }
 
 class AddPaymentInfoButton extends ConsumerWidget {
-  const AddPaymentInfoButton({super.key});
+  const AddPaymentInfoButton(
+      this.accountNameController, this.accountNumberController,
+      {super.key});
+
+  final TextEditingController accountNameController;
+  final TextEditingController accountNumberController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-        onTap: () => {},
+        onTap: () async => {
+              await ApiServices().addPaymentInfo(
+                  ref,
+                  context,
+                  accountNameController.text,
+                  int.parse(accountNumberController.text))
+            },
         child: Container(
             padding: const EdgeInsets.all(16.0),
             margin: const EdgeInsets.only(top: 10),
@@ -329,20 +416,19 @@ class AddPaymentInfoButton extends ConsumerWidget {
   }
 }
 
+// ignore: must_be_immutable
 class DropDownBankName extends ConsumerWidget {
-  // Initial Selected Value
-  String dropdownvalue = 'Payment Method';
+  DropDownBankName({super.key});
 
   // List of items in our dropdown menu
   var items = [
     'Payment Method',
-    'OVO',
+    'BNI',
+    'BCA',
     'Gopay',
-    'Lucinta Luna',
-    'Bank Abank Bank Abank bank abank ',
+    'OVO',
   ];
 
-  DropDownBankName({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
@@ -357,12 +443,10 @@ class DropDownBankName extends ConsumerWidget {
               isExpanded: true,
               itemHeight: null,
               style: const TextStyle(fontSize: 12, color: Colors.black),
-
               // Down Arrow Icon
               icon: const Icon(Icons.keyboard_arrow_down),
               // Initial Value
-              value: dropdownvalue,
-
+              value: ref.watch(authProvider).newPaymentMethodData,
               // Array list of items
               items: items.map((String items) {
                 return DropdownMenuItem(
@@ -376,9 +460,7 @@ class DropDownBankName extends ConsumerWidget {
               // After selecting the desired option,it will
               // change button value to selected value
               onChanged: (String? newValue) {
-                // setState(() {
-                //   dropdownvalue = newValue!;
-                // });
+                ref.read(authProvider).changePaymentMethod(newValue);
               },
             )));
   }
@@ -386,7 +468,7 @@ class DropDownBankName extends ConsumerWidget {
 
 // ---------------------------- EDIT PAYMENT INFO ----------------------------
 // edit modal --> same as add new payment detail modal
-editPaymentInfoDialog(context) {
+editPaymentInfoDialog(BuildContext context, WidgetRef ref, int index) {
   showDialog(
     context: context,
     builder: (BuildContext context) => Dialog(
@@ -415,7 +497,7 @@ editPaymentInfoDialog(context) {
                 ),
               )
             ]),
-            const EditPaymentInfoForm()
+            EditPaymentInfoForm(index)
           ],
         ),
       ),
@@ -424,53 +506,124 @@ editPaymentInfoDialog(context) {
 }
 
 class EditPaymentInfoForm extends ConsumerWidget {
-  const EditPaymentInfoForm({super.key});
+  const EditPaymentInfoForm(this.index, {super.key});
+  final int index;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
-              Text(
-                "Payment Method",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              // TODO: textfield
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
-              Text("Account Name",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              // TODO: textfield
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
-              Text("Account Number",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              // TODO: textfield
-            ],
-          ),
-          const EditPaymentInfoButton()
-        ],
-      ),
+    TextEditingController accountNumberController = TextEditingController();
+    TextEditingController accountNameController = TextEditingController();
+    var curPinfo = ref.watch(authProvider).userData.flattenPaymentInfo[index];
+    accountNumberController.text = curPinfo[1];
+    accountNameController.text = curPinfo[2];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 10),
+        const Divider(height: 5, thickness: 1),
+
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //   children: [
+        //     Expanded(
+        //       child: Container(
+        //         padding: EdgeInsets.all(15),
+        //         width: MediaQuery.of(context).size.width - 250,
+        //         decoration: BoxDecoration(
+        //           color: const Color(0xffF6F6F6),
+        //           borderRadius: BorderRadius.circular(10),
+        //         ),
+        //         child: Text(curPinfo[0]),
+        //       ),
+        //     )
+        //   ],
+        // ),
+        // const SizedBox(height: 10),
+        const SizedBox(height: 10),
+        const Text(
+          "Account Name",
+          textAlign: TextAlign.left,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(
+              child: TextField(
+                  key: UniqueKey(),
+                  controller: accountNameController,
+                  cursorColor: const Color(0xFF59C4B0),
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.bold),
+                  decoration: const InputDecoration(
+                      filled: true,
+                      hintText: "account name",
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      suffixIcon: Icon(Icons.edit, color: Colors.grey))),
+            )
+          ],
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          "Account Number",
+          textAlign: TextAlign.left,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 5),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+                child: TextField(
+              key: UniqueKey(),
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly
+              ],
+              controller: accountNumberController,
+              cursorColor: const Color(0xFF59C4B0),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              decoration: const InputDecoration(
+                  filled: true,
+                  hintText: "account number",
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  suffixIcon: Icon(Icons.edit, color: Colors.grey)),
+            ))
+          ],
+        ),
+        EditPaymentInfoButton(
+            accountNumberController, accountNameController, index)
+      ],
     );
   }
 }
 
 class EditPaymentInfoButton extends ConsumerWidget {
-  const EditPaymentInfoButton({super.key});
+  const EditPaymentInfoButton(
+      this.accountNumberController, this.accountNameController, this.index,
+      {super.key});
+
+  final int index;
+  final TextEditingController accountNumberController;
+  final TextEditingController accountNameController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-        onTap: () => {},
+        onTap: () async => {
+              await ApiServices().editPaymentInfo(
+                  ref,
+                  context,
+                  ref.watch(authProvider).newPaymentMethodData,
+                  int.parse(accountNumberController.text),
+                  accountNameController.text,
+                  index)
+            },
         child: Container(
             padding: const EdgeInsets.all(16.0),
             margin: const EdgeInsets.only(top: 10),
@@ -486,7 +639,9 @@ class EditPaymentInfoButton extends ConsumerWidget {
 }
 
 // ---------------------------- DELETE PAYMENT INFO ----------------------------
-deletePaymentInfoDialog(context) {
+deletePaymentInfoDialog(BuildContext context, WidgetRef ref, int index) {
+  var curPInfo = ref.read(authProvider).userData.flattenPaymentInfo[index];
+
   showDialog(
     context: context,
     builder: (BuildContext context) => Dialog(
@@ -518,18 +673,18 @@ deletePaymentInfoDialog(context) {
             const SizedBox(
               height: 30,
             ),
-            const Text(
-              'BCA',
+            Text(
+              curPInfo[0],
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              'Fifiimut - 132376232324',
+            Text(
+              '${curPInfo[1]} a.n ${curPInfo[2]}',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
             Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -556,9 +711,10 @@ deletePaymentInfoDialog(context) {
                 ),
               ),
               InkWell(
-                // onTap: () async {
-                //   await FriendServices().acceptFriendRequest(ref, userId);
-                // },
+                onTap: () async {
+                  await ApiServices().deletePaymentInfo(ref, context,
+                      curPInfo[0], int.parse(curPInfo[1]), curPInfo[2]);
+                },
                 child: Container(
                   alignment: Alignment.center,
                   width: 140,
@@ -650,7 +806,7 @@ friendInfoDialog(context) {
                 FriendPaymentInfoDetail()
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             )
           ],
@@ -734,7 +890,7 @@ confirmOrDenyPayment(context) {
                   ]),
             ),
             const SizedBox(height: 20),
-            Initicon(
+            const Initicon(
               text: "Nama Orangnya",
               size: 80,
               backgroundColor: Colors.black,

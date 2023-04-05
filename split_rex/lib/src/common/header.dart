@@ -46,7 +46,7 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                       ref.read(addExpenseProvider).resetNewGroup();
                                     }
                                     if (prevPage == "group_detail") {
-                                      await GroupServices().userGroupList(ref);
+                                      // await GroupServices().userGroupList(ref);
                                       await GroupServices().getGroupDetail(ref, ref.watch(groupListProvider).currGroup.groupId);
                                     }
                                     ref

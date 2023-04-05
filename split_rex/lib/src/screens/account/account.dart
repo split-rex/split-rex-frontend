@@ -435,7 +435,7 @@ class DropDownBankName extends ConsumerWidget {
         width: MediaQuery.of(context).size.width - 250,
         decoration: BoxDecoration(
           color: const Color(0xffF6F6F6),
-          borderRadius: BorderRadius.circular(10),
+          // borderRadius: BorderRadius.circular(10),
         ),
         child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -522,25 +522,30 @@ class EditPaymentInfoForm extends ConsumerWidget {
       children: [
         const SizedBox(height: 10),
         const Divider(height: 5, thickness: 1),
-
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //   children: [
-        //     Expanded(
-        //       child: Container(
-        //         padding: EdgeInsets.all(15),
-        //         width: MediaQuery.of(context).size.width - 250,
-        //         decoration: BoxDecoration(
-        //           color: const Color(0xffF6F6F6),
-        //           borderRadius: BorderRadius.circular(10),
-        //         ),
-        //         child: Text(curPinfo[0]),
-        //       ),
-        //     )
-        //   ],
-        // ),
-        // const SizedBox(height: 10),
-        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Text(
+              "Payment Method:",
+              textAlign: TextAlign.left,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(5),
+                width: MediaQuery.of(context).size.width - 250,
+                // decoration: BoxDecoration(
+                //   color: const Color(0xffF6F6F6),
+                //   borderRadius: BorderRadius.circular(10),
+                // ),
+                child: Text(
+                  curPinfo[0],
+                  style: TextStyle(fontWeight: FontWeight.w100),
+                ),
+              ),
+            )
+          ],
+        ),
         const Text(
           "Account Name",
           textAlign: TextAlign.left,
@@ -596,6 +601,7 @@ class EditPaymentInfoForm extends ConsumerWidget {
             ))
           ],
         ),
+        const SizedBox(height: 5),
         EditPaymentInfoButton(
             accountNumberController, accountNameController, index)
       ],
@@ -739,103 +745,6 @@ deletePaymentInfoDialog(BuildContext context, WidgetRef ref, int index) {
       ),
     ),
   );
-}
-
-// TODO : move it to group
-// friend payment info modal
-friendInfoDialog(context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) => Dialog(
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12.0))),
-      child: Container(
-        padding: const EdgeInsets.all(25.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(children: [
-              const Spacer(),
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Icon(
-                  Icons.close,
-                  color: Color(0xFF15808D),
-                ),
-              )
-            ]),
-            Row(
-              children: [
-                const Initicon(
-                  text: "Nama Orangnya",
-                  size: 57,
-                  backgroundColor: Colors.black,
-                  // backgroundColor: getProfileBgColor(memberList[1].color),
-                  // style: TextStyle(color: getProfileTextColor(memberList[1].color)),
-                ),
-                const SizedBox(
-                  width: 25,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    // TODO: handle overflow
-                    Text("Fifi Purnama",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18)),
-                    Text("Fifiimutt", style: TextStyle(fontSize: 14))
-                  ],
-                )
-              ],
-            ),
-            const Divider(thickness: 1, height: 30.0, color: Color(0xFFE1F3F2)),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text("Payment Info",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                SizedBox(
-                  height: 5,
-                ),
-                FriendPaymentInfoDetail(),
-                FriendPaymentInfoDetail()
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            )
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-class FriendPaymentInfoDetail extends ConsumerWidget {
-  const FriendPaymentInfoDetail({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-        padding: EdgeInsets.symmetric(vertical: 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text("BCA",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-            SizedBox(
-              height: 5,
-            ),
-            Text("1234124213 a.n. Fifi Kurang Imut W",
-                style: TextStyle(fontSize: 14))
-          ],
-        ));
-  }
 }
 
 // TODO : ini modal sem yang confirm/deny settle

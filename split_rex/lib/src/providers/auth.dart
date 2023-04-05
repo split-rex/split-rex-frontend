@@ -105,19 +105,21 @@ class AuthProvider extends ChangeNotifier {
     userData.paymentInfo = {};
     userData.flattenPaymentInfo = [];
     var paymentInfo = data["payment_info"];
-    for (var paymentMethod in paymentInfo.keys) {
-      Map<int, String> listOfAcc = <int, String>{};
-      for (var accountNumber in paymentInfo[paymentMethod].keys) {
-        var accountName = paymentInfo[paymentMethod][accountNumber];
-        listOfAcc[int.parse(accountNumber)] = accountName;
+    if (paymentInfo != null) {
+      for (var paymentMethod in paymentInfo.keys) {
+        Map<int, String> listOfAcc = <int, String>{};
+        for (var accountNumber in paymentInfo[paymentMethod].keys) {
+          var accountName = paymentInfo[paymentMethod][accountNumber];
+          listOfAcc[int.parse(accountNumber)] = accountName;
 
-        userData.flattenPaymentInfo.add([
-          paymentMethod,
-          accountNumber,
-          accountName,
-        ]);
+          userData.flattenPaymentInfo.add([
+            paymentMethod,
+            accountNumber,
+            accountName,
+          ]);
+        }
+        userData.paymentInfo[paymentMethod] = listOfAcc;
       }
-      userData.paymentInfo[paymentMethod] = listOfAcc;
     }
 
     newUserData.color = data["color"];

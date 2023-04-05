@@ -202,14 +202,8 @@ class FriendRequestsBody extends ConsumerWidget {
                     padding: const EdgeInsets.only(left: 15, top: 12),
                     itemBuilder: (context, index) {
                       return FriendList(
-                          name: ref
-                              .watch(friendProvider)
-                              .friendSentList[index]
-                              .name,
-                          color: ref
-                              .watch(friendProvider)
-                              .friendSentList[index]
-                              .color);
+                          index: index
+                      );
                     },
                     separatorBuilder: (context, index) => const Divider(
                       thickness: 1,

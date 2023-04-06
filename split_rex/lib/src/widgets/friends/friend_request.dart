@@ -201,9 +201,7 @@ class FriendRequestsBody extends ConsumerWidget {
                     shrinkWrap: true,
                     padding: const EdgeInsets.only(left: 15, top: 12),
                     itemBuilder: (context, index) {
-                      return FriendList(
-                          index: index
-                      );
+                      return FriendList(index: index);
                     },
                     separatorBuilder: (context, index) => const Divider(
                       thickness: 1,

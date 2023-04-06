@@ -5,6 +5,7 @@ import 'package:split_rex/src/common/header.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/screens/account/bank_names.dart';
 import 'package:split_rex/src/services/auth.dart';
 
 import '../../common/functions.dart';
@@ -421,13 +422,7 @@ class DropDownBankName extends ConsumerWidget {
   DropDownBankName({super.key});
 
   // List of items in our dropdown menu
-  var items = [
-    'Payment Method',
-    'BNI',
-    'BCA',
-    'Gopay',
-    'OVO',
-  ];
+  var items = AllPaymentMethod;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

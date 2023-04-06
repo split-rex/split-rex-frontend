@@ -42,7 +42,7 @@ class GroupListProvider extends ChangeNotifier {
     currGroup = group;
   }
 
-  void changeCurrGroupTransactions(List<Transaction> transactions){
+  void changeCurrGroupTransactions(List<Transaction> transactions) {
     currGroup.transactions = transactions;
   }
 
@@ -59,12 +59,35 @@ class GroupListProvider extends ChangeNotifier {
     List<Friend> memberList = <Friend>[];
     for (int i = 0; i < dataMemberList.length; i++) {
       var currMember = dataMemberList[i];
-      memberList.add(Friend(
-        userId: currMember["member_id"],
-        name: currMember["name"],
-        username: currMember["username"],
-        color: currMember["color"],
-      ));
+
+      var friendObj = Friend(
+          userId: currMember["member_id"],
+          name: currMember["name"],
+          username: currMember["username"],
+          color: currMember["color"],
+          email: currMember["email"]);
+      friendObj.paymentInfo = {};
+      friendObj.flattenPaymentInfo = [];
+      var paymentInfo = currMember["payment_info"];
+
+      if (paymentInfo != null) {
+        for (var paymentMethod in paymentInfo.keys) {
+          Map<int, String> listOfAcc = <int, String>{};
+          for (var accountNumber in paymentInfo[paymentMethod].keys) {
+            var accountName = paymentInfo[paymentMethod][accountNumber];
+            listOfAcc[int.parse(accountNumber)] = accountName;
+
+            friendObj.flattenPaymentInfo.add([
+              paymentMethod,
+              accountNumber,
+              accountName,
+            ]);
+          }
+          friendObj.paymentInfo[paymentMethod] = listOfAcc;
+        }
+      }
+
+      memberList.add(friendObj);
     }
     currGroup.members = memberList;
   }
@@ -88,12 +111,34 @@ class GroupListProvider extends ChangeNotifier {
         List<Friend> memberList = <Friend>[];
         for (int i = 0; i < dataMemberList.length; i++) {
           var currMember = dataMemberList[i];
-          memberList.add(Friend(
-            userId: currMember["member_id"],
-            name: currMember["name"],
-            username: currMember["username"],
-            color: currMember["color"],
-          ));
+          var friendObj = Friend(
+              userId: currMember["member_id"],
+              name: currMember["name"],
+              username: currMember["username"],
+              color: currMember["color"],
+              email: currMember["email"]);
+          friendObj.paymentInfo = {};
+          friendObj.flattenPaymentInfo = [];
+          var paymentInfo = currMember["payment_info"];
+
+          if (paymentInfo != null) {
+            for (var paymentMethod in paymentInfo.keys) {
+              Map<int, String> listOfAcc = <int, String>{};
+              for (var accountNumber in paymentInfo[paymentMethod].keys) {
+                var accountName = paymentInfo[paymentMethod][accountNumber];
+                listOfAcc[int.parse(accountNumber)] = accountName;
+
+                friendObj.flattenPaymentInfo.add([
+                  paymentMethod,
+                  accountNumber,
+                  accountName,
+                ]);
+              }
+              friendObj.paymentInfo[paymentMethod] = listOfAcc;
+            }
+          }
+
+          memberList.add(friendObj);
         }
 
         group.members = memberList;

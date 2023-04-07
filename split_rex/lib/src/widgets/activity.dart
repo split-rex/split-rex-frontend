@@ -8,9 +8,11 @@ import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/activity.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:split_rex/src/services/add_expense.dart';
+import 'package:split_rex/src/services/group.dart';
+import 'package:split_rex/src/services/payment.dart';
 
 Widget activityListWidget(BuildContext context, WidgetRef ref) {
-  ActivityService().readJson(ref);
   return SizedBox(
       width: MediaQuery.of(context).size.width - 40.0,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -60,165 +62,170 @@ Widget activityListWidget(BuildContext context, WidgetRef ref) {
                                 height: 20,
                               ),
                     ref
-                      .watch(activityProvider)
-                      .activities[index]
-                      .activityType == "PAYMENT"   
+                                .watch(activityProvider)
+                                .activities[index]
+                                .activityType ==
+                            "PAYMENT"
                         ? ref
-                      .watch(activityProvider)
-                      .activities[index]
-                      .status == "UNCONFIRMED"   
-                        ?Expanded(
-                            child: Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            child: RichText(
-                              softWrap: true,
-                              text: TextSpan(
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0XFF4f4f4f),
-                                      fontWeight: FontWeight.w400),
-                                  children: [
-                                    TextSpan(
-                                      text:ref
-                                          .watch(activityProvider)
-                                          .activities[index]
-                                          .name,
+                                    .watch(activityProvider)
+                                    .activities[index]
+                                    .status ==
+                                "UNCONFIRMED"
+                            ? Expanded(
+                                child: Container(
+                                margin: const EdgeInsets.only(left: 10),
+                                child: RichText(
+                                  softWrap: true,
+                                  text: TextSpan(
                                       style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const TextSpan(
-                                      text: " just settled",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text:  "Rp.${formatNumber(ref
-                                          .watch(activityProvider)
-                                          .activities[index]
-                                          .amount!)}",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const TextSpan(
-                                      text: " with ",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    const TextSpan(
-                                      text: "You",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: "\nView Settlement",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFF4F9A99)),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          ref
-                                              .read(groupListProvider)
-                                              .searchGroupNameOne(ref
-                                          .watch(activityProvider)
-                                          .activities[index]
-                                          .groupName!);
-                                          ref
-                                              .read(routeProvider)
-                                              .changePage("group_detail");
-                                        },
-                                    ),
-                                  ]),
+                                          fontSize: 12,
+                                          color: Color(0XFF4f4f4f),
+                                          fontWeight: FontWeight.w400),
+                                      children: [
+                                        TextSpan(
+                                          text: ref
+                                              .watch(activityProvider)
+                                              .activities[index]
+                                              .name,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const TextSpan(
+                                          text: " just settled ",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              "Rp.${formatNumber(ref.watch(activityProvider).activities[index].amount!)}",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const TextSpan(
+                                          text: " with ",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        const TextSpan(
+                                          text: "You",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: "\nView Settlement",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFF4F9A99)),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () async {
+                                              ref
+                                                  .read(groupListProvider)
+                                                  .changeCurrGroupById(ref
+                                                      .watch(activityProvider)
+                                                      .activities[index]
+                                                      .redirectId);
+                                              await GroupServices()
+                                                  .getGroupTransactions(ref);
+    
+                                              await PaymentServices()
+                                                  .getUnconfirmedPayment(ref);
+                                              ref
+                                                  .watch(routeProvider)
+                                                  .changePage(
+                                                      "confirm_payment");
+                                            },
+                                        ),
+                                      ]),
                                 ),
-                              )):Expanded(
-                            child: Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            child: RichText(
-                              softWrap: true,
-                              text: TextSpan(
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0XFF4f4f4f),
-                                      fontWeight: FontWeight.w400),
-                                  children: [
-                                    TextSpan(
-                                      text: ref
-                                          .watch(activityProvider)
-                                          .activities[index]
-                                          .name,
+                              ))
+                            : Expanded(
+                                child: Container(
+                                margin: const EdgeInsets.only(left: 10),
+                                child: RichText(
+                                  softWrap: true,
+                                  text: TextSpan(
                                       style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const TextSpan(
-                                      text: " just ",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: ref
-                                                  .watch(activityProvider)
-                                                  .activities[index]
-                                                  .status ==
-                                              "CONFIRMED"
-                                          ? "confirmed "
-                                          : "denied",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: ref
-                                                    .watch(activityProvider)
-                                                    .activities[index]
-                                                    .status ==
-                                                "CONFIRMED"
-                                            ? const Color(0xFF4F9A99)
-                                            : const Color(0XFFF10D0D),
-                                      ),
-                                    ),
-                                    const TextSpan(
-                                      text: "Your payment of ",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: "Rp.${formatNumber(ref
-                                          .watch(activityProvider)
-                                          .activities[index]
-                                          .amount!)}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: ref
-                                                    .watch(activityProvider)
-                                                    .activities[index]
-                                                    .status ==
-                                                "CONFIRMED"
-                                            ? const Color(0xFF4F9A99)
-                                            : const Color(0XFFF10D0D),
-                                      ),
-                                    ),
-                                    const TextSpan(
-                                      text: " in ",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: ref
-                                          .watch(activityProvider)
-                                          .activities[index]
-                                          .groupName,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ]),
-                            ),
-                          ))
+                                          fontSize: 12,
+                                          color: Color(0XFF4f4f4f),
+                                          fontWeight: FontWeight.w400),
+                                      children: [
+                                        TextSpan(
+                                          text: ref
+                                              .watch(activityProvider)
+                                              .activities[index]
+                                              .name,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const TextSpan(
+                                          text: " just ",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: ref
+                                                      .watch(activityProvider)
+                                                      .activities[index]
+                                                      .status ==
+                                                  "CONFIRMED"
+                                              ? "confirmed "
+                                              : "denied",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: ref
+                                                        .watch(activityProvider)
+                                                        .activities[index]
+                                                        .status ==
+                                                    "CONFIRMED"
+                                                ? const Color(0xFF4F9A99)
+                                                : const Color(0XFFF10D0D),
+                                          ),
+                                        ),
+                                        const TextSpan(
+                                          text: "Your payment of ",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              "Rp.${formatNumber(ref.watch(activityProvider).activities[index].amount!)}",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: ref
+                                                        .watch(activityProvider)
+                                                        .activities[index]
+                                                        .status ==
+                                                    "CONFIRMED"
+                                                ? const Color(0xFF4F9A99)
+                                                : const Color(0XFFF10D0D),
+                                          ),
+                                        ),
+                                        const TextSpan(
+                                          text: " in ",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: ref
+                                              .watch(activityProvider)
+                                              .activities[index]
+                                              .groupName,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ]),
+                                ),
+                              ))
                         : ref
                                     .watch(activityProvider)
                                     .activities[index]
@@ -265,16 +272,19 @@ Widget activityListWidget(BuildContext context, WidgetRef ref) {
                                               fontWeight: FontWeight.bold,
                                               color: Color(0xFF4F9A99)),
                                           recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              ref
-                                                  .read(groupListProvider)
-                                                  .searchGroupNameOne(ref
-                                              .watch(activityProvider)
-                                              .activities[index]
-                                              .groupName!);
+                                            ..onTap = () async {
+                                              await AddExpenseServices()
+                                                  .getTransactionDetail(
+                                                      ref,
+                                                      ref
+                                                          .watch(
+                                                              activityProvider)
+                                                          .activities[index]
+                                                          .redirectId);
                                               ref
                                                   .read(routeProvider)
-                                                  .changePage("group_detail");
+                                                  .changePage(
+                                                      "transaction_detail");
                                             },
                                         ),
                                       ]),

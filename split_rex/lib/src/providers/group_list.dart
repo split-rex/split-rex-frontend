@@ -46,6 +46,15 @@ class GroupListProvider extends ChangeNotifier {
     currGroup.transactions = transactions;
   }
 
+  void changeCurrGroupById(String groupId) {
+    for (int i = 0; i < groupsLoaded.length; i++) {
+      if (groups[i].groupId == groupId) {
+        currGroup = groups[i];
+        break;
+      }
+    }
+  }
+
   void changeCurrGroupDetail(dynamic groupDetail) {
     currGroup.groupId = groupDetail["group_id"];
     currGroup.name = groupDetail["name"];

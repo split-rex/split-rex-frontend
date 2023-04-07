@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/screens/activity.dart';
+import 'package:split_rex/src/services/activity.dart';
 import 'package:split_rex/src/services/group.dart';
 import 'package:camera/camera.dart';
 
@@ -38,6 +40,9 @@ class Navbar extends ConsumerWidget {
             }
             if (value == 1)  {
               await GroupServices().userGroupList(ref);
+            }
+            if (value == 3) {
+              await ActivityServices().getActivity(ref);
             }
             ref.read(routeProvider).changeNavbarIdx(value);
           }

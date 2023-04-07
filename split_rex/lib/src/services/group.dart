@@ -80,6 +80,39 @@ class GroupServices {
     }
   }
 
+  Future<void> getGroupTransactionsActivity(WidgetRef ref, String groupId) async {
+    Response resp = await get(
+      Uri.parse("$endpoint/groupTransactions?id=$groupId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+    );
+    var data = jsonDecode(resp.body);
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      var transactions = data["data"];
+      List<Transaction> newTransList = [];
+      try {
+        for (var i = 0; i < transactions.length; i++) {
+          var currTrans = transactions[i];
+          var tempTrans = Transaction();
+          tempTrans.groupId = groupId;
+          tempTrans.transactionId = currTrans["transaction_id"];
+          tempTrans.billOwner = currTrans["bill_owner"];
+          tempTrans.name = currTrans["name"];
+          tempTrans.date = currTrans["date"];
+          newTransList.add(tempTrans);
+        }
+        ref.watch(groupListProvider).changeCurrGroupTransactions(newTransList);
+      } catch (error) {
+        logger.d(error);
+      }
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
   Future<bool> getGroupOwed(String jwtToken) async {
     Response response = await get(
       Uri.parse("$endpoint/userGroupOwed"),

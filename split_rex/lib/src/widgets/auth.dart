@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:split_rex/src/providers/auth.dart';
@@ -227,6 +228,22 @@ class SubmitBtn extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () async {
+        EasyLoading.instance
+        ..displayDuration = const Duration(seconds: 3)
+        ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+        ..loadingStyle = EasyLoadingStyle.custom
+        ..indicatorSize = 45.0
+        ..radius = 16.0
+        ..textColor = Colors.white
+        ..progressColor = const Color(0xFF4F9A99)
+        ..backgroundColor = const Color(0xFF4F9A99)
+        ..indicatorColor = Colors.white
+        ..maskType = EasyLoadingMaskType.custom
+        ..maskColor = const Color.fromARGB(155, 255, 255, 255);
+        EasyLoading.show(
+          status: 'Loading...',
+          maskType: EasyLoadingMaskType.custom
+        );
         if (type == "signin") {
           ref
               .read(authProvider)
@@ -241,9 +258,10 @@ class SubmitBtn extends ConsumerWidget {
                   color: Color(
                       ref.watch(errorProvider).errorMsg == "Login Failed"
                           ? 0xFFF44336
-                          : 0xFF388E3C),
+                          : 0xFF6DC7BD),
                   borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -289,9 +307,10 @@ class SubmitBtn extends ConsumerWidget {
                           ref.watch(errorProvider).errorType ==
                               "ERROR_INVALID_EMAIL"
                       ? 0xFFF44336
-                      : 0xFF388E3C),
+                      : 0xFF6DC7BD),
                   borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -322,6 +341,7 @@ class SubmitBtn extends ConsumerWidget {
             elevation: 0,
           ));
         }
+        EasyLoading.dismiss();
       },
       child: Container(
         alignment: Alignment.center,

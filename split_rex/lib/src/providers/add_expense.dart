@@ -82,6 +82,11 @@ class AddExpenseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  resetItems() {
+    items.clear();
+    notifyListeners();
+  }
+
   addEmptyItem() {
     items.add(Items());
     notifyListeners();

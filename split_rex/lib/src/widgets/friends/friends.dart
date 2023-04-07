@@ -336,16 +336,7 @@ class FriendPaymentInfoDetail extends ConsumerWidget {
                 Text("$accountNumber a.n. $accountName"),
               ],
             ),
-          ),
-          Container(
-              margin: const EdgeInsets.only(left: 20),
-              child: Text(name,
-                  style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF4F4F4F))
-                    )
-          ),
+          ),   
         ],
       ),
     );

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:split_rex/src/providers/group_list.dart';
+import 'package:split_rex/src/widgets/friends/friends.dart';
+import '../../common/functions.dart';
+import '../../model/friends.dart';
 import '../../providers/friend.dart';
 import '../../providers/routes.dart';
-import '../friends/friends.dart';
 
 var logger = Logger();
 
@@ -163,18 +166,7 @@ class GroupMembers extends ConsumerWidget {
                 padding: const EdgeInsets.only(top: 12),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  return FriendList(
-                    name: ref
-                        .watch(groupListProvider)
-                        .currGroup
-                        .members[index]
-                        .name,
-                    color: ref
-                        .watch(groupListProvider)
-                        .currGroup
-                        .members[index]
-                        .color,
-                  );
+                  return GroupList(index: index);
                 },
                 separatorBuilder: (context, index) => const Divider(
                   thickness: 1,
@@ -187,5 +179,42 @@ class GroupMembers extends ConsumerWidget {
         ],
       ),
     );
+  }
+}
+
+class GroupList extends ConsumerWidget {
+  const GroupList({
+    super.key,
+    required this.index,
+  });
+
+  final int index;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var user = ref.watch(groupListProvider).currGroup.members[index];
+
+    return Container(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: InkWell(
+          onTap: () => friendInfoDialog(context, user),
+          child: Row(
+            children: [
+              Initicon(
+                text: user.name,
+                size: 40,
+                backgroundColor: getProfileBgColor(user.color),
+                style: TextStyle(color: getProfileTextColor(user.color)),
+              ),
+              Container(
+                  margin: const EdgeInsets.only(left: 20),
+                  child: Text(user.name,
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF4F4F4F)))),
+            ],
+          ),
+        ));
   }
 }

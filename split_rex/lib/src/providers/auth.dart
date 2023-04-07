@@ -4,13 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/model/user.dart';
 
-
 class AuthProvider extends ChangeNotifier {
   SignUpModel signUpData = SignUpModel();
   SignInModel signInData = SignInModel();
   UserUpdate newUserData = UserUpdate();
   UserUpdatePass newPass = UserUpdatePass();
   User userData = User();
+  String newPaymentMethodData = "Payment Method";
 
   String jwtToken = "";
   bool isVisible = true;
@@ -23,7 +23,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeSignUpData(name, username, email, pass, confPass){
+  void changeSignUpData(name, username, email, pass, confPass) {
     signUpData.name = name;
     signUpData.username = username;
     signUpData.email = email;
@@ -57,6 +57,15 @@ class AuthProvider extends ChangeNotifier {
     newPass.confNewPass = pass;
   }
 
+  void changePaymentMethod(data) {
+    newPaymentMethodData = data;
+    notifyListeners();
+  }
+
+  void changePaymentMethodNonListeners(data) {
+    newPaymentMethodData = data;
+  }
+
   void resetNewPass() {
     newPass.oldPass = "";
     newPass.newPass = "";
@@ -72,6 +81,11 @@ class AuthProvider extends ChangeNotifier {
     newUserData.color = userData.color;
   }
 
+  void resetPaymentMethod() {
+    newPaymentMethodData = "Payment Method";
+    notifyListeners();
+  }
+
   void changeVisibility() {
     isVisible = !isVisible;
     notifyListeners();
@@ -85,11 +99,32 @@ class AuthProvider extends ChangeNotifier {
     userData.name = data["fullname"];
     userData.username = data["username"];
     userData.userId = data["user_id"];
-    // userData.email = data["email"];
+    userData.email = data["email"];
     userData.color = data["color"];
+
+    userData.paymentInfo = {};
+    userData.flattenPaymentInfo = [];
+    var paymentInfo = data["payment_info"];
+    if (paymentInfo != null) {
+      for (var paymentMethod in paymentInfo.keys) {
+        Map<int, String> listOfAcc = <int, String>{};
+        for (var accountNumber in paymentInfo[paymentMethod].keys) {
+          var accountName = paymentInfo[paymentMethod][accountNumber];
+          listOfAcc[int.parse(accountNumber)] = accountName;
+
+          userData.flattenPaymentInfo.add([
+            paymentMethod,
+            accountNumber,
+            accountName,
+          ]);
+        }
+        userData.paymentInfo[paymentMethod] = listOfAcc;
+      }
+    }
+
     newUserData.color = data["color"];
+    notifyListeners();
   }
 }
 
 final authProvider = ChangeNotifierProvider((ref) => AuthProvider());
-

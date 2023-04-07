@@ -14,5 +14,3 @@ class GroupListModel {
   GroupListModel(this.groupId, this.name, this.members, this.startDate,
       this.endDate, this.type, this.totalUnpaid, this.totalExpense);
 }
-
-

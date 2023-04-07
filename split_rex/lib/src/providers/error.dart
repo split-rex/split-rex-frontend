@@ -21,7 +21,9 @@ class ErrorProvider extends ChangeNotifier {
     "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH": "Your password and confirmation does not match!",
 
     "ERROR_ALREADY_REQUESTED_SENT" : "Friend request sent",
-    "ERROR_ALREADY_REQUESTED_RECEIVED" : "This user has sent friend request to you"
+    "ERROR_ALREADY_REQUESTED_RECEIVED" : "This user has sent friend request to you",
+
+    "INVALID_PAYMENT_METHOD": "Change payment method",
   };
 
   void changeError(String value) {

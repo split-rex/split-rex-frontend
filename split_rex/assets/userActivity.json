@@ -37,6 +37,19 @@
           "name": "ubay",
           "group_name": "New Group Yeay"
         }
+      },
+      {
+        "activity_id": "2d38f333-8a2c-4573-ac89-13f2d08e9aa5",
+        "activity_type": "PAYMENT",
+        "date": "2023-03-31T15:01:02.382778+07:00",
+        "redirect_id": "0b865d7f-e40e-4440-905e-eccf2caaa6ed",
+        "detail": {
+          "payment_activity_id": "1125d23c-d3b6-4dad-93e6-136806c0790f",
+          "name": "nando",
+          "status": "UNCONFIRMED",
+          "amount": 10000,
+          "group_name": "New Group Yeay"
+        }
       }
     ]
   }

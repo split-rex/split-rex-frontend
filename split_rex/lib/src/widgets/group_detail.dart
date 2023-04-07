@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 import 'package:split_rex/src/common/bubble_member.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/model/group_model.dart';
@@ -10,6 +11,7 @@ import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/services/add_expense.dart';
+import 'package:split_rex/src/services/payment.dart';
 
 import '../providers/group_list.dart';
 
@@ -40,7 +42,7 @@ class GroupInfo extends ConsumerWidget {
               InkWell(
                   onTap: () => {
                         ref.read(routeProvider).changeNavbarIdx(1),
-                        ref.watch(routeProvider).changePage(prevPage),
+                        ref.read(routeProvider).changePage(prevPage),
                       },
                   child: const Icon(Icons.navigate_before,
                       color: Colors.white, size: 35)),
@@ -55,8 +57,6 @@ class GroupInfo extends ConsumerWidget {
               const Spacer(),
               InkWell(
                 onTap: () {
-                  
-                  
                   ref.watch(routeProvider).changePage("group_settings");
                 },
                 child:
@@ -159,7 +159,7 @@ class BalanceInfo extends ConsumerWidget {
                                             .currGroup
                                             .type ==
                                         "OWED"
-                                    ? const Color(0XFFF10D0D)
+                                    ? const Color(0xff4F4F4F)
                                     : const Color(0xFF4F9A99),
                                 fontWeight: FontWeight.w800,
                               )),
@@ -216,12 +216,19 @@ class GroupDetailHeader extends ConsumerWidget {
 }
 
 class GroupDetailContent extends ConsumerWidget {
+  
   const GroupDetailContent({super.key, required this.group});
 
   final GroupListModel group;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    log(ref
+                                    .watch(groupListProvider)
+                                    .currGroup
+                                    .transactions
+                                     
+.toString());
     return Material(
         type: MaterialType.transparency,
         child: Container(
@@ -249,8 +256,11 @@ class GroupDetailContent extends ConsumerWidget {
                     Flexible(
                       flex: 7,
                       child: InkWell(
-                        onTap: () {
-                          ref.watch(routeProvider).changePage("group_list");
+                        onTap: () async {
+                          await PaymentServices().getUnsettledPayment(ref);
+                          ref
+                              .watch(routeProvider)
+                              .changePage("unsettled_payments");
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -275,8 +285,11 @@ class GroupDetailContent extends ConsumerWidget {
                     Flexible(
                       flex: 7,
                       child: InkWell(
-                        onTap: () {
-                          ref.watch(routeProvider).changePage("group_list");
+                       onTap: () async {
+                          await PaymentServices().getUnconfirmedPayment(ref);
+                          ref
+                              .watch(routeProvider)
+                              .changePage("confirm_payment");
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -306,17 +319,12 @@ class GroupDetailContent extends ConsumerWidget {
                       itemCount: ref
                           .watch(groupListProvider)
                           .currGroup
-                          .transactions
+                          .groupActivities
                           .length,
                       itemBuilder: (BuildContext context, int index) {
                         return TransactionItem(
                             key: UniqueKey(),
-                            listIdx: ref
-                                    .watch(groupListProvider)
-                                    .currGroup
-                                    .transactions
-                                    .length -
-                                1 -
+                            listIdx: 
                                 index);
                       })),
             ],
@@ -355,28 +363,27 @@ class TransactionItem extends ConsumerStatefulWidget {
 class TransactionItemState extends ConsumerState<TransactionItem> {
   @override
   Widget build(BuildContext context) {
-    var transaction =
-        ref.watch(groupListProvider).currGroup.transactions[widget.listIdx];
-    var currentMonth = extractMonth(transaction.date);
+    var activity =
+        ref.watch(groupListProvider).currGroup.groupActivities[widget.listIdx];
+    var currentMonth = extractMonth(activity.date);
     log(widget.listIdx.toString());
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.listIdx ==
-                ref.watch(groupListProvider).currGroup.transactions.length -
-                    1 ||
+                0 ||
             currentMonth !=
                 extractMonth(ref
                     .watch(groupListProvider)
                     .currGroup
-                    .transactions[widget.listIdx + 1]
+                    .groupActivities[widget.listIdx - 1]
                     .date))
           MonthSeparator(month: currentMonth),
         InkWell(
             onTap: () async {
               await AddExpenseServices()
-                  .getTransactionDetail(ref, transaction.transactionId);
+                  .getTransactionDetail(ref, activity.activityId);
               ref.read(routeProvider).changePage("transaction_detail");
             },
             child: Container(
@@ -392,7 +399,7 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        extractMonth(transaction.date),
+                        extractMonth(activity.date),
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           color: Color(0XFF9A9AB0),
@@ -400,7 +407,7 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
                         ),
                       ),
                       Text(
-                        extractDate(transaction.date),
+                        extractDate(activity.date),
                         style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           color: Color(0XFF9A9AB0),
@@ -425,28 +432,54 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
                       )),
                   const SizedBox(
                     width: 20,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        transaction.name,
-                        style: const TextStyle(
-                          color: Color(0XFF9A9AB0),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                        ),
+                  ), 
+                  Expanded(
+                      child: Container(
+                      
+                      child: RichText(
+                        softWrap: true,
+                        text: TextSpan(
+                            style: const TextStyle(
+                                fontSize: 12,
+                                color: Color(0XFF9A9AB0),
+                                fontWeight: FontWeight.w400),
+                            children: [
+                              TextSpan(
+                                text: activity.name1,
+                                style: const TextStyle(
+                                  color: Color(0XFF9A9AB0),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const TextSpan(
+                                text: " paid ",
+                                style: TextStyle(
+                                  color: Color(0XFF9A9AB0),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              TextSpan(
+                                text: activity.name1,
+                                style: const TextStyle(
+                                  color: Color(0XFF9A9AB0),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextSpan(
+                                text:
+                                    "Rp.${formatNumber(activity.amount)}",
+                                style: const TextStyle(
+                                  color: Color(0XFF9A9AB0),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              
+                            ]),
                       ),
-                      Text(
-                        "Rp${transaction.total}",
-                        style: const TextStyle(
-                          color: Color(0XFF9A9AB0),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  )
+                    ))
+
+
+                
                 ],
               ),
             ))

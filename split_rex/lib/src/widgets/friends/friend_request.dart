@@ -23,7 +23,7 @@ class FriendRequestSelector extends ConsumerWidget {
               IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
-                  ref.watch(routeProvider).changePage("home");
+                  ref.read(routeProvider).changePage("home");
                 },
                 color: const Color(0xFF4F4F4F),
               ),
@@ -201,15 +201,7 @@ class FriendRequestsBody extends ConsumerWidget {
                     shrinkWrap: true,
                     padding: const EdgeInsets.only(left: 15, top: 12),
                     itemBuilder: (context, index) {
-                      return FriendList(
-                          name: ref
-                              .watch(friendProvider)
-                              .friendSentList[index]
-                              .name,
-                          color: ref
-                              .watch(friendProvider)
-                              .friendSentList[index]
-                              .color);
+                      return FriendList(index: index);
                     },
                     separatorBuilder: (context, index) => const Divider(
                       thickness: 1,

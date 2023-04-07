@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/group_list.dart';
@@ -12,13 +13,13 @@ import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/model/user.dart';
 import 'package:split_rex/src/services/group.dart';
 
+import '../common/logger.dart';
 import 'friend.dart';
 
 class ApiServices {
   String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
 
   Future<void> getProfile(WidgetRef ref) async {
-    
     Response resp =
         await get(Uri.parse("$endpoint/profile"), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -26,11 +27,7 @@ class ApiServices {
     });
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-      
       ref.read(authProvider).loadUserData(data["data"]);
-      log("getProfile");
-      ref.read(errorProvider).changeError(data["message"]);
-      
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
@@ -39,20 +36,20 @@ class ApiServices {
   Future<void> updateProfile(WidgetRef ref) async {
     UserUpdate newUserData = ref.watch(authProvider).newUserData;
     Response resp = await post(Uri.parse("$endpoint/updateProfile"),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
-      },
-      body: jsonEncode({
-        "name": newUserData.name,
-        "color": newUserData.color,
-      }));
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        },
+        body: jsonEncode({
+          "name": newUserData.name,
+          "color": newUserData.color,
+        }));
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       ref.read(authProvider).resetNewUserData();
       await getProfile(ref);
     } else {
-        ref.read(errorProvider).changeError(data["message"]);
+      ref.read(errorProvider).changeError(data["message"]);
     }
   }
 
@@ -60,25 +57,25 @@ class ApiServices {
     UserUpdatePass newPass = ref.watch(authProvider).newPass;
     if (newPass.confNewPass != newPass.newPass) {
       ref
-        .read(errorProvider)
-        .changeError("ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH");
+          .read(errorProvider)
+          .changeError("ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH");
     } else {
       Response resp = await post(Uri.parse("$endpoint/updatePassword"),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
-        },
-        body: jsonEncode({
-          "old_password": newPass.oldPass,
-          "new_password": newPass.newPass,
-        }));
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+          },
+          body: jsonEncode({
+            "old_password": newPass.oldPass,
+            "new_password": newPass.newPass,
+          }));
       var data = jsonDecode(resp.body);
       if (data["message"] == "SUCCESS") {
         ref.read(authProvider).resetNewPass();
         await getProfile(ref);
-        ref.watch(routeProvider).changePage("edit_account");
+        ref.read(routeProvider).changePage("edit_account");
       } else {
-          ref.read(errorProvider).changeError(data["message"]);
+        ref.read(errorProvider).changeError(data["message"]);
       }
     }
   }
@@ -115,17 +112,12 @@ class ApiServices {
         ref.read(authProvider).changeJwtToken(data["data"]);
         log("fegeg");
         await getProfile(ref);
-       
-        
+
         await FriendServices().userFriendList(ref);
         await FriendServices().friendRequestReceivedList(ref);
         await FriendServices().friendRequestSentList(ref);
         ref.read(routeProvider).changePage("home");
-        
       } else {
-        log("iiiijiji");
-        
-        print(data["message"]);
         ref.read(errorProvider).changeError(data["message"]);
         // print(ref.watch(errorProvider).errorType);
       }
@@ -148,11 +140,106 @@ class ApiServices {
       await FriendServices().userFriendList(ref);
       await FriendServices().friendRequestReceivedList(ref);
       await FriendServices().friendRequestSentList(ref);
-      GroupServices().getGroupOwed(ref.watch(authProvider).jwtToken).then((val) async {
+      GroupServices()
+          .getGroupOwed(ref.watch(authProvider).jwtToken)
+          .then((val) async {
         ref.read(groupListProvider).updateHasOwedGroups(val);
         await GroupServices().userGroupList(ref);
         ref.read(routeProvider).changePage("home");
       });
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> addPaymentInfo(
+    WidgetRef ref,
+    BuildContext context,
+    String accountName,
+    int accountNumber,
+  ) async {
+    // meaning still default
+    if (ref.watch(authProvider).newPaymentMethodData == "Payment Method") {
+      ref.read(errorProvider).changeError("INVALID_PAYMENT_METHOD");
+      return;
+    }
+
+    Response resp = await post(Uri.parse("$endpoint/addPaymentInfo"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        },
+        body: jsonEncode({
+          "payment_method": ref.watch(authProvider).newPaymentMethodData,
+          "account_number": accountNumber,
+          "account_name": accountName,
+        }));
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      Navigator.of(context).pop();
+      getProfile(ref);
+      ref.read(authProvider).resetPaymentMethod();
+      ref.read(routeProvider).changePage("account");
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> editPaymentInfo(
+      WidgetRef ref,
+      BuildContext context,
+      String paymentMethod,
+      int accountNumber,
+      String accountName,
+      int index) async {
+    var curPinfo = ref.watch(authProvider).userData.flattenPaymentInfo[index];
+
+    Response resp = await post(Uri.parse("$endpoint/editPaymentInfo"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        },
+        body: jsonEncode({
+          "old_payment_method": curPinfo[0],
+          "old_account_number": int.parse(curPinfo[1]),
+          "old_account_name": curPinfo[2],
+          "new_payment_method": paymentMethod,
+          "new_account_number": accountNumber,
+          "new_account_name": accountName,
+        }));
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      getProfile(ref);
+      ref.read(authProvider).resetPaymentMethod();
+      ref.read(routeProvider).changePage("account");
+      Navigator.of(context).pop();
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> deletePaymentInfo(
+    WidgetRef ref,
+    BuildContext context,
+    String paymentMethod,
+    int accountNumber,
+    String accountName,
+  ) async {
+    Response resp = await post(Uri.parse("$endpoint/deletePaymentInfo"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
+        },
+        body: jsonEncode({
+          "payment_method": paymentMethod,
+          "account_number": accountNumber,
+          "account_name": accountName,
+        }));
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      getProfile(ref);
+      ref.read(routeProvider).changePage("account");
+      Navigator.of(context).pop();
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

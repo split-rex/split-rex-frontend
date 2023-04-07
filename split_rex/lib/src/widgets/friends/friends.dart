@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
+import 'package:split_rex/src/model/friends.dart';
 import 'package:split_rex/src/providers/routes.dart';
 
 import '../../common/functions.dart';
@@ -14,26 +15,26 @@ class AddFriendsSection extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         ref.watch(friendProvider).resetAddFriend();
-        ref.watch(routeProvider).changePage("add_friends");
+        ref.read(routeProvider).changePage("add_friends");
       },
       child: Container(
-        height: 60,
-        width: MediaQuery.of(context).size.width - 40.0,
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: const Offset(0, 0), // Shadow position
-            ),
-          ],
-        ),
-        child: Row(
+          height: 60,
+          width: MediaQuery.of(context).size.width - 40.0,
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 1,
+                offset: const Offset(0, 0), // Shadow position
+              ),
+            ],
+          ),
+          child: Row(
             children: const [
               Icon(Icons.group_add),
               SizedBox(width: 10),
@@ -45,8 +46,7 @@ class AddFriendsSection extends ConsumerWidget {
                     fontSize: 16),
               ),
             ],
-          )
-      ),
+          )),
     );
   }
 }
@@ -67,7 +67,7 @@ class FriendRequestSection extends ConsumerWidget {
     }
 
     return InkWell(
-      onTap: () => ref.watch(routeProvider).changePage("friend_requests"),
+      onTap: () => ref.read(routeProvider).changePage("friend_requests"),
       child: Container(
           height: 72,
           width: MediaQuery.of(context).size.width - 40.0,
@@ -170,8 +170,7 @@ class FriendsSection extends ConsumerWidget {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return FriendList(
-                    name: ref.watch(friendProvider).friendList[index].name,
-                    color: ref.watch(friendProvider).friendList[index].color,
+                    index: index,
                   );
                 },
                 separatorBuilder: (context, index) => const Divider(
@@ -189,30 +188,155 @@ class FriendsSection extends ConsumerWidget {
 }
 
 class FriendList extends ConsumerWidget {
-  const FriendList({super.key, required this.name, required this.color});
+  const FriendList({super.key, required this.index});
 
-  final String name;
-  final int color;
+  final int index;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var user = ref.watch(friendProvider).friendList[index];
+
+    return Container(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: InkWell(
+          onTap: () => friendInfoDialog(context, user),
+          child: Row(
+            children: [
+              Initicon(
+                text: user.name,
+                size: 40,
+                backgroundColor: getProfileBgColor(user.color),
+                style: TextStyle(color: getProfileTextColor(user.color)),
+              ),
+              Container(
+                  margin: const EdgeInsets.only(left: 20),
+                  child: Text(user.name,
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF4F4F4F)))),
+            ],
+          ),
+        ));
+  }
+}
+
+friendInfoDialog(context, Friend user) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => Dialog(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0))),
+      child: Container(
+        padding: const EdgeInsets.all(25.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(children: [
+              const Spacer(),
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const Icon(
+                  Icons.close,
+                  color: Color(0xFF15808D),
+                ),
+              )
+            ]),
+            Row(
+              children: [
+                Initicon(
+                    text: user.name,
+                    size: 57,
+                    backgroundColor: getProfileBgColor(user.color),
+                    style: TextStyle(color: getProfileTextColor(user.color))),
+                const SizedBox(
+                  width: 25,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // TODO: handle overflow
+                    Text(user.name,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
+                    Text(user.username, style: const TextStyle(fontSize: 14))
+                  ],
+                )
+              ],
+            ),
+            const Divider(thickness: 1, height: 30.0, color: Color(0xFFE1F3F2)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("Payment Info",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                const SizedBox(
+                  height: 5,
+                ),
+                (user.flattenPaymentInfo.isEmpty)
+                    ? const Text("This user does not have any payment info.")
+                    : ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: user.flattenPaymentInfo.length,
+                        itemBuilder: (context, index) {
+                          return FriendPaymentInfoDetail(
+                            paymentMethod: user.flattenPaymentInfo[index][0],
+                            accountNumber: user.flattenPaymentInfo[index][1],
+                            accountName: user.flattenPaymentInfo[index][2],
+                          );
+                        },
+                        separatorBuilder: (context, index) => const Divider(
+                          height: 5,
+                          thickness: 0,
+                        ),
+                      )
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            )
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+class FriendPaymentInfoDetail extends ConsumerWidget {
+  const FriendPaymentInfoDetail({
+    super.key,
+    required this.paymentMethod,
+    required this.accountNumber,
+    required this.accountName,
+  });
+
+  final String paymentMethod;
+  final String accountNumber;
+  final String accountName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Initicon(
-            text: name,
-            size: 40,
-            backgroundColor: getProfileBgColor(color),
-            style: TextStyle(color: getProfileTextColor(color)),
-          ),
-          Container(
-              margin: const EdgeInsets.only(left: 20),
-              child: Text(name,
-                  style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF4F4F4F)))),
+          SizedBox(
+            width: MediaQuery.of(context).size.width - 210.0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(paymentMethod,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text("$accountNumber a.n. $accountName"),
+              ],
+            ),
+          ),   
         ],
       ),
     );

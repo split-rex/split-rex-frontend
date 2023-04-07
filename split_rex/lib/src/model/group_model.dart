@@ -10,9 +10,19 @@ class GroupListModel {
   int totalUnpaid;
   int totalExpense;
   List<Transaction> transactions = [];
+  List<GroupActivity> groupActivities = [];
 
   GroupListModel(this.groupId, this.name, this.members, this.startDate,
       this.endDate, this.type, this.totalUnpaid, this.totalExpense);
 }
 
+class GroupActivity {
+  String activityId;
+  String date;
+  String name1;
+  String name2;
+  int amount;
 
+  GroupActivity(this.activityId, this.date, this.name1, this.name2,
+      this.amount);
+}

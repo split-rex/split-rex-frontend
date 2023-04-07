@@ -13,6 +13,24 @@ convertDate(inputDate) {
   return result; // Output: 01-Mar-2023
 }
 
+String formatNumber(int number) {
+  String str = number.toString();
+  String formatted = '';
+  int len = str.length;
+
+  for (int i = 0; i < len; i++) {
+    formatted += str[i];
+
+    // Add a dot after every three digits
+    if ((len - i - 1) % 3 == 0 && i != len - 1) {
+      formatted += '.';
+    }
+  }
+
+  return formatted;
+}
+
+
 List<ProfileColor> profileColors = [
   // red
   ProfileColor(

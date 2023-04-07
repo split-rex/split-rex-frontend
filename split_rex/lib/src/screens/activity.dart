@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/header.dart';
+import 'package:split_rex/src/widgets/activity.dart';
 
 
 class Activity extends ConsumerWidget {
@@ -13,7 +14,12 @@ class Activity extends ConsumerWidget {
       ref,
       "Activity", 
       "home",
-      const Text("hoho")
-    );
+      Container(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Column(children: [Expanded(flex: 5, child: activityListWidget(context, ref)),],)
+        
+        ),
+      );
+    
   }
 }

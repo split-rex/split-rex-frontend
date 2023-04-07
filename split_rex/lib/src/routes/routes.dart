@@ -98,18 +98,16 @@ class PageRouting extends ConsumerWidget {
         return const ChooseFriendInGroupSetting();
       // camera
       case "scan_bill":
-        return CameraPage(
-          cameras: ref.watch(cameraProvider).cameras
-        );
+        return CameraPage(cameras: ref.watch(cameraProvider).cameras);
       case "preview_image":
         return PreviewPage(
           picture: ref.watch(cameraProvider).picture,
         );
 
-        // settle payment
+      // settle payment
       case "settle_up":
         return const SettleUp();
-        
+
       case "unsettled_payments":
         return const UnsettledPayments();
 
@@ -119,7 +117,6 @@ class PageRouting extends ConsumerWidget {
 
       case "confirm_payment":
         return const ConfirmPayment();
-
 
       // home
       default:

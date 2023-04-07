@@ -88,12 +88,7 @@ class _SignInFormState extends State<SignInForm> {
             type: "google",
             placeholdertext: "Sign In with Google",
           ),
-          const SizedBox(height: 5),
-          SignInFirebase(
-            key: UniqueKey(),
-            type: "facebook",
-            placeholdertext: "Sign In with Facebook",
-          ),
+          
           const SizedBox(height: 10),
         ]));
   }
@@ -175,11 +170,7 @@ class _SignUpFormState extends State<SignUpForm> {
             placeholdertext: "Sign Up with Google",
             type: "google",
           ),
-          const SizedBox(height: 5),
-          SignInFirebase(
-              key: UniqueKey(),
-              placeholdertext: "Sign Up with Facebook",
-              type: "facebook"),
+          
           const SizedBox(height: 10),
         ]));
   }

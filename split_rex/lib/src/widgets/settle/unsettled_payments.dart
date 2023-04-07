@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/providers/payment.dart';
+import 'package:split_rex/src/providers/routes.dart';
+
+import '../../common/functions.dart';
 
 class UnsettledPaymentsBody extends ConsumerWidget {
   const UnsettledPaymentsBody({super.key});
@@ -23,24 +27,60 @@ class UnsettledPaymentsBody extends ConsumerWidget {
             ),
           ],
         ),
-        child: const UnsettlePaymentDetail(
-          name: "samuel",
-          userId: "aksdjkasjjdskaasd",
-          oweOrLent: 1000,
-        ));
+        child: (ref.watch(paymentProvider).unsettledPayments.isEmpty)
+            ? Container(
+                padding: const EdgeInsets.all(10),
+                child: const Text("You don't have any unsettled payments",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF4F4F4F))),
+              )
+            : ListView.separated(
+                itemCount: ref.watch(paymentProvider).unsettledPayments.length,
+                shrinkWrap: true,
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                itemBuilder: (context, index) {
+                  return UnsettlePaymentDetail(
+                      index: index,
+                      name: ref
+                          .watch(paymentProvider)
+                          .unsettledPayments[index]
+                          .name,
+                      userId: ref
+                          .watch(paymentProvider)
+                          .unsettledPayments[index]
+                          .userId,
+                      color: ref
+                          .watch(paymentProvider)
+                          .unsettledPayments[index]
+                          .color,
+                      oweOrLent: ref
+                          .watch(paymentProvider)
+                          .unsettledPayments[index]
+                          .totalUnpaid);
+                },
+                separatorBuilder: (context, index) => const Divider(
+                      thickness: 1,
+                      indent: 20,
+                      color: Color(0xFFE1F3F2),
+                    )));
   }
 }
 
 class UnsettlePaymentDetail extends ConsumerWidget {
   const UnsettlePaymentDetail(
-      // TODO: GANTI INI OWEORLENT GATAU APA NAMANYAAA
       {super.key,
       required this.name,
       required this.userId,
+      required this.color,
+      required this.index,
       required this.oweOrLent});
 
   final String name;
   final String userId;
+  final int color;
+  final int index;
   final int oweOrLent;
 
   @override
@@ -57,7 +97,11 @@ class UnsettlePaymentDetail extends ConsumerWidget {
           children: [
             Container(
               padding: const EdgeInsets.only(left: 15),
-              child: Initicon(text: name),
+              child: Initicon(
+                text: name,
+                backgroundColor: getProfileBgColor(color),
+                style: TextStyle(color: getProfileTextColor(color)),
+              ),
             ),
             const SizedBox(width: 18),
             Column(
@@ -70,40 +114,48 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                       color: Color(0xFF4F4F4F),
                       fontWeight: FontWeight.w900),
                 ),
-                // TODO: ADA IF ELSENYA BEDA RICHTEXT!!!
-                RichText(
-                  text: TextSpan(
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF4F4F4F),
-                      ),
-                      children: [
-                        const TextSpan(text: "owes "),
-                        const TextSpan(
-                            text: "Rp.",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF6DC7BD))),
-                        TextSpan(
-                          // TODO: GANTI NAMA VAR
-                            text: oweOrLent.toString(),
+                (oweOrLent > 0)
+                    ? RichText(
+                        text: TextSpan(
                             style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF6DC7BD))),
-                        const TextSpan(text: " to "),
-                        const TextSpan(
-                            text: "You",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                            )),
-                      ]),
-                ),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF4F4F4F),
+                            ),
+                            children: [
+                              const TextSpan(text: "You owes "),
+                              TextSpan(
+                                  text: "Rp.${oweOrLent.toString()}",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xffFF0000))),
+                            ]),
+                      )
+                    : RichText(
+                        text: TextSpan(
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF4F4F4F),
+                            ),
+                            children: [
+                              const TextSpan(text: "owes "),
+                              TextSpan(
+                                  text: "Rp.${(-1 * oweOrLent).toString()}",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF6DC7BD))),
+                              const TextSpan(text: " to "),
+                              const TextSpan(
+                                  text: "You",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                  )),
+                            ]),
+                      ),
                 const SizedBox(height: 8),
                 Row(children: [
                   InkWell(
-                    // onTap: () async =>
-                    //     await FriendServices().rejectFriendRequest(ref, userId),
                     child: Container(
                       alignment: Alignment.center,
                       width: 117,
@@ -124,9 +176,12 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                   ),
                   const SizedBox(width: 12),
                   InkWell(
-                    // onTap: () async {
-                    //   await FriendServices().acceptFriendRequest(ref, userId);
-                    // },
+                    onTap: () async {
+                      ref
+                          .watch(paymentProvider)
+                          .changeCurrUnsettledPayment(index);
+                      ref.read(routeProvider).changePage("settle_up");
+                    },
                     child: Container(
                       alignment: Alignment.center,
                       width: 117,

@@ -15,6 +15,7 @@ class GroupListProvider extends ChangeNotifier {
   GroupListModel currGroup = GroupListModel("", "", [], "", "", "", 0, 0);
   bool isOwed = true;
 
+
   void updateHasOwedGroups(bool val) {
     hasOwedGroups = val;
     notifyListeners();
@@ -42,8 +43,21 @@ class GroupListProvider extends ChangeNotifier {
     currGroup = group;
   }
 
-  void changeCurrGroupTransactions(List<Transaction> transactions){
+  void changeCurrGroupTransactions(List<Transaction> transactions) {
     currGroup.transactions = transactions;
+  }
+
+  void changeCurrGroupActivity(List<GroupActivity> groupActivities) {
+    currGroup.groupActivities = groupActivities;
+  }
+
+  void changeCurrGroupById(String groupId) {
+    for (int i = 0; i < groupsLoaded.length; i++) {
+      if (groups[i].groupId == groupId) {
+        currGroup = groups[i];
+        break;
+      }
+    }
   }
 
   void changeCurrGroupDetail(dynamic groupDetail) {
@@ -59,12 +73,35 @@ class GroupListProvider extends ChangeNotifier {
     List<Friend> memberList = <Friend>[];
     for (int i = 0; i < dataMemberList.length; i++) {
       var currMember = dataMemberList[i];
-      memberList.add(Friend(
-        userId: currMember["member_id"],
-        name: currMember["name"],
-        username: currMember["username"],
-        color: currMember["color"],
-      ));
+
+      var friendObj = Friend(
+          userId: currMember["member_id"],
+          name: currMember["name"],
+          username: currMember["username"],
+          color: currMember["color"],
+          email: currMember["email"]);
+      friendObj.paymentInfo = {};
+      friendObj.flattenPaymentInfo = [];
+      var paymentInfo = currMember["payment_info"];
+
+      if (paymentInfo != null) {
+        for (var paymentMethod in paymentInfo.keys) {
+          Map<int, String> listOfAcc = <int, String>{};
+          for (var accountNumber in paymentInfo[paymentMethod].keys) {
+            var accountName = paymentInfo[paymentMethod][accountNumber];
+            listOfAcc[int.parse(accountNumber)] = accountName;
+
+            friendObj.flattenPaymentInfo.add([
+              paymentMethod,
+              accountNumber,
+              accountName,
+            ]);
+          }
+          friendObj.paymentInfo[paymentMethod] = listOfAcc;
+        }
+      }
+
+      memberList.add(friendObj);
     }
     currGroup.members = memberList;
   }
@@ -88,12 +125,34 @@ class GroupListProvider extends ChangeNotifier {
         List<Friend> memberList = <Friend>[];
         for (int i = 0; i < dataMemberList.length; i++) {
           var currMember = dataMemberList[i];
-          memberList.add(Friend(
-            userId: currMember["member_id"],
-            name: currMember["name"],
-            username: currMember["username"],
-            color: currMember["color"],
-          ));
+          var friendObj = Friend(
+              userId: currMember["member_id"],
+              name: currMember["name"],
+              username: currMember["username"],
+              color: currMember["color"],
+              email: currMember["email"]);
+          friendObj.paymentInfo = {};
+          friendObj.flattenPaymentInfo = [];
+          var paymentInfo = currMember["payment_info"];
+
+          if (paymentInfo != null) {
+            for (var paymentMethod in paymentInfo.keys) {
+              Map<int, String> listOfAcc = <int, String>{};
+              for (var accountNumber in paymentInfo[paymentMethod].keys) {
+                var accountName = paymentInfo[paymentMethod][accountNumber];
+                listOfAcc[int.parse(accountNumber)] = accountName;
+
+                friendObj.flattenPaymentInfo.add([
+                  paymentMethod,
+                  accountNumber,
+                  accountName,
+                ]);
+              }
+              friendObj.paymentInfo[paymentMethod] = listOfAcc;
+            }
+          }
+
+          memberList.add(friendObj);
         }
 
         group.members = memberList;
@@ -136,7 +195,38 @@ class GroupListProvider extends ChangeNotifier {
     logger.d(groupsLoaded);
     notifyListeners();
   }
+
+  void searchGroupNameOne(String name) {
+    // int len = groupsLoaded.length;
+    // List<GroupListModel> builder = [];
+    // List<GroupListModel> groupsLoad = groupsLoaded;
+
+    // // print(groupsLoad);
+    // for (int i = 0; i < len; i++) {
+    //   if (groupsLoaded[i].name.toLowerCase().contains(name.toLowerCase())) {
+    //     print("here");
+    //     builder.add(groupsLoaded[i]);
+    //   }
+    // }
+    // // print(groupsLoad[1].name);
+    // groups = builder;
+    // groups = groups;
+    // print(groups);
+    // notifyListeners();
+    int len = groupsLoaded.length;
+
+    // print(groupsLoad);
+    for (int i = 0; i < len; i++) {
+      if (groupsLoaded[i].name.toLowerCase().contains(name.toLowerCase())) {
+        currGroup = groupsLoaded[i];
+      }
+    }
+ 
+    notifyListeners();
+  }
 }
+
+
 
 final groupListProvider = ChangeNotifierProvider((ref) => GroupListProvider());
 

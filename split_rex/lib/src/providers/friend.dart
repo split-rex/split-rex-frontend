@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/common/logger.dart';
 
 import '../model/friends.dart';
 
@@ -37,6 +38,27 @@ class FriendProvider extends ChangeNotifier {
         name: friend["fullname"],
         color: friend["color"],
       );
+
+      friendObj.paymentInfo = {};
+      friendObj.flattenPaymentInfo = [];
+      var paymentInfo = friend["payment_info"];
+
+      if (paymentInfo != null) {
+        for (var paymentMethod in paymentInfo.keys) {
+          Map<int, String> listOfAcc = <int, String>{};
+          for (var accountNumber in paymentInfo[paymentMethod].keys) {
+            var accountName = paymentInfo[paymentMethod][accountNumber];
+            listOfAcc[int.parse(accountNumber)] = accountName;
+
+            friendObj.flattenPaymentInfo.add([
+              paymentMethod,
+              accountNumber,
+              accountName,
+            ]);
+          }
+          friendObj.paymentInfo[paymentMethod] = listOfAcc;
+        }
+      }
 
       friendList.add(friendObj);
       friendSearched.add(friendObj);

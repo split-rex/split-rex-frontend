@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 import 'package:split_rex/src/model/add_expense.dart';
+import 'package:split_rex/src/model/group_model.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 
@@ -41,10 +42,46 @@ class GroupServices {
     if (data["message"] == "SUCCESS") {
       ref.read(groupListProvider).changeCurrGroupDetail(data["data"]);
       await getGroupTransactions(ref);
+      await getGroupActivity(ref);
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
   }
+
+  Future<void> getGroupActivity(WidgetRef ref) async {
+    String groupId = ref.watch(groupListProvider).currGroup.groupId;
+    Response resp = await get(
+      Uri.parse("$endpoint/getGroupActivity?id=$groupId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+    );
+    var data = jsonDecode(resp.body);
+    if (data["message"] == "SUCCESS") {
+      var activities = data["data"];
+      List<GroupActivity> newActivityList = [];
+      try {
+        for (var i = 0; i < activities.length; i++) {
+          var currActivity = activities[i];
+          var tempActivity = GroupActivity(
+            currActivity["activity_id"],
+            currActivity["date"],
+            currActivity["name1"],
+            currActivity["name2"],
+            currActivity["amount"],
+          );
+          newActivityList.add(tempActivity);
+        }
+        ref.watch(groupListProvider).changeCurrGroupActivity(newActivityList);
+      } catch (error) {
+        logger.d(error);
+      }
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
 
   Future<void> getGroupTransactions(WidgetRef ref) async {
     String groupId = ref.watch(groupListProvider).currGroup.groupId;
@@ -82,6 +119,39 @@ class GroupServices {
     }
   }
 
+  Future<void> getGroupTransactionsActivity(WidgetRef ref, String groupId) async {
+    Response resp = await get(
+      Uri.parse("$endpoint/groupTransactions?id=$groupId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+    );
+    var data = jsonDecode(resp.body);
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      var transactions = data["data"];
+      List<Transaction> newTransList = [];
+      try {
+        for (var i = 0; i < transactions.length; i++) {
+          var currTrans = transactions[i];
+          var tempTrans = Transaction();
+          tempTrans.groupId = groupId;
+          tempTrans.transactionId = currTrans["transaction_id"];
+          tempTrans.billOwner = currTrans["bill_owner"];
+          tempTrans.name = currTrans["name"];
+          tempTrans.date = currTrans["date"];
+          newTransList.add(tempTrans);
+        }
+        ref.watch(groupListProvider).changeCurrGroupTransactions(newTransList);
+      } catch (error) {
+        logger.d(error);
+      }
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
   Future<bool> getGroupOwed(String jwtToken) async {
     Response response = await get(
       Uri.parse("$endpoint/userGroupOwed"),
@@ -91,7 +161,7 @@ class GroupServices {
       },
     );
     var data = await json.decode(response.body);
-    logger.d(data["data"]);
+    // logger.d(data["data"]);
     return data["data"]["list_group"].isNotEmpty;
   }
 
@@ -104,10 +174,8 @@ class GroupServices {
       },
     );
     var data = await json.decode(response.body);
-    logger.d(data["data"]);
-    ref
-        .watch(groupListProvider)
-        .updateHasLentGroups(data["data"]["list_group"].isNotEmpty);
+    // logger.d(data["data"]);
+    ref.watch(groupListProvider).updateHasLentGroups(data["data"]["list_group"].isNotEmpty);
   }
 
   Future<void> editGroupInfo(

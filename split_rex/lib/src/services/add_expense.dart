@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/model/add_expense.dart';
+import 'package:split_rex/src/model/friends.dart';
 
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/providers/transaction.dart';
 
 import './group.dart';
 
@@ -162,11 +164,54 @@ class AddExpenseServices {
     var data = jsonDecode(resp.body);
     logger.d(data);
     if (data["message"] == "SUCCESS") {
-      logger.d("SUKSESSSSSSS");
       ref.watch(addExpenseProvider).resetAll();      
       ref.read(routeProvider).changeNavbarIdx(1);
       await GroupServices().getGroupTransactions(ref);
       ref.read(routeProvider).changePage("group_detail");
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+    }
+  }
+
+  Future<void> getTransactionDetail(WidgetRef ref, String transactionId) async {
+    Response resp = await get(Uri.parse("$endpoint/getTransactionDetail?transaction_id=$transactionId"),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+        });
+    var data = jsonDecode(resp.body);
+    logger.d(data);
+    if (data["message"] == "SUCCESS") {
+      var trans = data["data"];
+      var transItem = trans["items"];
+
+      Transaction newTrans = Transaction();
+      newTrans.name = trans["name"];
+      newTrans.groupName = trans["group_name"];
+      newTrans.date = trans["date"];
+      newTrans.subtotal = trans["subtotal"];
+      newTrans.tax = trans["tax"];
+      newTrans.service = trans["service"];
+      newTrans.total = trans["total"];
+
+      for (var i = 0; i < transItem.length; i++) {
+        Items tempItem = Items();
+        tempItem.name = transItem[i]["name"];
+        tempItem.qty = transItem[i]["quantity"];
+        tempItem.price = transItem[i]["price"];
+        tempItem.total = transItem[i]["total_price"];
+        var transConsumer = transItem[i]["consumer"];
+        for (var j = 0; j < transConsumer.length; j++) {
+          Friend tempConsumer = Friend();
+          tempConsumer.userId = transConsumer[j]["user_id"];
+          tempConsumer.name = transConsumer[j]["name"];
+          tempConsumer.color = transConsumer[j]["color"];
+          tempItem.consumerDetails.add(tempConsumer);
+        }
+        newTrans.items.add(tempItem);
+      }
+      ref.read(transactionProvider).changeTrans(newTrans);
+      ref.read(routeProvider).changePage("transaction_detail");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

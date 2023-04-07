@@ -144,7 +144,7 @@ class NextButton extends ConsumerWidget {
         ? dateController.selectedRange?.startDate.toString()
         : dateController.selectedRange?.endDate.toString()
       );
-      ref.watch(routeProvider).changePage("edit_items");
+      ref.read(routeProvider).changePage("edit_items");
     },
     child: Container(
           padding: const EdgeInsets.all(16.0),

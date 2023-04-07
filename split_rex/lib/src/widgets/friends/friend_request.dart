@@ -23,7 +23,7 @@ class FriendRequestSelector extends ConsumerWidget {
               IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
-                  ref.watch(routeProvider).changePage("home");
+                  ref.read(routeProvider).changePage("home");
                 },
                 color: const Color(0xFF4F4F4F),
               ),

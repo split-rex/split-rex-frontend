@@ -116,7 +116,7 @@ class FriendRequest extends ConsumerWidget {
 
               ref.watch(friendProvider).resetAddFriend();
               ref.read(routeProvider).changeNavbarIdx(1);
-              ref.watch(routeProvider).changePage("friend_requests");
+              ref.read(routeProvider).changePage("friend_requests");
             },
             child: const Text("Review",
                 textAlign: TextAlign.end,

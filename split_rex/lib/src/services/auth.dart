@@ -76,7 +76,7 @@ class ApiServices {
       if (data["message"] == "SUCCESS") {
         ref.read(authProvider).resetNewPass();
         await getProfile(ref);
-        ref.watch(routeProvider).changePage("edit_account");
+        ref.read(routeProvider).changePage("edit_account");
       } else {
           ref.read(errorProvider).changeError(data["message"]);
       }

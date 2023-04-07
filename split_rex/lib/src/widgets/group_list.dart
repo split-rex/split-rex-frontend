@@ -163,7 +163,7 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                           style:  TextStyle(
                                             color: 
                                             ref.watch(groupListProvider).groups[index].type == "OWED"
-                                            ? const Color(0XFFF10D0D)
+                                            ? const Color(0xffFF0000)
                                             : const Color(0xFF4F9A99),
                                             fontWeight: FontWeight.w800,
                                           )),

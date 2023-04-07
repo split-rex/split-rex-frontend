@@ -6,7 +6,6 @@ import 'package:http/http.dart';
 import 'package:split_rex/src/providers/activity.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
-import 'package:split_rex/src/providers/group_list.dart';
 
 class ActivityServices {
   String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";

@@ -5,7 +5,6 @@ import 'package:logger/logger.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/widgets/friends/friends.dart';
 import '../../common/functions.dart';
-import '../../model/friends.dart';
 import '../../providers/friend.dart';
 import '../../providers/routes.dart';
 

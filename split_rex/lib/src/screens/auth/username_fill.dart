@@ -1,13 +1,9 @@
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/common/header.dart';
 import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
-import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/auth.dart';
 import 'package:split_rex/src/widgets/auth.dart';
 
@@ -56,7 +52,7 @@ class _UsernameFillState extends State<UsernameFill> {
             ),
           ],
           border: Border.all(
-              color: Color(0xffEEEEEE))),
+              color: const Color(0xffEEEEEE))),
       child:
                 TextField(
 
@@ -96,7 +92,6 @@ class SetUsername extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = FirebaseAuth.instance.currentUser;
-    print(user?.displayName);
     return GestureDetector(
       onTap: () async {
         ref.read(authProvider).changeSignUpData(user?.displayName,

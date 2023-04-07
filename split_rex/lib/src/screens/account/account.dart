@@ -9,7 +9,6 @@ import 'package:split_rex/src/screens/account/bank_names.dart';
 import 'package:split_rex/src/services/auth.dart';
 
 import '../../common/functions.dart';
-import '../../common/logger.dart';
 
 class Account extends ConsumerWidget {
   const Account({super.key});
@@ -165,7 +164,7 @@ class Account extends ConsumerWidget {
                               )
                             ],
                           ),
-                    AddNewPaymentInfoButton()
+                    const AddNewPaymentInfoButton()
                   ],
                 ),
               ),
@@ -226,6 +225,8 @@ class PaymentInfoDetail extends ConsumerWidget {
 }
 
 class AddNewPaymentInfoButton extends ConsumerWidget {
+  const AddNewPaymentInfoButton({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
@@ -428,8 +429,8 @@ class DropDownBankName extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
         width: MediaQuery.of(context).size.width - 250,
-        decoration: BoxDecoration(
-          color: const Color(0xffF6F6F6),
+        decoration: const BoxDecoration(
+          color: Color(0xffF6F6F6),
           // borderRadius: BorderRadius.circular(10),
         ),
         child: Padding(
@@ -527,7 +528,7 @@ class EditPaymentInfoForm extends ConsumerWidget {
             ),
             Expanded(
               child: Container(
-                padding: EdgeInsets.all(5),
+                padding: const EdgeInsets.all(5),
                 width: MediaQuery.of(context).size.width - 250,
                 // decoration: BoxDecoration(
                 //   color: const Color(0xffF6F6F6),
@@ -535,7 +536,7 @@ class EditPaymentInfoForm extends ConsumerWidget {
                 // ),
                 child: Text(
                   curPinfo[0],
-                  style: TextStyle(fontWeight: FontWeight.w100),
+                  style: const TextStyle(fontWeight: FontWeight.w100),
                 ),
               ),
             )

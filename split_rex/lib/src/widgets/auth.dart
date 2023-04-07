@@ -341,7 +341,6 @@ class SubmitBtn extends ConsumerWidget {
             elevation: 0,
           ));
         }
-        EasyLoading.dismiss();
       },
       child: Container(
         alignment: Alignment.center,

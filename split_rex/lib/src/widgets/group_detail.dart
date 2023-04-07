@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path/path.dart';
 import 'package:split_rex/src/common/bubble_member.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/model/group_model.dart';

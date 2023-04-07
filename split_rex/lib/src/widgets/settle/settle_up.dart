@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter/services.dart';
-import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/model/payment.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/payment.dart';

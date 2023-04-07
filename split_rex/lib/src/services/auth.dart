@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/group_list.dart';
@@ -13,7 +14,6 @@ import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/model/user.dart';
 import 'package:split_rex/src/services/group.dart';
 
-import '../common/logger.dart';
 import 'friend.dart';
 
 class ApiServices {
@@ -116,10 +116,11 @@ class ApiServices {
         await FriendServices().userFriendList(ref);
         await FriendServices().friendRequestReceivedList(ref);
         await FriendServices().friendRequestSentList(ref);
+        EasyLoading.dismiss();
         ref.read(routeProvider).changePage("home");
       } else {
+        EasyLoading.dismiss();
         ref.read(errorProvider).changeError(data["message"]);
-        // print(ref.watch(errorProvider).errorType);
       }
     }
   }
@@ -137,17 +138,16 @@ class ApiServices {
       ref.read(authProvider).changeJwtToken(data["data"]);
       ref.read(errorProvider).changeError(data["message"]);
       await getProfile(ref);
+      await GroupServices().userGroupList(ref);
       await FriendServices().userFriendList(ref);
       await FriendServices().friendRequestReceivedList(ref);
       await FriendServices().friendRequestSentList(ref);
-      GroupServices()
-          .getGroupOwed(ref.watch(authProvider).jwtToken)
-          .then((val) async {
-        ref.read(groupListProvider).updateHasOwedGroups(val);
-        await GroupServices().userGroupList(ref);
-        ref.read(routeProvider).changePage("home");
-      });
+      EasyLoading.dismiss();
+      ref.read(routeProvider).changePage("home");
+      AsyncValue<bool> val = ref.refresh(getGroupOwedLent(true));
+      ref.read(groupListProvider).updateHasOwedGroups(val as bool);
     } else {
+      EasyLoading.dismiss();
       ref.read(errorProvider).changeError(data["message"]);
     }
   }
@@ -176,6 +176,7 @@ class ApiServices {
         }));
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
       getProfile(ref);
       ref.read(authProvider).resetPaymentMethod();
@@ -212,6 +213,7 @@ class ApiServices {
       getProfile(ref);
       ref.read(authProvider).resetPaymentMethod();
       ref.read(routeProvider).changePage("account");
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
     } else {
       ref.read(errorProvider).changeError(data["message"]);
@@ -239,6 +241,7 @@ class ApiServices {
     if (data["message"] == "SUCCESS") {
       getProfile(ref);
       ref.read(routeProvider).changePage("account");
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
     } else {
       ref.read(errorProvider).changeError(data["message"]);

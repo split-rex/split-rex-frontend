@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -26,6 +28,9 @@ class _CameraPageState extends ConsumerState<CameraPage> {
   bool _isRearCameraSelected = true;
   bool _isFlashOn = false;
 
+  //Create an instance of ScreenshotController
+  ScreenshotController screenshotController = ScreenshotController();
+
   @override
   void dispose() {
     _cameraController.dispose();
@@ -37,24 +42,6 @@ class _CameraPageState extends ConsumerState<CameraPage> {
     super.initState();
     initCamera(widget.cameras![0]);
     _cameraController.setFlashMode(FlashMode.off);
-  }
-
-  Future takePicture() async {
-    if (!_cameraController.value.isInitialized) {
-      return null;
-    }
-    if (_cameraController.value.isTakingPicture) {
-      return null;
-    }
-    try {
-      XFile picture = await _cameraController.takePicture();
-      ref.read(cameraProvider).setPicture(picture);
-      await ScanBillServices().postBill(ref, File(ref.watch(cameraProvider).picture.path));
-      ref.read(routeProvider).changePage("add_expense");
-    } on CameraException catch (e) {
-      debugPrint('Error occured while taking picture: $e');
-      return null;
-    }
   }
 
   Future initCamera(CameraDescription cameraDescription) async {
@@ -90,7 +77,10 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                 ? 1 / (widthScreen / heightScreen) * camera.aspectRatio 
                 : (widthScreen / heightScreen) * camera.aspectRatio,
               child: Center(
-                child: CameraPreview(_cameraController),
+                child: Screenshot(
+                  controller: screenshotController,
+                  child: CameraPreview(_cameraController), 
+                )
               )
             )
             : Container(
@@ -154,7 +144,29 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                   ),
                   Expanded(
                     child: IconButton(
-                      onPressed: takePicture,
+                      onPressed: () {
+                        _cameraController.pausePreview();
+                        EasyLoading.show(
+                          status: 'Loading...',
+                          maskType: EasyLoadingMaskType.custom
+                        );
+                        screenshotController.capture(
+                          delay: const Duration(milliseconds: 10)
+                        ).then((image) async {
+                          if (image != null) {
+                            String filename = DateTime.now().toIso8601String();
+                            final directory = await getApplicationDocumentsDirectory();
+                            var imagePath = await File('${directory.path}/$filename.png').create();
+                            await imagePath.writeAsBytes(image);
+                            ref.read(cameraProvider).setPicture(imagePath);
+                            await ScanBillServices().postBill(ref, imagePath);
+                            EasyLoading.dismiss();
+                            ref.read(routeProvider).changePage("add_expense");
+                          }
+                        }).catchError((onError) {
+                          print(onError);
+                        });
+                      },
                       iconSize: 50,
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -196,7 +208,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
 class PreviewPage extends ConsumerWidget {
   const PreviewPage({Key? key, required this.picture}) : super(key: key);
 
-  final XFile picture;
+  final File picture;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -207,7 +219,6 @@ class PreviewPage extends ConsumerWidget {
             fit: BoxFit.cover, width: 250
           ),
           const SizedBox(height: 24),
-          Text(picture.name),
           InkWell(
               onTap: () => ref
                 .watch(routeProvider)

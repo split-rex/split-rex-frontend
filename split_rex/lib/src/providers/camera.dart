@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CameraProvider extends ChangeNotifier {
   List<CameraDescription>? cameras;
-  late XFile picture;
+  late File picture;
 
   void setCameras(value) {
     cameras = value;

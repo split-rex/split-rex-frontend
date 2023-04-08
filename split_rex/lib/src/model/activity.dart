@@ -1,5 +1,3 @@
-import 'package:split_rex/src/model/add_expense.dart';
-
 class ActivityModel {
   String activityId;
   String activityType;

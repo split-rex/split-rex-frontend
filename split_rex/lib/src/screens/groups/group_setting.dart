@@ -20,16 +20,22 @@ class GroupSettings extends ConsumerWidget {
         ref,
         "Group Settings",
         "group_detail",
-        Column(
+        Container(
+          child:  Column(
           children: const [
             GroupNameSection(),
             // TODO: bisa add new member ke group
-            // SizedBox(height: 15),
-            // AddGroupMembersSection(),
             SizedBox(height: 15),
-            GroupMembers(),
+            AddGroupMembersSection(),
+            SizedBox(height: 15),
+            Expanded(
+                flex: 5,
+                child: GroupMembers(),
+              ),
           ],
-        ));
+        )
+        ),
+       );
   }
 }
 

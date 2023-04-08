@@ -1,13 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
+import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
+import 'package:split_rex/src/providers/group_settings.dart';
+import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/services/group.dart';
 
 import '../common/functions.dart';
 
-
-Widget searchBar() => Container(
+Widget searchBar(BuildContext context, WidgetRef ref) => Container(
       margin: const EdgeInsets.only(left: 18.0, right: 18.0),
       decoration: BoxDecoration(
         color: const Color(0XFFFFFFFF),
@@ -17,14 +22,72 @@ Widget searchBar() => Container(
       ),
       padding: const EdgeInsets.all(12.0),
       child: Row(
-        children: const [
-          Icon(
+        children: [
+          const Icon(
             Icons.search,
             color: Color(0XFF9A9AB0),
           ),
-          SizedBox(width: 8.0),
-          Text("Search for a friend.....",
-              style: TextStyle(color: Color(0XFF9A9AB0)))
+          const SizedBox(width: 8.0),
+          Flexible(
+            fit: FlexFit.tight,
+            child: TextField(
+              onChanged: (text) {
+                log(text);
+              },
+              decoration: const InputDecoration(
+                suffix: InkWell(
+                  child: Icon(
+                    Icons.filter_alt,
+                    color: Colors.grey,
+                  ),
+                ),
+                hintText: "Search for a friend....",
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8.0),
+        ],
+      ),
+    );
+
+Widget searchBarInSettings(BuildContext context, WidgetRef ref) => Container(
+      margin: const EdgeInsets.only(left: 18.0, right: 18.0),
+      decoration: BoxDecoration(
+        color: const Color(0XFFFFFFFF),
+        border: Border.all(
+            color: const Color.fromARGB(50, 154, 154, 176), width: 1.0),
+        borderRadius: const BorderRadius.all(Radius.circular(14.0)),
+      ),
+      padding: const EdgeInsets.all(12.0),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.search,
+            color: Color(0XFF9A9AB0),
+          ),
+          const SizedBox(width: 8.0),
+          Flexible(
+            fit: FlexFit.tight,
+            child: TextField(
+              onChanged: (text) {
+                ref.read(friendProvider.notifier).searchFriendNotInGroup(text);
+              },
+              decoration: const InputDecoration(
+                suffix: InkWell(
+                  child: Icon(
+                    Icons.filter_alt,
+                    color: Colors.grey,
+                  ),
+                ),
+                hintText: "Search for a friend....",
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8.0),
         ],
       ),
     );
@@ -52,74 +115,69 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
               ),
               child: ListView.separated(
                 padding: EdgeInsets.zero,
-                itemCount: ref.watch(friendProvider).friendList.length,
+                itemCount: ref.watch(friendProvider).friendNotInGroup.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty
-                          ? null
-                          : () {
-                              ref
-                                  .read(addExpenseProvider)
-                                  .changeSelectedFriends(ref.watch(friendProvider).friendList[index]);
-                            },
+                      onTap: () {
+                        ref.read(groupSettingsProvider).changeSelectedFriends(
+                            ref.watch(friendProvider).friendNotInGroup[index]);
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(children: [
                             Initicon(
                               text: ref
-                                    .watch(friendProvider)
-                                    .friendList[index]
-                                    .name,
+                                  .watch(friendProvider)
+                                  .friendNotInGroup[index]
+                                  .name,
                               size: 40,
-                              backgroundColor: getProfileBgColor(
-                                ref
-                                    .watch(friendProvider)
-                                    .friendList[index]
-                                    .color
-                                ),
+                              backgroundColor: getProfileBgColor(ref
+                                  .watch(friendProvider)
+                                  .friendNotInGroup[index]
+                                  .color),
                               style: TextStyle(
-                                color: getProfileTextColor(
-                                  ref
-                                    .watch(friendProvider)
-                                    .friendList[index]
-                                    .color
-                                )
-                              ), 
+                                  color: getProfileTextColor(ref
+                                      .watch(friendProvider)
+                                      .friendNotInGroup[index]
+                                      .color)),
                             ),
                             const SizedBox(width: 16),
                             Text(
                                 ref
                                     .watch(friendProvider)
-                                    .friendList[index]
+                                    .friendNotInGroup[index]
                                     .name,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 16,
-                                  color: 
-                                  ref
-                                          .watch(addExpenseProvider)
-                                          .existingGroup.members.isNotEmpty
-                                      ? const Color.fromARGB(130, 79, 79, 79) :
-                                       const Color(0XFF4F4F4F),
+                                  color: Color(0XFF4F4F4F),
                                 ))
                           ]),
                           Checkbox(
                               value: ref
-                                      .watch(addExpenseProvider)
-                                      .newGroup.memberId
-                                      .contains(ref.watch(friendProvider).friendList[index].userId)
+                                      .watch(groupSettingsProvider)
+                                      .memberId
+                                      .contains(ref
+                                          .watch(friendProvider)
+                                          .friendNotInGroup[index]
+                                          .userId)
                                   ? true
                                   : false,
-                              onChanged:
-                                  ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty
-                                      ? null
-                                      : (bool? value) {
-                                          ref
-                                              .read(addExpenseProvider)
-                                              .changeSelectedFriends(ref.watch(friendProvider).friendList[index]);
-                                        })
+                              onChanged: ref
+                                      .watch(groupSettingsProvider)
+                                      .existingGroup
+                                      .members
+                                      .isNotEmpty
+                                  ? null
+                                  : (bool? value) {
+                                      ref
+                                          .read(groupSettingsProvider)
+                                          .changeSelectedFriends(ref
+                                              .watch(friendProvider)
+                                              .friendNotInGroup[index]);
+                                    })
                         ],
                       ));
                 },
@@ -130,3 +188,143 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
             ))
           ]));
 }
+
+class AddFriendToGroupButton extends ConsumerWidget {
+  const AddFriendToGroupButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GestureDetector(
+        onTap: () async {
+          if (ref.watch(groupSettingsProvider).memberId.isNotEmpty) {
+            // ref.watch(routeProvider).changePage("group_settings");
+            log(ref.watch(groupSettingsProvider).memberId.toString());
+            await GroupServices().addFriendToGroup(ref);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Container(
+                padding: const EdgeInsets.all(16),
+                height: 70,
+                decoration: const BoxDecoration(
+                    color: Color(0xFF388E3C),
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      "Friends added to group",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ));
+          } else {
+            null;
+          }
+        },
+        child: Container(
+            alignment: Alignment.bottomCenter,
+            height: 72,
+            child: Container(
+                decoration: const BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 5.0),
+                      blurRadius: 15,
+                      color: Color.fromARGB(59, 0, 0, 0),
+                    )
+                  ],
+                  color: Colors.white,
+                ),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 12.0, horizontal: 18.0),
+                child: Container(
+                    padding: const EdgeInsets.all(16.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(8.0)),
+                      color:
+                          ref.watch(groupSettingsProvider).memberId.isNotEmpty
+                              ? const Color(0XFF6DC7BD)
+                              : const Color.fromARGB(50, 79, 79, 79),
+                    ),
+                    child: const Text("Add to Group",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700))))));
+  }
+}
+
+// Widget addFriendToGroupButton(WidgetRef ref) => GestureDetector(
+//     onTap: () async {
+//       if (ref.watch(groupSettingsProvider).memberId.isNotEmpty) {
+//         // ref.watch(routeProvider).changePage("group_settings");
+//         log(ref.watch(groupSettingsProvider).memberId.toString());
+//         await GroupServices().addFriendToGroup(ref);
+//         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+//           content: Container(
+//             padding: const EdgeInsets.all(16),
+//             height: 70,
+//             decoration: BoxDecoration(
+//                 color: Color(ref.watch(errorProvider).errorMsg == "Login Failed"
+//                     ? 0xFFF44336
+//                     : 0xFF388E3C),
+//                 borderRadius: const BorderRadius.all(Radius.circular(15))),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   ref.watch(errorProvider).errorMsg == "Login Failed"
+//                       ? "Login failed, email or password are wrong!"
+//                       : "Logged in successfully!",
+//                   style: const TextStyle(
+//                     fontSize: 16,
+//                     color: Colors.white,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//           behavior: SnackBarBehavior.floating,
+//           backgroundColor: Colors.transparent,
+//           elevation: 0,
+//         ));
+//       } else {
+//         null;
+//       }
+//     },
+//     child: Container(
+//         alignment: Alignment.bottomCenter,
+//         height: 72,
+//         child: Container(
+//             decoration: const BoxDecoration(
+//               boxShadow: [
+//                 BoxShadow(
+//                   offset: Offset(0, 5.0),
+//                   blurRadius: 15,
+//                   color: Color.fromARGB(59, 0, 0, 0),
+//                 )
+//               ],
+//               color: Colors.white,
+//             ),
+//             padding:
+//                 const EdgeInsets.symmetric(vertical: 12.0, horizontal: 18.0),
+//             child: Container(
+//                 padding: const EdgeInsets.all(16.0),
+//                 alignment: Alignment.center,
+//                 decoration: BoxDecoration(
+//                   borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+//                   color: ref.watch(groupSettingsProvider).memberId.isNotEmpty
+//                       ? const Color(0XFF6DC7BD)
+//                       : const Color.fromARGB(50, 79, 79, 79),
+//                 ),
+//                 child: const Text("Add to Group",
+//                     style: TextStyle(
+//                         color: Colors.white, fontWeight: FontWeight.w700))))));

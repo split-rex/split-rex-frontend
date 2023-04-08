@@ -1,8 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 import 'package:split_rex/src/common/bubble_member.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/model/group_model.dart';
+import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/services/add_expense.dart';
@@ -51,8 +56,9 @@ class GroupInfo extends ConsumerWidget {
               ),
               const Spacer(),
               InkWell(
-                onTap: () =>
-                    ref.read(routeProvider).changePage("group_settings"),
+                onTap: () {
+                  ref.watch(routeProvider).changePage("group_settings");
+                },
                 child:
                     const Icon(Icons.settings, color: Colors.white, size: 30),
               )
@@ -210,16 +216,23 @@ class GroupDetailHeader extends ConsumerWidget {
 }
 
 class GroupDetailContent extends ConsumerWidget {
+  
   const GroupDetailContent({super.key, required this.group});
 
   final GroupListModel group;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    log(ref
+                                    .watch(groupListProvider)
+                                    .currGroup
+                                    .transactions
+                                     
+.toString());
     return Material(
         type: MaterialType.transparency,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
           decoration: const BoxDecoration(
               gradient: LinearGradient(
             colors: [
@@ -232,64 +245,73 @@ class GroupDetailContent extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  InkWell(
-                      onTap: () async => {
-                            await PaymentServices().getUnsettledPayment(ref),
-                            ref
-                                .watch(routeProvider)
-                                .changePage("unsettled_payments")
-                          },
-                      child: Container(
-                        decoration: const BoxDecoration(
-                            color: Color(0xFFDFF2F0),
+              Container(
+                width: MediaQuery.of(context).size.width - 40.0,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                ),
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: [
+                    Flexible(
+                      flex: 7,
+                      child: InkWell(
+                        onTap: () async {
+                          await PaymentServices().getUnsettledPayment(ref);
+                          ref
+                              .watch(routeProvider)
+                              .changePage("unsettled_payments");
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: const BoxDecoration(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 30),
-                        child: const Text(
-                          "Unsettled Payments",
-                          style: TextStyle(
-                              color: Color(0xFF2E9281),
-                              fontWeight: FontWeight.w100,
-                              fontSize: 12),
-                        ),
-                      )),
-                  const Spacer(),
-                  InkWell(
-                      onTap: () async => {
-                            await PaymentServices().getUnconfirmedPayment(ref),
-                            ref
-                                .watch(routeProvider)
-                                .changePage("confirm_payment")
-                          },
-                      child: Container(
-                        decoration: const BoxDecoration(
+                                BorderRadius.all(Radius.circular(10.0)),
                             color: Color(0xFFDFF2F0),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 30),
-                        child: const Text(
-                          "Confirm Payments",
-                          style: TextStyle(
-                              color: Color(0xFF2E9281),
-                              fontWeight: FontWeight.w100,
-                              fontSize: 12),
+                          ),
+                          child: const Text(
+                            "Unsettled Payments",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF4F9A99),
+                              fontSize: 11,
+                            ),
+                          ),
                         ),
-                      )),
-                ],
-              ),
-              // TODO: add lines
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                "February 2023",
-                style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ),
+                    const Spacer(),
+                    Flexible(
+                      flex: 7,
+                      child: InkWell(
+                       onTap: () async {
+                          await PaymentServices().getUnconfirmedPayment(ref);
+                          ref
+                              .watch(routeProvider)
+                              .changePage("confirm_payment");
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: const BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            color: Color(0xFFDFF2F0),
+                          ),
+                          child: const Text(
+                            "Confirmed Payments",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF4F9A99),
+                              fontSize: 11,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Expanded(
                   child: ListView.builder(
@@ -297,11 +319,13 @@ class GroupDetailContent extends ConsumerWidget {
                       itemCount: ref
                           .watch(groupListProvider)
                           .currGroup
-                          .transactions
+                          .groupActivities
                           .length,
                       itemBuilder: (BuildContext context, int index) {
                         return TransactionItem(
-                            key: UniqueKey(), listIdx: index);
+                            key: UniqueKey(),
+                            listIdx: 
+                                index);
                       })),
             ],
           ),
@@ -309,8 +333,27 @@ class GroupDetailContent extends ConsumerWidget {
   }
 }
 
+class MonthSeparator extends StatelessWidget {
+  final String month;
+
+  const MonthSeparator({required this.month});
+
+  @override
+  Widget build(BuildContext context) {
+    var currmonth = getFullMonthName(month);
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      child: Text(
+        "$currmonth 2023",
+        style: Theme.of(context).textTheme.headlineSmall,
+      ),
+    );
+  }
+}
+
 class TransactionItem extends ConsumerStatefulWidget {
   final int listIdx;
+
   const TransactionItem({super.key, required this.listIdx});
 
   @override
@@ -320,91 +363,127 @@ class TransactionItem extends ConsumerStatefulWidget {
 class TransactionItemState extends ConsumerState<TransactionItem> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTap: () async {
-          await AddExpenseServices().getTransactionDetail(
-              ref,
-              ref
-                  .watch(groupListProvider)
-                  .currGroup
-                  .transactions[widget.listIdx]
-                  .transactionId);
-          ref.read(routeProvider).changePage("transaction_detail");
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            children: [
-              const SizedBox(
-                width: 10,
+    var activity =
+        ref.watch(groupListProvider).currGroup.groupActivities[widget.listIdx];
+    var currentMonth = extractMonth(activity.date);
+    log(widget.listIdx.toString());
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.listIdx ==
+                0 ||
+            currentMonth !=
+                extractMonth(ref
+                    .watch(groupListProvider)
+                    .currGroup
+                    .groupActivities[widget.listIdx - 1]
+                    .date))
+          MonthSeparator(month: currentMonth),
+        InkWell(
+            onTap: () async {
+              // await AddExpenseServices()
+              //     .getTransactionDetail(ref, activity.activityId);
+              // ref.read(routeProvider).changePage("transaction_detail");
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  Text(
-                    "Feb",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Color(0XFF9A9AB0),
-                      fontSize: 20,
-                    ),
-                  ),
-                  Text(
-                    "12",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      color: Color(0XFF9A9AB0),
-                      fontSize: 28,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xffcff2ff),
-                  ),
-                  height: 35,
-                  width: 35,
-                  child: const Initicon(
-                    text: "Muhammad Ali",
-                    size: 16.0,
-                  )),
-              const SizedBox(
-                width: 20,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  Text(
-                    ref
-                        .watch(groupListProvider)
-                        .currGroup
-                        .transactions[widget.listIdx]
-                        .name,
-                    style: const TextStyle(
-                      color: Color(0XFF9A9AB0),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  const SizedBox(
+                    width: 10,
                   ),
-                  Text(
-                    "Rp${ref.watch(groupListProvider).currGroup.transactions[widget.listIdx].total}",
-                    style: const TextStyle(
-                      color: Color(0XFF9A9AB0),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        extractMonth(activity.date),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Color(0XFF9A9AB0),
+                          fontSize: 20,
+                        ),
+                      ),
+                      Text(
+                        extractDate(activity.date),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w800,
+                          color: Color(0XFF9A9AB0),
+                          fontSize: 28,
+                        ),
+                      ),
+                    ],
                   ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xffcff2ff),
+                      ),
+                      height: 35,
+                      width: 35,
+                      child: const Initicon(
+                        text: "",
+                        size: 16.0,
+                      )),
+                  const SizedBox(
+                    width: 20,
+                  ), 
+                  Expanded(
+                      child: Container(
+                      
+                      child: RichText(
+                        softWrap: true,
+                        text: TextSpan(
+                            style: const TextStyle(
+                                fontSize: 12,
+                                color: Color(0XFF9A9AB0),
+                                fontWeight: FontWeight.w400),
+                            children: [
+                              TextSpan(
+                                text: activity.name1,
+                                style: const TextStyle(
+                                  color: Color(0XFF9A9AB0),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const TextSpan(
+                                text: " paid ",
+                                style: TextStyle(
+                                  color: Color(0XFF9A9AB0),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              TextSpan(
+                                text: activity.name1,
+                                style: const TextStyle(
+                                  color: Color(0XFF9A9AB0),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextSpan(
+                                text:
+                                    " Rp.${formatNumber(activity.amount)}",
+                                style: const TextStyle(
+                                  color: Color(0XFF9A9AB0),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              
+                            ]),
+                      ),
+                    ))
+
+
+                
                 ],
-              )
-            ],
-          ),
-        ));
+              ),
+            ))
+      ],
+    );
   }
 }

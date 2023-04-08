@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/logger.dart';
@@ -9,6 +11,9 @@ class FriendProvider extends ChangeNotifier {
   List<Friend> friendReceivedList = <Friend>[];
   List<Friend> friendSentList = <Friend>[];
   List<Friend> friendSearched = <Friend>[];
+  List<Friend> friendNotInGroup = <Friend>[];
+  List<Friend> friendNotInGroupLoaded = <Friend>[];
+  List<Friend> friendInGroup = <Friend>[];
   Friend addFriend = Friend(name: "");
   bool isReceived = true;
 
@@ -129,6 +134,68 @@ class FriendProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  searchFriendNameFromList(String name, List<Friend> friendtosearch) {
+    int len = friendtosearch.length;
+    friendSearched.clear();
+
+    for (int i = 0; i < len; i++) {
+      if (friendtosearch[i].name.toLowerCase().contains(name.toLowerCase())) {
+        friendSearched.add(friendList[i]);
+      }
+    }
+
+    notifyListeners();
+  }
+
+  getFriendNotInGroup(List<dynamic> groupMembers) {
+    friendNotInGroup.clear();
+    friendNotInGroupLoaded.clear();
+    List<String> memberId = <String>[];
+
+    for (var member in groupMembers) {
+      memberId.add(member.userId);
+    }
+
+    for (var friend in friendList) {
+      if (!memberId.contains(friend.userId)) {
+        friendNotInGroup.add(friend);
+        friendNotInGroupLoaded.add(friend);
+      }
+    }
+
+    notifyListeners();
+  }
+
+  searchFriendNotInGroup(String name) {
+    // log(name);
+    int len = friendNotInGroupLoaded.length;
+    friendNotInGroup.clear();
+
+    for (int i = 0; i < len; i++) {
+      log(friendNotInGroupLoaded[i].name.toLowerCase());
+      if (friendNotInGroupLoaded[i]
+          .name
+          .toLowerCase()
+          .contains(name.toLowerCase())) {
+        friendNotInGroup.add(friendNotInGroupLoaded[i]);
+      }
+    }
+
+    notifyListeners();
+  }
+
+  // getFriendInGroup(List<Friend> groupMembers) {
+  //   friendInGroup.clear();
+
+  //   for (var friend in friendList) {
+  //     if (!groupMembers.contains(friend)) {
+  //       friendNotInGroup.add(friend);
+  //     }
+  //   }
+
+  //   notifyListeners();
+  // }
 
   Friend getFriend(memberId) {
     return friendList.firstWhere((friend) => friend.userId == memberId);

@@ -15,6 +15,7 @@ class GroupListProvider extends ChangeNotifier {
   GroupListModel currGroup = GroupListModel("", "", [], "", "", "", 0, 0);
   bool isOwed = true;
 
+
   void updateHasOwedGroups(bool val) {
     hasOwedGroups = val;
     notifyListeners();
@@ -44,6 +45,10 @@ class GroupListProvider extends ChangeNotifier {
 
   void changeCurrGroupTransactions(List<Transaction> transactions) {
     currGroup.transactions = transactions;
+  }
+
+  void changeCurrGroupActivity(List<GroupActivity> groupActivities) {
+    currGroup.groupActivities = groupActivities;
   }
 
   void changeCurrGroupById(String groupId) {

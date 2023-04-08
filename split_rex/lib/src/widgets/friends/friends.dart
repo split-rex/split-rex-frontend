@@ -161,31 +161,36 @@ class FriendsSection extends ConsumerWidget {
                     fontSize: 12,
                   ),
                 ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ListView.separated(
-                itemCount: ref.watch(friendProvider).friendList.length,
-                padding: const EdgeInsets.only(top: 12),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return FriendList(
-                    index: index,
-                  );
-                },
-                separatorBuilder: (context, index) => const Divider(
-                  thickness: 1,
-                  indent: 20,
-                  color: Color(0xFFE1F3F2),
-                ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: ref.watch(friendProvider).friendList.length,
+                    itemBuilder: (context, index) {
+                      return FriendList(
+                        index: index,
+                      );
+                    },
+                    separatorBuilder: (context, index) => const Divider(
+                      thickness: 1,
+                      indent: 20,
+                      color: Color(0xFFE1F3F2),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          )
+            ),
+          ),
         ],
       ),
     );
   }
 }
+
 
 class FriendList extends ConsumerWidget {
   const FriendList({super.key, required this.index});

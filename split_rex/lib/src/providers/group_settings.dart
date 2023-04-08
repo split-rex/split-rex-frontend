@@ -156,6 +156,11 @@ class GroupSettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  clearMember(){
+    memberId = [];
+    notifyListeners();
+  }
+
   
 }
 

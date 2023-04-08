@@ -5,6 +5,7 @@ import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:split_rex/src/providers/group_list.dart';
+import 'package:split_rex/src/providers/group_settings.dart';
 import 'package:split_rex/src/widgets/friends/friends.dart';
 import '../../common/functions.dart';
 import '../../model/friends.dart';
@@ -93,7 +94,8 @@ class AddGroupMembersSection extends ConsumerWidget {
       onTap: () {
         ref.watch(friendProvider).resetAddFriend();
         ref.watch(friendProvider).getFriendNotInGroup(
-                      ref.watch(groupListProvider).currGroup.members);
+            ref.watch(groupListProvider).currGroup.members);
+        ref.watch(groupSettingsProvider).clearMember();
         ref.watch(routeProvider).changePage("choose_friend_group_settings");
       },
       child: Container(
@@ -131,12 +133,10 @@ class AddGroupMembersSection extends ConsumerWidget {
 }
 
 class GroupMembers extends ConsumerWidget {
-  
   const GroupMembers({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-   
     return Container(
       width: MediaQuery.of(context).size.width - 40.0,
       padding: const EdgeInsets.only(top: 25, bottom: 10, left: 20, right: 30),
@@ -163,25 +163,31 @@ class GroupMembers extends ConsumerWidget {
                     fontSize: 12,
                   ),
                 ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ListView.separated(
-                itemCount:
-                    ref.watch(groupListProvider).currGroup.members.length,
-                padding: const EdgeInsets.only(top: 12),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return GroupList(index: index);
-                },
-                separatorBuilder: (context, index) => const Divider(
-                  thickness: 1,
-                  indent: 20,
-                  color: Color(0xFFE1F3F2),
-                ),
-              ),
-            ],
-          )
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount:
+                        ref.watch(groupListProvider).currGroup.members.length,
+                    padding: const EdgeInsets.only(top: 12),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return GroupList(index: index);
+                    },
+                    separatorBuilder: (context, index) => const Divider(
+                      thickness: 1,
+                      indent: 20,
+                      color: Color(0xFFE1F3F2),
+                    ),
+                  ),
+                ],
+              )
+            )
+          ),
+          
         ],
       ),
     );

@@ -42,7 +42,7 @@ class ChooseFriendInGroupSetting extends ConsumerWidget {
             children: [
               searchBarInSettings(context, ref),
               Expanded(flex: 7, child: addFriendToGroup(context, ref)),
-              addFriendToGroupButton(ref),
+              const AddFriendToGroupButton(),
             ],
           ),
         ));

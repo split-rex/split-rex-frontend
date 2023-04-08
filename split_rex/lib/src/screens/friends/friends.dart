@@ -14,7 +14,8 @@ class Friends extends ConsumerWidget {
         ref,
         "Friends",
         "group_list",
-        SingleChildScrollView(
+        Container(
+          padding: const EdgeInsets.only(top: 8.0),
           child:Column(
             children: const [
               SizedBox(height: 15),
@@ -23,7 +24,11 @@ class Friends extends ConsumerWidget {
               FriendRequestSection(),
               SizedBox(height: 15),
               // TODO: sort for friends
-              FriendsSection()
+              // FriendsSection(),
+              Expanded(
+                flex: 7,
+                child: FriendsSection(),
+              )
             ],
           )
         )

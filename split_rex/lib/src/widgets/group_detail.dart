@@ -382,9 +382,9 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
           MonthSeparator(month: currentMonth),
         InkWell(
             onTap: () async {
-              await AddExpenseServices()
-                  .getTransactionDetail(ref, activity.activityId);
-              ref.read(routeProvider).changePage("transaction_detail");
+              // await AddExpenseServices()
+              //     .getTransactionDetail(ref, activity.activityId);
+              // ref.read(routeProvider).changePage("transaction_detail");
             },
             child: Container(
               decoration: BoxDecoration(
@@ -467,7 +467,7 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
                               ),
                               TextSpan(
                                 text:
-                                    "Rp.${formatNumber(activity.amount)}",
+                                    " Rp.${formatNumber(activity.amount)}",
                                 style: const TextStyle(
                                   color: Color(0XFF9A9AB0),
                                   fontWeight: FontWeight.bold,

@@ -32,7 +32,7 @@ Widget searchBar(BuildContext context, WidgetRef ref) => Container(
             fit: FlexFit.tight,
             child: TextField(
               onChanged: (text) {
-                log(text);
+                ref.read(friendProvider.notifier).searchFriendName(text);
               },
               decoration: const InputDecoration(
                 suffix: InkWell(

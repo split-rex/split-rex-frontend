@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/widgets/choose_friend.dart';
 
 import '../../common/header.dart';
 import '../../widgets/friends/friends.dart';
@@ -17,15 +18,17 @@ class Friends extends ConsumerWidget {
         Container(
           padding: const EdgeInsets.only(top: 8.0),
           child:Column(
-            children: const [
-              SizedBox(height: 15),
-              AddFriendsSection(),
-              SizedBox(height: 15),
-              FriendRequestSection(),
-              SizedBox(height: 15),
+            children: [
+              const SizedBox(height: 15),
+              const AddFriendsSection(),
+              const SizedBox(height: 15),
+              const FriendRequestSection(),
+              const SizedBox(height: 15),
+              searchBar(context, ref),
+              const SizedBox(height: 15),
               // TODO: sort for friends
               // FriendsSection(),
-              Expanded(
+              const Expanded(
                 flex: 7,
                 child: FriendsSection(),
               )

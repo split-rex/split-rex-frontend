@@ -169,7 +169,7 @@ class FriendsSection extends ConsumerWidget {
                   ListView.separated(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: ref.watch(friendProvider).friendList.length,
+                    itemCount: ref.watch(friendProvider).friendSearched.length,
                     itemBuilder: (context, index) {
                       return FriendList(
                         index: index,
@@ -199,7 +199,7 @@ class FriendList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var user = ref.watch(friendProvider).friendList[index];
+    var user = ref.watch(friendProvider).friendSearched[index];
 
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 8),

@@ -14,6 +14,7 @@ import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/model/user.dart';
 import 'package:split_rex/src/services/group.dart';
 
+import '../common/logger.dart';
 import 'friend.dart';
 
 class ApiServices {
@@ -176,11 +177,7 @@ class ApiServices {
         }));
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-      // ignore: use_build_context_synchronously
-      Navigator.of(context).pop();
-      getProfile(ref);
-      ref.read(authProvider).resetPaymentMethod();
-      ref.read(routeProvider).changePage("account");
+      await getProfile(ref);
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
@@ -189,7 +186,6 @@ class ApiServices {
   Future<void> editPaymentInfo(
       WidgetRef ref,
       BuildContext context,
-      String paymentMethod,
       int accountNumber,
       String accountName,
       int index) async {
@@ -204,17 +200,13 @@ class ApiServices {
           "old_payment_method": curPinfo[0],
           "old_account_number": int.parse(curPinfo[1]),
           "old_account_name": curPinfo[2],
-          "new_payment_method": paymentMethod,
+          "new_payment_method": curPinfo[0],
           "new_account_number": accountNumber,
           "new_account_name": accountName,
         }));
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-      getProfile(ref);
-      ref.read(authProvider).resetPaymentMethod();
-      ref.read(routeProvider).changePage("account");
-      // ignore: use_build_context_synchronously
-      Navigator.of(context).pop();
+      await getProfile(ref);
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

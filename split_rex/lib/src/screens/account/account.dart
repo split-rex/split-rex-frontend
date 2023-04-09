@@ -398,11 +398,16 @@ class AddPaymentInfoButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
         onTap: () async => {
-              await ApiServices().addPaymentInfo(
+              ApiServices().addPaymentInfo(
                   ref,
                   context,
                   accountNameController.text,
-                  int.parse(accountNumberController.text))
+                  int.parse(accountNumberController.text)).then((value) {
+                    ref.read(authProvider).resetPaymentMethod();
+                    ref.read(routeProvider).changePage("account");
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context).pop();
+                  })
             },
         child: Container(
             padding: const EdgeInsets.all(16.0),
@@ -618,13 +623,17 @@ class EditPaymentInfoButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
         onTap: () async => {
-              await ApiServices().editPaymentInfo(
+              ApiServices().editPaymentInfo(
                   ref,
                   context,
-                  ref.watch(authProvider).newPaymentMethodData,
                   int.parse(accountNumberController.text),
                   accountNameController.text,
-                  index)
+                  index).then((value) {
+                    ref.read(authProvider).resetPaymentMethod();
+                    ref.read(routeProvider).changePage("account");
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context).pop();
+                  })
             },
         child: Container(
             padding: const EdgeInsets.all(16.0),

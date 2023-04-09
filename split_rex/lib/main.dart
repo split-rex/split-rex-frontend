@@ -36,7 +36,8 @@ class MyApp extends ConsumerWidget {
           ref.watch(routeProvider).currentPage == "change_password" ||
           ref.watch(routeProvider).currentPage == "edit_account" ||
           ref.watch(routeProvider).currentPage == "new_group" ||
-          ref.watch(routeProvider).currentPage == "edit_items"
+          ref.watch(routeProvider).currentPage == "edit_items" ||
+          ref.watch(routeProvider).currentPage == "settle_up"
           ? true 
           : false,
         bottomNavigationBar: 

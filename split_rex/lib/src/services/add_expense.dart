@@ -48,27 +48,16 @@ class AddExpenseServices {
     newBill.billOwner = ref.watch(authProvider).userData.userId;
     newBill.groupId = ref.watch(groupListProvider).currGroup.groupId;
     newBill.items = ref.watch(addExpenseProvider).items;
-    // print("YOYOMA");
-    // print(newBill.billOwner);
-    // print(newBill.date);
-    // print(newBill.desc);
-    // print(newBill.groupId);
-    // print(newBill.items);
-    // print(newBill.name);
-    // print(newBill.service);
-    // print(newBill.subtotal);
-    // print(newBill.tax);
-    // print(newBill.total);
-    // print("YOYOMA");
 
-    var itemsObj = {};
+    var itemsObj = [];
 
     for (Items item in newBill.items) {
-      itemsObj[item.name] = {
+      itemsObj.add({
+        "name": item.name,
         "quantity": item.qty,
         "price": item.price,
-        "consumere": item.consumer
-      };
+        "consumer": item.consumer
+      });
     }
 
     Response resp = await post(Uri.parse("$endpoint/userCreateTransaction"),
@@ -86,6 +75,7 @@ class AddExpenseServices {
           "service": newBill.service,
           "total": newBill.total,
           "bill_owner": newBill.billOwner,
+          "items": itemsObj
         }));
     var data = jsonDecode(resp.body);
     logger.d(data);

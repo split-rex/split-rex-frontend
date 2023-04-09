@@ -17,7 +17,8 @@ class SettleUpBody extends ConsumerWidget {
     UnsettledPayment curr = ref.watch(paymentProvider).currUnsettledPayment;
     TextEditingController amountController = TextEditingController();
 
-    return Column(
+    return SingleChildScrollView(
+      child: Column(
       children: [
         const SizedBox(
           height: 30,
@@ -96,6 +97,7 @@ class SettleUpBody extends ConsumerWidget {
         SizedBox(
           width: MediaQuery.of(context).size.width - 200,
           child: TextField(
+            key: UniqueKey(),
             // style: TextStyle(fontSize: 16),
             controller: amountController,
             keyboardType: TextInputType.number,
@@ -156,7 +158,7 @@ class SettleUpBody extends ConsumerWidget {
         const SizedBox(height: 20),
         SettleUpButton(amountController: amountController),
       ],
-    );
+    ));
   }
 }
 

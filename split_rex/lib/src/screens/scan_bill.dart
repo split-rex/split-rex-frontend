@@ -159,9 +159,10 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                             var imagePath = await File('${directory.path}/$filename.png').create();
                             await imagePath.writeAsBytes(image);
                             ref.read(cameraProvider).setPicture(imagePath);
-                            await ScanBillServices().postBill(ref, imagePath);
-                            EasyLoading.dismiss();
-                            ref.read(routeProvider).changePage("add_expense");
+                            ScanBillServices().postBill(ref, imagePath).then((value) {
+                              EasyLoading.dismiss();
+                              ref.read(routeProvider).changePage("add_expense");
+                            });
                           }
                         }).catchError((onError) {
                           print(onError);

@@ -332,7 +332,11 @@ class GroupDetailContent extends ConsumerWidget {
                         return TransactionItem(
                             key: UniqueKey(),
                             listIdx: 
-                                index);
+                                ref
+                          .watch(groupListProvider)
+                          .currGroup
+                          .transactions
+                          .length-1-index);
                       })),
             ],
           ),
@@ -379,12 +383,16 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.listIdx ==
-                0 ||
+                ref
+                          .watch(groupListProvider)
+                          .currGroup
+                          .transactions
+                          .length-1 ||
             currentMonth !=
                 extractMonth(ref
                     .watch(groupListProvider)
                     .currGroup
-                    .groupActivities[widget.listIdx - 1]
+                    .transactions[widget.listIdx + 1]
                     .date))
           MonthSeparator(month: currentMonth),
         InkWell(

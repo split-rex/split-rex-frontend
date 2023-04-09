@@ -316,11 +316,18 @@ class GroupDetailContent extends ConsumerWidget {
               Expanded(
                   child: ListView.builder(
                       padding: EdgeInsets.zero,
-                      itemCount: ref
+                      itemCount: 
+                      // ref
+                      //     .watch(groupListProvider)
+                      //     .currGroup
+                      //     .groupActivities
+                      //     .length,
+                       ref
                           .watch(groupListProvider)
                           .currGroup
-                          .groupActivities
-                          .length,
+                          .transactions
+                          .length,  
+
                       itemBuilder: (BuildContext context, int index) {
                         return TransactionItem(
                             key: UniqueKey(),
@@ -364,7 +371,7 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
   @override
   Widget build(BuildContext context) {
     var activity =
-        ref.watch(groupListProvider).currGroup.groupActivities[widget.listIdx];
+        ref.watch(groupListProvider).currGroup.transactions[widget.listIdx];
     var currentMonth = extractMonth(activity.date);
     log(widget.listIdx.toString());
 
@@ -382,9 +389,9 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
           MonthSeparator(month: currentMonth),
         InkWell(
             onTap: () async {
-              // await AddExpenseServices()
-              //     .getTransactionDetail(ref, activity.activityId);
-              // ref.read(routeProvider).changePage("transaction_detail");
+              await AddExpenseServices()
+                  .getTransactionDetail(ref, activity.transactionId);
+              ref.read(routeProvider).changePage("transaction_detail");
             },
             child: Container(
               decoration: BoxDecoration(
@@ -444,35 +451,42 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
                                 color: Color(0XFF9A9AB0),
                                 fontWeight: FontWeight.w400),
                             children: [
-                              TextSpan(
-                                text: activity.name1,
-                                style: const TextStyle(
-                                  color: Color(0XFF9A9AB0),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              // TextSpan(
+                              //   text: activity.name1,
+                              //   style: const TextStyle(
+                              //     color: Color(0XFF9A9AB0),
+                              //     fontWeight: FontWeight.bold,
+                              //   ),
+                              // ),
                               const TextSpan(
-                                text: " paid ",
+                                text: "Added new transaction ",
                                 style: TextStyle(
                                   color: Color(0XFF9A9AB0),
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
                               TextSpan(
-                                text: activity.name1,
+                                text: activity.name,
                                 style: const TextStyle(
                                   color: Color(0XFF9A9AB0),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              TextSpan(
-                                text:
-                                    " Rp.${formatNumber(activity.amount)}",
-                                style: const TextStyle(
-                                  color: Color(0XFF9A9AB0),
+                              const TextSpan(
+                                text: "\nView details ",
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
+                                  color: Color(0xFF4F9A99)
                                 ),
                               ),
+                              // TextSpan(
+                              //   text:
+                              //       " Rp.${formatNumber(activity.amount)}",
+                              //   style: const TextStyle(
+                              //     color: Color(0XFF9A9AB0),
+                              //     fontWeight: FontWeight.bold,
+                              //   ),
+                              // ),
                               
                             ]),
                       ),

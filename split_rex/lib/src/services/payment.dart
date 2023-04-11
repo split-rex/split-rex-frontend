@@ -46,7 +46,8 @@ class PaymentServices {
   }
 
   Future<void> getUnconfirmedPayment(WidgetRef ref) async {
-    Response resp = await get(Uri.parse("$endpoint/getUnconfirmedPayment"),
+    String groupId = ref.watch(groupListProvider).currGroup.groupId;
+    Response resp = await get(Uri.parse("$endpoint/getUnconfirmedPayment?group_id=$groupId"),
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'

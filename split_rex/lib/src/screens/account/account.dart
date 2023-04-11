@@ -253,36 +253,37 @@ addNewPaymentInfoDialog(context, ref) {
   showDialog(
     context: context,
     builder: (BuildContext context) => Dialog(
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0))),
-      child: Container(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(children: [
-              const Text("Add Payment Info",
-                  style: TextStyle(
-                      color: Color(0xff2E9281),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold)),
-              const Spacer(),
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Icon(
-                  Icons.close,
-                  color: Color(0xFF15808D),
-                ),
-              )
-            ]),
-            const AddPaymentInfoForm()
-          ],
-        ),
-      ),
-    ),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        child: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(children: [
+                  const Text("Add Payment Info",
+                      style: TextStyle(
+                          color: Color(0xff2E9281),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold)),
+                  const Spacer(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Icon(
+                      Icons.close,
+                      color: Color(0xFF15808D),
+                    ),
+                  )
+                ]),
+                const AddPaymentInfoForm()
+              ],
+            ),
+          ),
+        )),
   );
 }
 
@@ -398,16 +399,15 @@ class AddPaymentInfoButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
         onTap: () async => {
-              ApiServices().addPaymentInfo(
-                  ref,
-                  context,
-                  accountNameController.text,
-                  int.parse(accountNumberController.text)).then((value) {
-                    ref.read(authProvider).resetPaymentMethod();
-                    ref.read(routeProvider).changePage("account");
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context).pop();
-                  })
+              ApiServices()
+                  .addPaymentInfo(ref, context, accountNameController.text,
+                      int.parse(accountNumberController.text))
+                  .then((value) {
+                ref.read(authProvider).resetPaymentMethod();
+                ref.read(routeProvider).changePage("account");
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pop();
+              })
             },
         child: Container(
             padding: const EdgeInsets.all(16.0),
@@ -473,36 +473,38 @@ editPaymentInfoDialog(BuildContext context, WidgetRef ref, int index) {
   showDialog(
     context: context,
     builder: (BuildContext context) => Dialog(
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0))),
-      child: Container(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(children: [
-              const Text("Edit Payment Info",
-                  style: TextStyle(
-                      color: Color(0xff2E9281),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold)),
-              const Spacer(),
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Icon(
-                  Icons.close,
-                  color: Color(0xFF15808D),
-                ),
-              )
-            ]),
-            EditPaymentInfoForm(index)
-          ],
-        ),
-      ),
-    ),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        child: SingleChildScrollView(
+          child: Container(
+            height: 350,
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(children: [
+                  const Text("Edit Payment Info",
+                      style: TextStyle(
+                          color: Color(0xff2E9281),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold)),
+                  const Spacer(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Icon(
+                      Icons.close,
+                      color: Color(0xFF15808D),
+                    ),
+                  )
+                ]),
+                EditPaymentInfoForm(index)
+              ],
+            ),
+          ),
+        )),
   );
 }
 
@@ -623,17 +625,19 @@ class EditPaymentInfoButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
         onTap: () async => {
-              ApiServices().editPaymentInfo(
-                  ref,
-                  context,
-                  int.parse(accountNumberController.text),
-                  accountNameController.text,
-                  index).then((value) {
-                    ref.read(authProvider).resetPaymentMethod();
-                    ref.read(routeProvider).changePage("account");
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context).pop();
-                  })
+              ApiServices()
+                  .editPaymentInfo(
+                      ref,
+                      context,
+                      int.parse(accountNumberController.text),
+                      accountNameController.text,
+                      index)
+                  .then((value) {
+                ref.read(authProvider).resetPaymentMethod();
+                ref.read(routeProvider).changePage("account");
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pop();
+              })
             },
         child: Container(
             padding: const EdgeInsets.all(16.0),

@@ -17,148 +17,155 @@ class SettleUpBody extends ConsumerWidget {
     UnsettledPayment curr = ref.watch(paymentProvider).currUnsettledPayment;
     TextEditingController amountController = TextEditingController();
 
-    return SingleChildScrollView(
-      child: Column(
-      children: [
-        const SizedBox(
-          height: 30,
-        ),
-        const Text(
-          "Amount to settle with",
-          style: TextStyle(fontSize: 16),
-        ),
-        Text(
-          curr.name,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        (curr.totalUnpaid > 0)
-            ? SizedBox(
-                width: MediaQuery.of(context).size.width - 180,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Initicon(
-                      text: ref.watch(authProvider).userData.name,
-                      size: 79,
-                      backgroundColor: getProfileBgColor(
-                          ref.watch(authProvider).userData.color),
-                      style: TextStyle(
-                          color: getProfileTextColor(
-                              ref.watch(authProvider).userData.color)),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward,
-                      color: Color(0xFFC0C6C5),
-                      size: 50,
-                    ),
-                    Initicon(
-                      text: curr.name,
-                      size: 79,
-                      backgroundColor: getProfileBgColor(curr.color),
-                      style: TextStyle(color: getProfileTextColor(curr.color)),
-                    ),
-                  ],
-                ),
-              )
-            : SizedBox(
-                width: MediaQuery.of(context).size.width - 180,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Initicon(
-                      text: ref.watch(authProvider).userData.name,
-                      size: 79,
-                      backgroundColor: getProfileBgColor(
-                          ref.watch(authProvider).userData.color),
-                      style: TextStyle(
-                          color: getProfileTextColor(
-                              ref.watch(authProvider).userData.color)),
-                    ),
-                    const Icon(
-                      Icons.arrow_back,
-                      color: Color(0xFFC0C6C5),
-                      size: 50,
-                    ),
-                    Initicon(
-                      text: curr.name,
-                      size: 79,
-                      backgroundColor: getProfileBgColor(curr.color),
-                      style: TextStyle(color: getProfileTextColor(curr.color)),
-                    ),
-                  ],
-                ),
-              ),
-        const SizedBox(
-          height: 30,
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width - 200,
-          child: TextField(
-            key: UniqueKey(),
-            // style: TextStyle(fontSize: 16),
-            controller: amountController,
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly
-            ], // Only numbers can be entered
-            decoration: InputDecoration(
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                prefixText: "Rp ",
-                hintText: 'Enter amount to settle',
-                hintStyle: const TextStyle(fontSize: 16)),
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        (curr.totalUnpaid > 0)
-            ? RichText(
-                text: TextSpan(
-                    style: const TextStyle(
-                        color: Color(0xFF4F4F4F),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400),
-                    children: [
-                      const TextSpan(text: "out of "),
-                      TextSpan(
-                          text: "Rp.${(curr.totalUnpaid).toString()}",
-                          style: const TextStyle(
-                              color: Color(0xffFF0000),
-                              fontWeight: FontWeight.bold)),
-                      const TextSpan(text: " you owed"),
-                    ]),
-              )
-            : RichText(
-                text: TextSpan(
-                    style: const TextStyle(
-                        color: Color(0xFF4F4F4F),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400),
-                    children: [
-                      const TextSpan(text: "out of "),
-                      TextSpan(
-                          text: "Rp.${(-1 * curr.totalUnpaid).toString()} ",
-                          style: const TextStyle(
-                              color: Color(0xFF6DC7BD),
-                              fontWeight: FontWeight.bold)),
-                      TextSpan(
+    final double screenHeight = MediaQuery.of(context).size.height - 360;
+    final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    return SizedBox(
+        height:  screenHeight - keyboardHeight,
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+            child: Column(
+          children: [
+            const SizedBox(
+              height: 30,
+            ),
+            const Text(
+              "Amount to settle with",
+              style: TextStyle(fontSize: 16),
+            ),
+            Text(
+              curr.name,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            (curr.totalUnpaid > 0)
+                ? SizedBox(
+                    width: MediaQuery.of(context).size.width - 180,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Initicon(
+                          text: ref.watch(authProvider).userData.name,
+                          size: 79,
+                          backgroundColor: getProfileBgColor(
+                              ref.watch(authProvider).userData.color),
+                          style: TextStyle(
+                              color: getProfileTextColor(
+                                  ref.watch(authProvider).userData.color)),
+                        ),
+                        const Icon(
+                          Icons.arrow_forward,
+                          color: Color(0xFFC0C6C5),
+                          size: 50,
+                        ),
+                        Initicon(
                           text: curr.name,
-                          style: const TextStyle(
-                              color: Color(0xFF6DC7BD),
-                              fontWeight: FontWeight.bold)),
-                      const TextSpan(text: " lent"),
-                    ]),
+                          size: 79,
+                          backgroundColor: getProfileBgColor(curr.color),
+                          style:
+                              TextStyle(color: getProfileTextColor(curr.color)),
+                        ),
+                      ],
+                    ),
+                  )
+                : SizedBox(
+                    width: MediaQuery.of(context).size.width - 180,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Initicon(
+                          text: ref.watch(authProvider).userData.name,
+                          size: 79,
+                          backgroundColor: getProfileBgColor(
+                              ref.watch(authProvider).userData.color),
+                          style: TextStyle(
+                              color: getProfileTextColor(
+                                  ref.watch(authProvider).userData.color)),
+                        ),
+                        const Icon(
+                          Icons.arrow_back,
+                          color: Color(0xFFC0C6C5),
+                          size: 50,
+                        ),
+                        Initicon(
+                          text: curr.name,
+                          size: 79,
+                          backgroundColor: getProfileBgColor(curr.color),
+                          style:
+                              TextStyle(color: getProfileTextColor(curr.color)),
+                        ),
+                      ],
+                    ),
+                  ),
+            const SizedBox(
+              height: 30,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 200,
+              child: TextField(
+                key: UniqueKey(),
+                // style: TextStyle(fontSize: 16),
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ], // Only numbers can be entered
+                decoration: InputDecoration(
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    prefixText: "Rp ",
+                    hintText: 'Enter amount to settle',
+                    hintStyle: const TextStyle(fontSize: 16)),
               ),
-        const SizedBox(height: 20),
-        SettleUpButton(amountController: amountController),
-      ],
-    ));
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            (curr.totalUnpaid > 0)
+                ? RichText(
+                    text: TextSpan(
+                        style: const TextStyle(
+                            color: Color(0xFF4F4F4F),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400),
+                        children: [
+                          const TextSpan(text: "out of "),
+                          TextSpan(
+                              text: "Rp.${(curr.totalUnpaid).toString()}",
+                              style: const TextStyle(
+                                  color: Color(0xffFF0000),
+                                  fontWeight: FontWeight.bold)),
+                          const TextSpan(text: " you owed"),
+                        ]),
+                  )
+                : RichText(
+                    text: TextSpan(
+                        style: const TextStyle(
+                            color: Color(0xFF4F4F4F),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400),
+                        children: [
+                          const TextSpan(text: "out of "),
+                          TextSpan(
+                              text: "Rp.${(-1 * curr.totalUnpaid).toString()} ",
+                              style: const TextStyle(
+                                  color: Color(0xFF6DC7BD),
+                                  fontWeight: FontWeight.bold)),
+                          TextSpan(
+                              text: curr.name,
+                              style: const TextStyle(
+                                  color: Color(0xFF6DC7BD),
+                                  fontWeight: FontWeight.bold)),
+                          const TextSpan(text: " lent"),
+                        ]),
+                  ),
+            const SizedBox(height: 20),
+            SettleUpButton(amountController: amountController),
+          ],
+        )));
   }
 }
 

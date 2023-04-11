@@ -200,6 +200,7 @@ helpDialogUnsettledPayments(context) {
               height: 20,
             ),
             const Text('How do we calculate these balances?',
+            textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             const SizedBox(
               height: 20,
@@ -267,6 +268,7 @@ helpDialogSettleUp(context) {
               height: 20,
             ),
             const Text('How do we calculate these balances?',
+            textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             const SizedBox(
               height: 20,

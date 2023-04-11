@@ -118,7 +118,7 @@ class GroupListProvider extends ChangeNotifier {
             modelList[i]["start_date"],
             modelList[i]["end_date"],
             modelList[i]["type"],
-            modelList[i]["total_unpaid"],
+            (modelList[i]["total_unpaid"]).toInt(),
             modelList[i]["total_expense"]);
 
         var dataMemberList = modelList[i]["list_memberr"];

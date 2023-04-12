@@ -9,6 +9,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/firebaseauth.dart';
 import 'package:split_rex/src/providers/routes.dart';
+import 'package:split_rex/src/screens/forgot_password/create_new_password.dart';
 import '../services/auth.dart';
 
 const String assetName = 'assets/LogoSVG.svg';
@@ -17,7 +18,11 @@ final Widget svg = SvgPicture.asset(assetName, semanticsLabel: 'Acme Logo');
 Widget mainJumbotron(String type) => Container(
       margin: const EdgeInsets.only(left: 20, right: 20, top: 50),
       child: Text(
-        type == "signin" ? "Sign In" : type == "signup" ? "Sign Up" : "Create your username",
+        type == "signin"
+            ? "Sign In"
+            : type == "signup"
+                ? "Sign Up"
+                : "Create your username",
         style: const TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w900,
@@ -30,8 +35,9 @@ Widget subJumbotron(String type) => Container(
       child: Text(
         type == "signin"
             ? "We’re happy to see you again. To use your account, you should sign in first."
-            : type == "signup" ? "Enter the fields below to get started."
-            : "Enter your username to continue. This will be your username on Split Rex.",
+            : type == "signup"
+                ? "Enter the fields below to get started."
+                : "Enter your username to continue. This will be your username on Split Rex.",
         textAlign: TextAlign.center,
         style: const TextStyle(
           fontSize: 14,
@@ -39,8 +45,6 @@ Widget subJumbotron(String type) => Container(
         ),
       ),
     );
-
-
 
 class SignInForm extends StatefulWidget {
   const SignInForm({super.key});
@@ -77,6 +81,8 @@ class _SignInFormState extends State<SignInForm> {
               key: UniqueKey(),
               controller: passController,
               placeholderText: "Password"),
+          const SizedBox(height: 10),
+          ForgotPass(),
           SubmitBtn(
             key: UniqueKey(),
             emailController: emailController,
@@ -89,13 +95,10 @@ class _SignInFormState extends State<SignInForm> {
             type: "google",
             placeholdertext: "Sign In with Google",
           ),
-          
           const SizedBox(height: 10),
         ]));
   }
 }
-
-
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -171,7 +174,6 @@ class _SignUpFormState extends State<SignUpForm> {
             placeholdertext: "Sign Up with Google",
             type: "google",
           ),
-          
           const SizedBox(height: 10),
         ]));
   }
@@ -188,12 +190,34 @@ class SignInFirebase extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SignInButton(
-      type == "google" ? Buttons.Google : Buttons.Facebook,
+      Buttons.Google,
+      padding: const EdgeInsets.all(8),
       text: placeholdertext,
       onPressed: () async {
         await ref.read(googleSignInProvider).googleLogin();
       },
     );
+  }
+}
+
+class ForgotPass extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          InkWell(
+            child: const Text(
+              "Forgot password?",
+              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12),
+              textAlign: TextAlign.end,
+            ),
+            onTap: () {
+              // Write Tap Code Here.
+              ref.read(routeProvider).changePage("forgot_password");
+            },
+          ),
+        ]));
   }
 }
 
@@ -220,21 +244,19 @@ class SubmitBtn extends ConsumerWidget {
     return GestureDetector(
       onTap: () async {
         EasyLoading.instance
-        ..displayDuration = const Duration(seconds: 3)
-        ..indicatorType = EasyLoadingIndicatorType.fadingCircle
-        ..loadingStyle = EasyLoadingStyle.custom
-        ..indicatorSize = 45.0
-        ..radius = 16.0
-        ..textColor = Colors.white
-        ..progressColor = const Color(0xFF4F9A99)
-        ..backgroundColor = const Color(0xFF4F9A99)
-        ..indicatorColor = Colors.white
-        ..maskType = EasyLoadingMaskType.custom
-        ..maskColor = const Color.fromARGB(155, 255, 255, 255);
+          ..displayDuration = const Duration(seconds: 3)
+          ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+          ..loadingStyle = EasyLoadingStyle.custom
+          ..indicatorSize = 45.0
+          ..radius = 16.0
+          ..textColor = Colors.white
+          ..progressColor = const Color(0xFF4F9A99)
+          ..backgroundColor = const Color(0xFF4F9A99)
+          ..indicatorColor = Colors.white
+          ..maskType = EasyLoadingMaskType.custom
+          ..maskColor = const Color.fromARGB(155, 255, 255, 255);
         EasyLoading.show(
-          status: 'Loading...',
-          maskType: EasyLoadingMaskType.custom
-        );
+            status: 'Loading...', maskType: EasyLoadingMaskType.custom);
         if (type == "signin") {
           ref
               .read(authProvider)
@@ -385,7 +407,7 @@ class FormFill extends ConsumerWidget {
       alignment: Alignment.center,
       margin: const EdgeInsets.only(left: 20, right: 20, top: 17),
       padding: const EdgeInsets.only(left: 20, right: 20),
-      height: 41,
+      height: 56,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: Colors.grey[200],
@@ -448,7 +470,7 @@ class PasswordField extends ConsumerWidget {
       alignment: Alignment.center,
       margin: const EdgeInsets.only(left: 20, right: 20, top: 17),
       padding: const EdgeInsets.only(left: 20, right: 20),
-      height: 41,
+      height: 56,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: Colors.grey[200],
@@ -500,4 +522,3 @@ class PasswordField extends ConsumerWidget {
     );
   }
 }
-

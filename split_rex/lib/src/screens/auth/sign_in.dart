@@ -18,23 +18,17 @@ class SignInScreen extends ConsumerWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-           () async {
-              final user = FirebaseAuth.instance.currentUser;
-              ref.read(authProvider).changeSignUpData(user?.displayName,
-                  user?.displayName, user?.email, user?.uid, user?.uid);
-              await ApiServices().postRegister(ref);
-              if (ref.watch(errorProvider).errorType == "ERROR_EMAIL_EXISTED")
-              {
-                ref
-                    .read(authProvider)
-                    .changeSignInData(user?.email, user?.uid);
-                await ApiServices().postLogin(ref);
-              }
-
-              
-            }();
+          () async {
+            final user = FirebaseAuth.instance.currentUser;
+            ref.read(authProvider).changeSignUpData(user?.displayName,
+                user?.displayName, user?.email, user?.uid, user?.uid);
+            await ApiServices().postRegister(ref);
+            if (ref.watch(errorProvider).errorType == "ERROR_EMAIL_EXISTED") {
+              ref.read(authProvider).changeSignInData(user?.email, user?.uid);
+              await ApiServices().postLogin(ref);
+            }
+          }();
           return const Center(child: CircularProgressIndicator());
-          
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {

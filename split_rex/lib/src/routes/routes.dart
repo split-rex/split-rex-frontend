@@ -31,6 +31,10 @@ import '../screens/scan_bill.dart';
 import '../screens/settle/settle_up.dart';
 import '../screens/settle/unsettled_payments.dart';
 
+import '../screens/forgot_password/create_new_password.dart';
+import '../screens/forgot_password/forgot_pasword.dart';
+import '../screens/forgot_password/reset_password_sucess.dart';
+
 class PageRouting extends ConsumerWidget {
   const PageRouting({super.key});
 
@@ -51,6 +55,14 @@ class PageRouting extends ConsumerWidget {
         return const Activity();
       case "account":
         return const Account();
+
+      // password
+      case "forgot_password":
+        return const ForgotPassword();
+      case "create_password":
+        return const CreateNewPassword();
+      case "reset_pass_success":
+        return const ResetPassSuccess();
 
       // friends
       case "friend_requests":

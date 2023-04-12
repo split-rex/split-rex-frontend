@@ -40,7 +40,7 @@ class _UsernameFillState extends State<UsernameFill> {
       alignment: Alignment.center,
       margin: const EdgeInsets.only(left: 20, right: 20, top: 17),
       padding: const EdgeInsets.only(left: 20, right: 20),
-      height: 41,
+      height: 56,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: Colors.grey[200],

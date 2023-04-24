@@ -10,6 +10,8 @@ import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/model/add_expense.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
 
+import '../common/const.dart';
+
 int strToInt(String input) {
   bool endsWithDot = RegExp(r'\.00$').hasMatch(input);
   bool endsWithComma = RegExp(r'\,00$').hasMatch(input);
@@ -27,7 +29,8 @@ int strToInt(String input) {
 }
 
 class ScanBillServices {
-  String endpoint = "https://split-rex-ocr-v2-7v6i6rndga-et.a.run.app/ocr";
+  String endpoint = getUrl();
+  // String endpoint = "http://localhost:8080";
 
   Future<void> postBill(WidgetRef ref, File file) async {
     var stream = ByteStream(file.openRead());

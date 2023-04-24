@@ -11,13 +11,15 @@ import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/providers/transaction.dart';
 
+import '../common/const.dart';
 import './group.dart';
 
 import '../common/logger.dart';
 import '../providers/add_expense.dart';
 
 class AddExpenseServices {
-  String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
+  String endpoint = getUrl();
+  // String endpoint = "http://localhost:8080";
 
   Future<void> createGroup(WidgetRef ref) async {
     NewGroup newGroup = ref.watch(addExpenseProvider).newGroup;

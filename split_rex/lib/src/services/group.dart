@@ -11,11 +11,13 @@ import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/group_settings.dart';
 import 'package:split_rex/src/providers/routes.dart';
 
+import '../common/const.dart';
 import '../common/logger.dart';
 import '../providers/auth.dart';
 
 class GroupServices {
-  String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
+  String endpoint = getUrl();
+  // String endpoint = "http://localhost:8080";
 
   Future<void> userGroupList(WidgetRef ref) async {
     Response resp = await get(

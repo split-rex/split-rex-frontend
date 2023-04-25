@@ -10,10 +10,12 @@ import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/widgets/groups/group_settings.dart';
 
+import '../common/const.dart';
 import '../providers/payment.dart';
 
 class PaymentServices {
-  String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
+  String endpoint = getUrl();
+  // String endpoint = "http://localhost:8080";
 
   Future<void> getUnsettledPayment(WidgetRef ref) async {
     String groupId = ref.watch(groupListProvider).currGroup.groupId;

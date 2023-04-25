@@ -7,8 +7,10 @@ import 'package:split_rex/src/providers/activity.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 
+import '../common/const.dart';
+
 class ActivityServices {
-  String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
+  String endpoint = getUrl();
 
   Future<void> readJson(WidgetRef ref) async {
     final String response =

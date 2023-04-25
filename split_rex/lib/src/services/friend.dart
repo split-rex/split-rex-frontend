@@ -7,10 +7,12 @@ import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/model/auth.dart';
 
+import '../common/const.dart';
 import '../providers/friend.dart';
 
 class FriendServices {
-  String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
+  String endpoint = getUrl();
+  // String endpoint = "http://localhost:8080/";
 
   Future<void> userFriendList(WidgetRef ref) async {
     SignUpModel signUpData = ref.watch(authProvider).signUpData;

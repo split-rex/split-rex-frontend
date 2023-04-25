@@ -14,11 +14,13 @@ import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/model/user.dart';
 import 'package:split_rex/src/services/group.dart';
 
+import '../common/const.dart';
 import '../common/logger.dart';
 import 'friend.dart';
 
 class ApiServices {
-  String endpoint = "https://split-rex-backend-7v6i6rndga-et.a.run.app";
+  String endpoint = getUrl();
+  // String endpoint = "http:/p/localhost:8080";
 
   Future<void> getProfile(WidgetRef ref) async {
     Response resp =

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_initicon/flutter_initicon.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:split_rex/src/providers/password.dart';
 import 'package:split_rex/src/providers/routes.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/providers/error.dart';
 
 import '../../common/header.dart';
 
@@ -12,7 +12,9 @@ class ForgotPassword extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(errorProvider).changeError("");
+    TextEditingController emailController = TextEditingController();
+    ref.watch(forgotPasswordProvider).timerStopped = false;
+
     return header(
       context,
       ref,
@@ -54,12 +56,14 @@ class ForgotPassword extends ConsumerWidget {
                 ),
               ),
               FormFill(
+                controller: emailController,
                 key: UniqueKey(),
                 icon: Icons.email,
                 placeholderText: "E-mail",
               ),
               const SizedBox(height: 10),
               ResetButton(
+                emailController: emailController,
                 key: UniqueKey(),
               ),
             ],
@@ -71,9 +75,13 @@ class ForgotPassword extends ConsumerWidget {
 class FormFill extends ConsumerWidget {
   final String placeholderText;
   final IconData icon;
+  final TextEditingController controller;
 
   const FormFill(
-      {required Key key, required this.placeholderText, required this.icon})
+      {required Key key,
+      required this.placeholderText,
+      required this.icon,
+      required this.controller})
       : super(key: key);
 
   @override
@@ -93,24 +101,10 @@ class FormFill extends ConsumerWidget {
               color: Color(0xffEEEEEE),
             ),
           ],
-          border: Border.all(
-              color: Color((ref.watch(errorProvider).errorType ==
-                              "ERROR_USERNAME_EXISTED" &&
-                          placeholderText == "Username") ||
-                      (ref.watch(errorProvider).errorType ==
-                              "ERROR_INVALID_EMAIL" &&
-                          placeholderText == "E-mail") ||
-                      (ref.watch(errorProvider).errorType ==
-                              "ERROR_EMAIL_EXISTED" &&
-                          placeholderText == "E-mail") ||
-                      (ref.watch(errorProvider).errorType ==
-                              "ERROR: INVALID USERNAME OR PASSWORD" &&
-                          placeholderText == "Username")
-                  ? 0xFFF44336
-                  : 0xffEEEEEE))),
+          border: Border.all(color: const Color(0xffEEEEEE))),
       child: TextField(
         key: key,
-        // controller: controller,
+        controller: controller,
         cursorColor: const Color(0xFF59C4B0),
         decoration: InputDecoration(
             icon: Icon(
@@ -129,18 +123,35 @@ class FormFill extends ConsumerWidget {
 }
 
 class ResetButton extends ConsumerWidget {
-  // final TextEditingController nameController;
+  final TextEditingController emailController;
 
   const ResetButton({
     required Key key,
-    // required this.nameController,
+    required this.emailController,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () {
-        ref.read(routeProvider).changePage("create_password");
+      onTap: () async {
+        EasyLoading.instance
+          ..displayDuration = const Duration(seconds: 3)
+          ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+          ..loadingStyle = EasyLoadingStyle.custom
+          ..indicatorSize = 45.0
+          ..radius = 16.0
+          ..textColor = Colors.white
+          ..progressColor = const Color(0xFF4F9A99)
+          ..backgroundColor = const Color(0xFF4F9A99)
+          ..indicatorColor = Colors.white
+          ..maskType = EasyLoadingMaskType.custom
+          ..maskColor = const Color.fromARGB(155, 255, 255, 255);
+        EasyLoading.show(
+            status: 'Loading...', maskType: EasyLoadingMaskType.custom);
+        ref.read(forgotPasswordProvider).changeEmail(emailController.text);
+        // await ForgotPassServices().generatePassToken(ref, emailController.text);
+        ref.read(routeProvider).changePage("verify_token");
+        EasyLoading.dismiss();
       },
       child: Container(
           padding: const EdgeInsets.all(16.0),

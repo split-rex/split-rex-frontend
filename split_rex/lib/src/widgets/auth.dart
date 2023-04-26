@@ -82,7 +82,7 @@ class _SignInFormState extends State<SignInForm> {
               controller: passController,
               placeholderText: "Password"),
           const SizedBox(height: 10),
-          ForgotPass(),
+          const ForgotPass(),
           SubmitBtn(
             key: UniqueKey(),
             emailController: emailController,
@@ -201,6 +201,8 @@ class SignInFirebase extends ConsumerWidget {
 }
 
 class ForgotPass extends ConsumerWidget {
+  const ForgotPass({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(

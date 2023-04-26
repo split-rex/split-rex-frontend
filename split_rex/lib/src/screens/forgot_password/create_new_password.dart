@@ -11,7 +11,6 @@ class CreateNewPassword extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(errorProvider).changeError("");
     return header(
       context,
       ref,

@@ -26,32 +26,32 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                         top: 50.0, bottom: 10.0, left: 5.0, right: 5.0),
                     child: Stack(
                       alignment:
-                          ref.watch(routeProvider).currentPage == "account"
+                          ModalRoute.of(context)?.settings.name == "/account"
                               ? Alignment.centerRight
                               : Alignment.centerLeft,
                       children: [
-                        ref.watch(routeProvider).currentPage !=
-                                    ("group_list") &&
-                                ref.watch(routeProvider).currentPage !=
-                                    ("activity") &&
-                                ref.watch(routeProvider).currentPage !=
-                                    ("account")
+                        ModalRoute.of(context)?.settings.name !=
+                                    ("/group_list") &&
+                                ModalRoute.of(context)?.settings.name !=
+                                    ("/activity") &&
+                                ModalRoute.of(context)?.settings.name !=
+                                    ("/account")
                             ? Container(
                                 width: MediaQuery.of(context).size.width - 20.0,
                                 alignment: Alignment.centerLeft,
                                 padding: const EdgeInsets.only(left: 20),
                                 child: InkWell(
-                                  onTap: () async { 
+                                  onTap: () { 
                                     if (prevPage == "add_expense") {
                                       ref.read(addExpenseProvider).resetNewGroup();
                                     }
                                     if (prevPage == "group_detail") {
                                       // await GroupServices().userGroupList(ref);
-                                      await GroupServices().getGroupDetail(ref, ref.watch(groupListProvider).currGroup.groupId);
+                                      GroupServices().getGroupDetail(ref, ref.watch(groupListProvider).currGroup.groupId).then((value) {
+                                        Navigator.pop(context);
+                                      });
                                     }
-                                    ref
-                                      .watch(routeProvider)
-                                      .changePage(prevPage);
+                                    Navigator.pop(context);
                                   },
                                   child: const Icon(Icons.navigate_before,
                                       color: Color(0XFF4F4F4F), size: 35),
@@ -68,32 +68,35 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                 fontSize: 18),
                           ),
                         ),
-                        ref.watch(routeProvider).currentPage == ("group_list")
+                        ModalRoute.of(context)?.settings.name == ("/group_list")
                             ? Container(
                                 width: MediaQuery.of(context).size.width - 20.0,
                                 padding: const EdgeInsets.only(right: 20),
                                 alignment: Alignment.centerRight,
                                 child: GestureDetector(
-                                    onTap: () async {
-                                      await FriendServices()
-                                          .userFriendList(ref);
-                                      await FriendServices()
-                                          .friendRequestReceivedList(ref);
-                                      await FriendServices()
-                                          .friendRequestSentList(ref);
-                                      ref
-                                          .watch(routeProvider)
-                                          .changePage("friends");
-                                    },
-                                    child: const Text("All Friends",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFF4F9A99),
-                                        ))),
+                                  onTap: () {
+                                    FriendServices()
+                                    .userFriendList(ref).then((value) {
+                                      FriendServices()
+                                      .friendRequestReceivedList(ref).then((value) {
+                                        FriendServices()
+                                        .friendRequestSentList(ref).then((value) {
+                                          ref.read(routeProvider).changePage(context, "/friends");
+                                        });
+                                      });
+                                    });
+                                  },
+                                  child: const Text("All Friends",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF4F9A99),
+                                    )
+                                  )
+                                ),
                               )
                             : const SizedBox(width: 0),
-                        ref.watch(routeProvider).currentPage == ("settle_up")
+                            ModalRoute.of(context)?.settings.name == ("/settle_up")
                             ? Container(
                                 width: MediaQuery.of(context).size.width - 20.0,
                                 alignment: Alignment.centerRight,
@@ -104,7 +107,7 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                         Icons.help_outline_outlined)),
                               )
                             : const SizedBox(width: 0),
-                        ref.watch(routeProvider).currentPage == ("settle_up")
+                            ModalRoute.of(context)?.settings.name == ("/settle_up")
                             ? Container(
                                 width: MediaQuery.of(context).size.width - 20.0,
                                 alignment: Alignment.centerRight,
@@ -114,7 +117,7 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                         Icons.help_outline_outlined)),
                               )
                             : const SizedBox(width: 0),
-                        ref.watch(routeProvider).currentPage == ("account")
+                            ModalRoute.of(context)?.settings.name == ("/account")
                             ? Container(
                                 width: MediaQuery.of(context).size.width - 20.0,
                                 alignment: Alignment.centerRight,
@@ -128,7 +131,6 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                           .watch(googleSignInProvider)
                                           .googleLogout();
                                     }
-
                                     await _signOut(ref);
                                   },
                                   child: const Icon(Icons.logout,

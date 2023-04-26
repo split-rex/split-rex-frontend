@@ -2,12 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:path/path.dart';
 import 'package:split_rex/src/common/bubble_member.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/model/group_model.dart';
-import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/services/add_expense.dart';
@@ -41,8 +38,8 @@ class GroupInfo extends ConsumerWidget {
             children: [
               InkWell(
                   onTap: () => {
-                        ref.read(routeProvider).changeNavbarIdx(1),
-                        ref.read(routeProvider).changePage(prevPage),
+                        ref.read(routeProvider).changeNavbarIdx(context, 1),
+                        ref.read(routeProvider).changePage(context, prevPage),
                       },
                   child: const Icon(Icons.navigate_before,
                       color: Colors.white, size: 35)),
@@ -57,7 +54,7 @@ class GroupInfo extends ConsumerWidget {
               const Spacer(),
               InkWell(
                 onTap: () {
-                  ref.watch(routeProvider).changePage("group_settings");
+                  ref.read(routeProvider).changePage(context, "/group_settings");
                 },
                 child:
                     const Icon(Icons.settings, color: Colors.white, size: 30),
@@ -256,11 +253,12 @@ class GroupDetailContent extends ConsumerWidget {
                     Flexible(
                       flex: 7,
                       child: InkWell(
-                        onTap: () async {
-                          await PaymentServices().getUnsettledPayment(ref);
-                          ref
-                              .watch(routeProvider)
-                              .changePage("unsettled_payments");
+                        onTap: () {
+                          PaymentServices().getUnsettledPayment(ref).then((value) {
+                            ref
+                                .read(routeProvider)
+                                .changePage(context, "/unsettled_payments");
+                          });
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -285,11 +283,12 @@ class GroupDetailContent extends ConsumerWidget {
                     Flexible(
                       flex: 7,
                       child: InkWell(
-                       onTap: () async {
-                          await PaymentServices().getUnconfirmedPayment(ref);
-                          ref
-                              .watch(routeProvider)
-                              .changePage("confirm_payment");
+                       onTap: () {
+                          PaymentServices().getUnconfirmedPayment(ref).then((value) {
+                            ref
+                                .read(routeProvider)
+                                .changePage(context, "/confirm_payment");
+                          });
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -347,7 +346,7 @@ class GroupDetailContent extends ConsumerWidget {
 class MonthSeparator extends StatelessWidget {
   final String month;
 
-  const MonthSeparator({required this.month});
+  const MonthSeparator({super.key, required this.month});
 
   @override
   Widget build(BuildContext context) {
@@ -396,10 +395,12 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
                     .date))
           MonthSeparator(month: currentMonth),
         InkWell(
-            onTap: () async {
-              await AddExpenseServices()
-                  .getTransactionDetail(ref, activity.transactionId);
-              ref.read(routeProvider).changePage("transaction_detail");
+            onTap: () {
+              AddExpenseServices()
+                  .getTransactionDetail(ref, activity.transactionId, context).then((value) {
+              ref.read(routeProvider).changePage(context, "/transaction_detail");
+
+                  });
             },
             child: Container(
               decoration: BoxDecoration(
@@ -449,8 +450,6 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
                     width: 20,
                   ), 
                   Expanded(
-                      child: Container(
-                      
                       child: RichText(
                         softWrap: true,
                         text: TextSpan(
@@ -498,7 +497,7 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
                               
                             ]),
                       ),
-                    ))
+                    )
 
 
                 

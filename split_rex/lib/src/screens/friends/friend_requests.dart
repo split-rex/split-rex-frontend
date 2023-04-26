@@ -10,11 +10,13 @@ class FriendRequests extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return header(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: header(
         context,
         ref,
         "Friend Requests",
-        "friends",
+        "/friends",
         SingleChildScrollView(
           child: Column(
             children: const [
@@ -24,6 +26,7 @@ class FriendRequests extends ConsumerWidget {
             ],
           )
         )
-      );
+      ),
+    );
   }
 }

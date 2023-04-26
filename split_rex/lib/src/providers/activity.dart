@@ -31,32 +31,32 @@ class ActivityProvider extends ChangeNotifier {
   void loadActivityData(dynamic modelList) {
     List<ActivityModel> builder = activities;
     builder.clear();
-    for(int i = 0; i < modelList.length; i++) {
-      if(modelList[i]['activity_type'] == "PAYMENT"){
-        builder.add(ActivityModel(
-        activityId: modelList[i]['activity_id'],
-        activityType: modelList[i]['activity_type'],
-        date: modelList[i]['date'],
-        redirectId: modelList[i]['redirect_id'],
-        paymentActivityId: modelList[i]['detail']['payment_activity_id'],
-        name: modelList[i]['detail']['name'],
-        status: modelList[i]['detail']['status'],
-        amount: modelList[i]['detail']['amount'],
-        groupName: modelList[i]['detail']['group_name'],
-      ));
-      } else {
-        builder.add(ActivityModel(
-        activityId: modelList[i]['activity_id'],
-        activityType: modelList[i]['activity_type'],
-        date: modelList[i]['date'],
-        redirectId: modelList[i]['redirect_id'],
-        name: modelList[i]['detail']['name'],
-        groupName: modelList[i]['detail']['group_name'],
-        transactionActivityId: modelList[i]['detail']['transaction_activity_id'],
-      ));
-
+    if (modelList != null) {
+      for(int i = 0; i < modelList?.length; i++) {
+        if(modelList[i]['activity_type'] == "PAYMENT"){
+          builder.add(ActivityModel(
+          activityId: modelList[i]['activity_id'],
+          activityType: modelList[i]['activity_type'],
+          date: modelList[i]['date'],
+          redirectId: modelList[i]['redirect_id'],
+          paymentActivityId: modelList[i]['detail']['payment_activity_id'],
+          name: modelList[i]['detail']['name'],
+          status: modelList[i]['detail']['status'],
+          amount: modelList[i]['detail']['amount'],
+          groupName: modelList[i]['detail']['group_name'],
+        ));
+        } else {
+          builder.add(ActivityModel(
+            activityId: modelList[i]['activity_id'],
+            activityType: modelList[i]['activity_type'],
+            date: modelList[i]['date'],
+            redirectId: modelList[i]['redirect_id'],
+            name: modelList[i]['detail']['name'],
+            groupName: modelList[i]['detail']['group_name'],
+            transactionActivityId: modelList[i]['detail']['transaction_activity_id'],
+          ));
+        }
       }
-      
     }
     notifyListeners();
   }

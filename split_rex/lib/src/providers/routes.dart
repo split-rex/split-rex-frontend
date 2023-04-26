@@ -1,49 +1,55 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/screens/home.dart';
 
 class RouteProvider extends ChangeNotifier {
-  String currentPage = "sign_up";
   int currentNavbarIdx = 0;
-  bool isNavbarRevealed = false;
 
   void clearRouteProvider() {
-    currentPage = "sign_up";
     currentNavbarIdx = 0;
-    isNavbarRevealed = false;
     notifyListeners();
   }
 
-  final List<String> _pagesWithNavbar = [
-    "home",
-    "activity",
-    "group_list",
-    "account",
-  ];
-
-  void changePage(value) {
-    currentPage = value;
-    if (_pagesWithNavbar.contains(value)) {
-      isNavbarRevealed = true;
+  void changePage(context, value) {
+    if (
+      (ModalRoute.of(context)?.settings.name == "/sign_up"
+      || ModalRoute.of(context)?.settings.name == "/sign_in") 
+      && value == "/") {
+        Navigator.pushAndRemoveUntil(
+        context, 
+        MaterialPageRoute(
+          builder: (context) => const Home()
+        ), 
+        ModalRoute.withName("/")
+      );
+    } else if (ModalRoute.of(context)?.settings.name == "/scan_bill") {
+      if (value == "/") {
+        Navigator.pop(context);
+      } else {
+        Navigator.pushReplacementNamed(context, value);
+      }
     } else {
-      isNavbarRevealed = false;
+      Navigator.pushNamed(context, value);
     }
     notifyListeners();
   }
 
-  void changeNavbarIdx(value) {
+  void changeNavbarIdx(context, value) {
     currentNavbarIdx = value;
     switch (value) {
       case 0:
-        changePage("home");
+        changePage(context, "/");
         break;
       case 1:
-        changePage("group_list");
+        changePage(context, "/group_list");
         break;
       case 3:
-        changePage("activity");
+        changePage(context, "/activity");
         break;
       case 4:
-        changePage("account");
+        changePage(context, "/account");
         break;
     }
     notifyListeners();

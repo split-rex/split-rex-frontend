@@ -157,6 +157,7 @@ class FriendServices {
     );
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
+      ref.read(errorProvider).changeError("");
       ref.read(friendProvider).resetAddFriend();
       userFriendList(ref);
       friendRequestReceivedList(ref);
@@ -187,8 +188,7 @@ class FriendServices {
       userFriendList(ref);
       friendRequestReceivedList(ref);
       friendRequestSentList(ref);
-
-      // ref.read(errorProvider).errorMsg =  "ADD_FRIEND_SUCCESS";
+      ref.read(errorProvider).changeError("ERROR_ALREADY_REQUESTED_SENT");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

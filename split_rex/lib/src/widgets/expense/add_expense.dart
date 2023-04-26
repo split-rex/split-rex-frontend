@@ -224,14 +224,14 @@ Widget addNewGroup(BuildContext context, WidgetRef ref) {
           ]));
 }
 
-Widget addButton(WidgetRef ref) => GestureDetector(
+Widget addButton(WidgetRef ref, BuildContext context) => GestureDetector(
     onTap: () {
       if (ref.watch(addExpenseProvider).existingGroup.members.isNotEmpty ||
           ref.watch(addExpenseProvider).newGroup.memberId.isNotEmpty) {
             if (ref.watch(addExpenseProvider).isNewGroup) {
-              ref.read(routeProvider).changePage("new_group");
+              ref.read(routeProvider).changePage(context, "/new_group");
             } else {
-              ref.read(routeProvider).changePage("edit_items");
+              ref.read(routeProvider).changePage(context, "/edit_items");
             }
       } else {
         null;

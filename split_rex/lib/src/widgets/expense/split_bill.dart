@@ -189,7 +189,7 @@ Widget summarySplit(WidgetRef ref, String title) => Column(children: [
   const SizedBox(height: 12.0)
 ],); 
 
-Widget splitButton(WidgetRef ref) => GestureDetector(
+Widget splitButton(WidgetRef ref, BuildContext context) => GestureDetector(
   onTap: () async {
     if (ref.watch(addExpenseProvider).newGroup.name == "" && ref.watch(addExpenseProvider).isNewGroup) {
       null;
@@ -197,7 +197,8 @@ Widget splitButton(WidgetRef ref) => GestureDetector(
       if (ref.watch(addExpenseProvider).isNewGroup) {
         await AddExpenseServices().createGroup(ref);
       }
-      await AddExpenseServices().createTransaction(ref);
+      // ignore: use_build_context_synchronously
+      await AddExpenseServices().createTransaction(ref, context);
     }
   },
   child: Container(

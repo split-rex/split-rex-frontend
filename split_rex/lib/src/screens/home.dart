@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:split_rex/src/widgets/navbar.dart';
 import '../widgets/home.dart';
 
 
@@ -7,14 +8,18 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-          children: const [
-            HomeHeader(),
-            Expanded(
-              child: 
-                HomeFooter()
-            )
-          ],
-        );
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      bottomNavigationBar: const Navbar(),
+      body: Column(
+        children: const [
+          HomeHeader(),
+          Expanded(
+            child: 
+              HomeFooter()
+          )
+        ],
+      ),
+    );
   }
 }

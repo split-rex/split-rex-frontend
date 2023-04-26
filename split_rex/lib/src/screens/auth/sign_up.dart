@@ -1,12 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/providers/auth.dart';
-import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/screens/auth/username_fill.dart';
-import 'package:split_rex/src/screens/home.dart';
-import 'package:split_rex/src/services/auth.dart';
 import 'package:split_rex/src/widgets/auth.dart';
 
 class SignUpScreen extends ConsumerWidget {
@@ -15,12 +11,13 @@ class SignUpScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           // add async here
           if (snapshot.hasData) {
-            // ref.read(routeProvider).changePage("fill_username");
+            // ref.read(routeProvider).changePage(context, "/fill_username");
 
             //  () async {
             // final user = FirebaseAuth.instance.currentUser;
@@ -61,15 +58,15 @@ class SignUpScreen extends ConsumerWidget {
                     children: [
                       const Text("Have an account?  "),
                       GestureDetector(
-                        child: const Text(
-                          key: Key("SignInPage"),
+                        child: Text(
+                          key: UniqueKey(),
                           "Sign in",
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w800,
                           ),
                         ),
                         onTap: () {
-                          ref.read(routeProvider).changePage("sign_in");
+                          ref.read(routeProvider).changePage(context, "/sign_in");
                         },
                       )
                     ],
@@ -82,4 +79,6 @@ class SignUpScreen extends ConsumerWidget {
       ),
     );
   }
+
+
 }

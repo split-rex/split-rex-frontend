@@ -8,7 +8,6 @@ import 'package:split_rex/src/providers/auth.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/firebaseauth.dart';
-import 'package:split_rex/src/providers/routes.dart';
 import '../services/auth.dart';
 
 const String assetName = 'assets/LogoSVG.svg';
@@ -239,7 +238,7 @@ class SubmitBtn extends ConsumerWidget {
           ref
               .read(authProvider)
               .changeSignInData(emailController.text, passController.text);
-          await ApiServices().postLogin(ref);
+          await ApiServices().postLogin(ref, context);
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Container(
@@ -278,7 +277,7 @@ class SubmitBtn extends ConsumerWidget {
               emailController.text,
               passController.text,
               confController!.text);
-          await ApiServices().postRegister(ref);
+          await ApiServices().postRegister(ref, context);
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Container(

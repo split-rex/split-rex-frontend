@@ -13,6 +13,12 @@ convertDate(inputDate) {
   return result; // Output: 01-Mar-2023
 }
 
+String formatDate(String dateString) {
+  DateTime date = DateTime.parse(dateString);
+  String formattedDate = DateFormat('dd MMM yyyy').format(date);
+  return formattedDate;
+}
+
 String formatNumber(int number) {
   String str = number.toString();
   String formatted = '';

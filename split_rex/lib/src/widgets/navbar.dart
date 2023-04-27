@@ -30,22 +30,7 @@ class Navbar extends ConsumerWidget {
                   return const _PopupExpense();
                 });
           } else {
-            if (value == 0) {
-              if (ref.watch(groupListProvider).isOwed) {
-                await GroupServices().getGroupOwed(ref.watch(authProvider).jwtToken);
-              } else {
-                await GroupServices().getGroupLent(ref.watch(authProvider).jwtToken);
-              }
-            }
-            if (value == 1)  {
-              await GroupServices().userGroupList(ref);
-            }
-            if (value == 3) {
-              await ActivityServices().getActivity(ref);
-            }
-            if (context.mounted) {
-              ref.read(routeProvider).changeNavbarIdx(context, value);
-            }
+            ref.read(routeProvider).changeNavbarIdx(context, value);
           }
         },
         items: const [

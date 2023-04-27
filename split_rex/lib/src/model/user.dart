@@ -5,7 +5,7 @@ class User {
   String email;
   int color;
   late Map<String, Map<int, String>> paymentInfo;
-  late List<dynamic> flattenPaymentInfo;
+  List<dynamic> flattenPaymentInfo = [];
   
   User({
     this.userId = "",

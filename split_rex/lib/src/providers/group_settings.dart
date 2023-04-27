@@ -8,18 +8,18 @@ import '../model/group_model.dart';
 class GroupSettingsProvider extends ChangeNotifier {
   List<Items> items = [];
   bool isNewGroup = false;
-  
   Transaction newBill = Transaction();
   GroupListModel existingGroup = GroupListModel("", "", [], "", "", "", 0, 0);
   GroupListModel currGroup = GroupListModel("", "", [], "", "", "", 0, 0);
   List<String> memberId = [];
-
   String selectedMember = "";
+
   resetAll() {
     items = [];
     isNewGroup = false;
     memberId = [];
     newBill = Transaction();
+    currGroup = GroupListModel("", "", [], "", "", "", 0, 0);
     existingGroup = GroupListModel("", "", [], "", "", "", 0, 0);
     selectedMember = "";
     notifyListeners();

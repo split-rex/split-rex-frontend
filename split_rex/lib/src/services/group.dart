@@ -158,7 +158,7 @@ class GroupServices {
     }
   }
 
-  Future<bool> getGroupOwed(String jwtToken) async {
+  Future<dynamic> getGroupOwed(String jwtToken) async {
     Response response = await get(
       Uri.parse("$endpoint/userGroupOwed"),
       headers: <String, String>{
@@ -167,11 +167,10 @@ class GroupServices {
       },
     );
     var data = await json.decode(response.body);
-    // logger.d(data["data"]);
-    return data["data"]["list_group"].isNotEmpty;
+    return data;
   }
 
-  Future<bool> getGroupLent(String jwtToken) async {
+  Future<dynamic> getGroupLent(String jwtToken) async {
     Response response = await get(
       Uri.parse("$endpoint/userGroupLent"),
       headers: <String, String>{
@@ -180,12 +179,11 @@ class GroupServices {
       },
     );
     var data = await json.decode(response.body);
-    // logger.d(data["data"]);
-    return (data["data"]["list_group"].isNotEmpty);
+    return data;
   }
 
   Future<void> editGroupInfo(
-      WidgetRef ref, String groupId, String newGroupName) async {
+    WidgetRef ref, String groupId, String newGroupName) async {
     Response resp = await post(
       Uri.parse("$endpoint/editGroupInfo"),
       headers: <String, String>{
@@ -235,14 +233,23 @@ class GroupServices {
 
 final groupServicesProvider = Provider<GroupServices>((ref) => GroupServices());
 
-final getGroupOwedLent = FutureProvider.family<bool, bool>((ref, isOwed) async {
-  if (isOwed) {
-    return ref.read(groupServicesProvider).getGroupOwed(
-      ref.watch(authProvider).jwtToken
-    );
+final getGroupOwedLent = Provider((ref) async {
+  var groupsOwed = await ref.read(groupServicesProvider).getGroupOwed(
+    ref.watch(authProvider).jwtToken
+  );
+  var groupsLent = await ref.read(groupServicesProvider).getGroupLent(
+    ref.watch(authProvider).jwtToken
+  );
+
+  if (groupsOwed["message"] == "SUCCESS") {
+    ref.read(groupListProvider).updateHasOwedGroups(groupsOwed["data"]["list_group"].isNotEmpty);
   } else {
-    return ref.read(groupServicesProvider).getGroupLent(
-      ref.watch(authProvider).jwtToken
-    );
+    ref.read(errorProvider).changeError(groupsOwed["message"]);
+  }
+
+  if (groupsLent["message"] == "SUCCESS") {
+    ref.read(groupListProvider).updateHasOwedGroups(groupsLent["data"]["list_group"].isNotEmpty);
+  } else {
+    ref.read(errorProvider).changeError(groupsLent["message"]);
   }
 });

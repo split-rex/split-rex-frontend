@@ -5,7 +5,7 @@ class Friend {
   int color;
   String email;
   late Map<String, Map<int, String>> paymentInfo;
-  late List<dynamic> flattenPaymentInfo;
+  List<dynamic> flattenPaymentInfo = [];
 
   Friend({
     this.userId = "",

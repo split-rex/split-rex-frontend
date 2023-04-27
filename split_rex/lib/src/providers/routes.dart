@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/screens/auth/sign_up.dart';
 import 'package:split_rex/src/screens/home.dart';
 
 class RouteProvider extends ChangeNotifier {
@@ -13,7 +12,16 @@ class RouteProvider extends ChangeNotifier {
   }
 
   void changePage(context, value) {
-    if (
+    if (ModalRoute.of(context)?.settings.name == "/account" && value == "/sign_up") {
+      Navigator.pushAndRemoveUntil(
+        context, 
+        MaterialPageRoute(
+          builder: (context) => const SignUpScreen()
+        ), 
+        ModalRoute.withName("/sign_up")
+      );
+    }
+    else if (
       (ModalRoute.of(context)?.settings.name == "/sign_up"
       || ModalRoute.of(context)?.settings.name == "/sign_in") 
       && value == "/") {

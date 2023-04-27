@@ -27,6 +27,8 @@ class GroupListProvider extends ChangeNotifier {
   }
 
   void clearGroupListProvider() {
+    hasOwedGroups = false;
+    hasLentGroups = false;
     groups = <GroupListModel>[];
     groupsLoaded = <GroupListModel>[];
     currGroup = GroupListModel("", "", [], "", "", "", 0, 0);

@@ -165,7 +165,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                         onPressed: () {
                           _cameraController!.pausePreview();
                           EasyLoading.show(
-                            status: 'Loading...',
+                            status: 'Scanning...',
                             maskType: EasyLoadingMaskType.custom
                           );
                           screenshotController.capture(

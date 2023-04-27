@@ -5,7 +5,6 @@ import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/providers/activity.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/services/activity.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:split_rex/src/services/add_expense.dart';
 import 'package:split_rex/src/services/group.dart';

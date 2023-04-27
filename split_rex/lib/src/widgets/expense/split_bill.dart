@@ -190,15 +190,17 @@ Widget summarySplit(WidgetRef ref, String title) => Column(children: [
 ],); 
 
 Widget splitButton(WidgetRef ref, BuildContext context) => GestureDetector(
-  onTap: () async {
+  onTap: () {
     if (ref.watch(addExpenseProvider).newGroup.name == "" && ref.watch(addExpenseProvider).isNewGroup) {
       null;
     } else {
       if (ref.watch(addExpenseProvider).isNewGroup) {
-        await AddExpenseServices().createGroup(ref);
+        AddExpenseServices().createGroup(ref).then((value) {
+          AddExpenseServices().createTransaction(ref, context);
+        });
+      } else {
+        AddExpenseServices().createTransaction(ref, context);
       }
-      // ignore: use_build_context_synchronously
-      await AddExpenseServices().createTransaction(ref, context);
     }
   },
   child: Container(

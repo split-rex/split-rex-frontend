@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/model/activity.dart';
 
 class ActivityProvider extends ChangeNotifier {

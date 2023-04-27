@@ -9,7 +9,6 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/firebaseauth.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/screens/forgot_password/create_new_password.dart';
 import '../services/auth.dart';
 
 const String assetName = 'assets/LogoSVG.svg';
@@ -216,7 +215,7 @@ class ForgotPass extends ConsumerWidget {
             ),
             onTap: () {
               // Write Tap Code Here.
-              ref.read(routeProvider).changePage("forgot_password");
+              ref.read(routeProvider).changePage(context, "/forgot_password");
             },
           ),
         ]));

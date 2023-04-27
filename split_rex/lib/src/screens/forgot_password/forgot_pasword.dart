@@ -16,12 +16,14 @@ class ForgotPassword extends ConsumerWidget {
     TextEditingController emailController = TextEditingController();
     ref.watch(forgotPasswordProvider).timerStopped = false;
 
-    return header(
-      context,
-      ref,
-      "Forgot Password",
-      "sign_in",
-      Container(
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: header(
+        context,
+        ref,
+        "Forgot Password",
+        "/sign_in",
+        Container(
           margin: const EdgeInsets.symmetric(horizontal: 25),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -68,7 +70,9 @@ class ForgotPassword extends ConsumerWidget {
                 key: UniqueKey(),
               ),
             ],
-          )),
+          )
+        ),
+      )
     );
   }
 }
@@ -149,9 +153,10 @@ class ResetButton extends ConsumerWidget {
           ..maskColor = const Color.fromARGB(155, 255, 255, 255);
         EasyLoading.show(
             status: 'Loading...', maskType: EasyLoadingMaskType.custom);
-        await ForgotPassServices().generatePassToken(ref, emailController.text);
-        ref.watch(forgotPasswordProvider).changeEmail(emailController.text);
-        ref.read(routeProvider).changePage("verify_token");
+        await ForgotPassServices().generatePassToken(ref, emailController.text).then((value) {
+          ref.watch(forgotPasswordProvider).changeEmail(emailController.text);
+          ref.read(routeProvider).changePage(context, "/verify_token");
+        });
       },
       child: Container(
           padding: const EdgeInsets.all(16.0),

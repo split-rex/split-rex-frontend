@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/error.dart';
-import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/providers/auth.dart';
 
 import '../../common/header.dart';
@@ -16,12 +15,14 @@ class CreateNewPassword extends ConsumerWidget {
     TextEditingController passController = TextEditingController();
     TextEditingController confPassController = TextEditingController();
 
-    return header(
-      context,
-      ref,
-      "Create a New Password",
-      "forgot_password",
-      Container(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: header(
+        context,
+        ref,
+        "Create a New Password",
+        "/forgot_password",
+        Container(
           margin: const EdgeInsets.symmetric(horizontal: 25),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -65,7 +66,9 @@ class CreateNewPassword extends ConsumerWidget {
                 key: UniqueKey(),
               ),
             ],
-          )),
+          )
+        ),
+      )
     );
   }
 }
@@ -168,7 +171,7 @@ class ResetButton extends ConsumerWidget {
         EasyLoading.show(
             status: 'Loading...', maskType: EasyLoadingMaskType.custom);
         await ForgotPassServices()
-            .changePasword(ref, passController.text, confPassController.text);
+            .changePasword(context, ref, passController.text, confPassController.text);
 
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

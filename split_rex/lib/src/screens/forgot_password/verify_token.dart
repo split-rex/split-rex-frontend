@@ -20,12 +20,14 @@ class VerifyToken extends ConsumerWidget {
     timerStart = false;
     TextEditingController controller = TextEditingController();
 
-    return header(
-      context,
-      ref,
-      "Verification",
-      "forgot_password",
-      Container(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: header(
+        context,
+        ref,
+        "Verification",
+        "/forgot_password",
+        Container(
           margin: const EdgeInsets.symmetric(horizontal: 25),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -83,7 +85,7 @@ class VerifyToken extends ConsumerWidget {
                   ),
                   GestureDetector(
                     onTap: () =>
-                        ref.read(routeProvider).changePage("forgot_password"),
+                        ref.read(routeProvider).changePage(context, "/forgot_password"),
                     child: const Text("Re-enter email",
                         style: TextStyle(
                             fontSize: 11, fontWeight: FontWeight.bold)),
@@ -97,7 +99,9 @@ class VerifyToken extends ConsumerWidget {
                       key: UniqueKey(),
                     ),
             ],
-          )),
+          )
+        ),
+      )
     );
   }
 }
@@ -262,9 +266,10 @@ class VerifyTokenButton extends ConsumerWidget {
           ..maskColor = const Color.fromARGB(155, 255, 255, 255);
         EasyLoading.show(
             status: 'Loading...', maskType: EasyLoadingMaskType.custom);
-        await ForgotPassServices()
-            .verifyResetPassToken(ref, codeController.text);
-        ref.read(routeProvider).changePage("create_password");
+        ForgotPassServices()
+            .verifyResetPassToken(ref, codeController.text).then((value) {
+              ref.read(routeProvider).changePage(context, "/create_password");
+            });
       },
       child: Container(
           padding: const EdgeInsets.all(16.0),

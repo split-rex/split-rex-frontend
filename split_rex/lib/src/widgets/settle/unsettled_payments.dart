@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/providers/payment.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import '../../providers/group_list.dart';
 import '../../services/notification.dart';
 import 'package:timezone/timezone.dart' as tz;
 import '../../common/functions.dart';

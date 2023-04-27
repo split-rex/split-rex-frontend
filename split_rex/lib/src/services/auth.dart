@@ -22,7 +22,6 @@ import '../common/const.dart';
 import '../providers/activity.dart';
 import '../providers/add_expense.dart';
 import '../providers/friend.dart';
-import '../providers/group_list.dart';
 import 'activity.dart';
 import 'friend.dart';
 
@@ -166,7 +165,7 @@ class ApiServices {
             FriendServices().userFriendList(ref).then((value) {
               FriendServices().friendRequestReceivedList(ref).then((value) {
                 FriendServices().friendRequestSentList(ref).then((value) {
-                  ref.read(getGroupOwedLent).then((data) {
+                  getGroupOwedLent(ref).then((data) {
                     EasyLoading.dismiss();
                     ref.read(routeProvider).changePage(context, "/");
                   });

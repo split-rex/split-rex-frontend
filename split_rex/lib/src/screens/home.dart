@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/widgets/navbar.dart';
-import '../services/auth.dart';
 import '../services/friend.dart';
 import '../services/group.dart';
 import '../widgets/home.dart';
@@ -42,13 +41,11 @@ class Home extends ConsumerWidget {
   }
 
   Future<void> _pullRefresh(BuildContext context, WidgetRef ref) async {
-    await ApiServices().getProfile(ref).then((value) {
-      GroupServices().userGroupList(ref).then((value) {
-        FriendServices().userFriendList(ref).then((value) {
-          FriendServices().friendRequestReceivedList(ref).then((value) {
-            FriendServices().friendRequestSentList(ref).then((value) {
-              ref.read(getGroupOwedLent);
-            });
+    await GroupServices().userGroupList(ref).then((value) {
+      FriendServices().userFriendList(ref).then((value) {
+        FriendServices().friendRequestReceivedList(ref).then((value) {
+          FriendServices().friendRequestSentList(ref).then((value) {
+            getGroupOwedLent(ref);
           });
         });
       });

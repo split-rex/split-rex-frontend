@@ -233,14 +233,14 @@ class GroupServices {
 
 final groupServicesProvider = Provider<GroupServices>((ref) => GroupServices());
 
-final getGroupOwedLent = Provider((ref) async {
+Future<void> getGroupOwedLent(WidgetRef ref) async {
   var groupsOwed = await ref.read(groupServicesProvider).getGroupOwed(
     ref.watch(authProvider).jwtToken
   );
   var groupsLent = await ref.read(groupServicesProvider).getGroupLent(
     ref.watch(authProvider).jwtToken
   );
-
+  
   if (groupsOwed["message"] == "SUCCESS") {
     ref.read(groupListProvider).updateHasOwedGroups(groupsOwed["data"]["list_group"].isNotEmpty);
   } else {
@@ -248,8 +248,9 @@ final getGroupOwedLent = Provider((ref) async {
   }
 
   if (groupsLent["message"] == "SUCCESS") {
-    ref.read(groupListProvider).updateHasOwedGroups(groupsLent["data"]["list_group"].isNotEmpty);
+    logger.d(groupsLent);
+    ref.read(groupListProvider).updateHasLentGroups(groupsLent["data"]["list_group"].isNotEmpty);
   } else {
     ref.read(errorProvider).changeError(groupsLent["message"]);
   }
-});
+}

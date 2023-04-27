@@ -29,7 +29,7 @@ class SignUpScreen extends ConsumerWidget {
               ref
                     .read(authProvider)
                     .changeSignInData(user?.email, user?.uid);
-              await ApiServices().postLogin(ref);
+              await ApiServices().postLogin(ref, context);
               
               }();
               

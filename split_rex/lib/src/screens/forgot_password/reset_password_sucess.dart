@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/providers/error.dart';
 
 import 'package:split_rex/src/providers/routes.dart';
 
@@ -9,7 +8,9 @@ class ResetPassSuccess extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 25),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -49,7 +50,9 @@ class ResetPassSuccess extends ConsumerWidget {
               key: UniqueKey(),
             ),
           ],
-        ));
+        )
+      )
+    );
   }
 }
 
@@ -65,7 +68,7 @@ class SignInButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () async {
-        ref.read(routeProvider).changePage("sign_in");
+        ref.read(routeProvider).changePage(context, "/sign_in");
       },
       child: Container(
           padding: const EdgeInsets.all(16.0),

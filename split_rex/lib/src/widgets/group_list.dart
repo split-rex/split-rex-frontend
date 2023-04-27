@@ -81,11 +81,12 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
             return 
             ModalRoute.of(context)?.settings.name == "/group_list"
             ||
-            ((ref.watch(groupListProvider).isOwed 
-            && ref.watch(groupListProvider).groups[index].type == "OWED")
+            (
+              ((ref.watch(groupListProvider).isOwed 
+              && ref.watch(groupListProvider).groups[index].type == "OWED")
             ||
-            ((!ref.watch(groupListProvider).isOwed) 
-            && ref.watch(groupListProvider).groups[index].type == "LENT")
+              (!(ref.watch(groupListProvider).isOwed) 
+              && ref.watch(groupListProvider).groups[index].type == "LENT"))
             && ModalRoute.of(context)?.settings.name == "/") 
             ?
             Container(
@@ -195,9 +196,19 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                 ))
               : const SizedBox();
           },
-        ):
+        )
+        :
         Center(child: 
-          Text("You have no ${ref.watch(groupListProvider).isOwed ? "owed" : "lent"} groups"
+          Text("You have no ${ref.watch(groupListProvider).isOwed ? "owed" : "lent"} ${
+            ((
+              ref.watch(groupListProvider).hasLentGroups
+              && !(ref.watch(groupListProvider).isOwed))
+            || 
+            (
+              ref.watch(groupListProvider).hasOwedGroups
+              && (ref.watch(groupListProvider).isOwed)
+            )
+            && ModalRoute.of(context)?.settings.name == "/")}\n${ref.watch(groupListProvider).hasLentGroups} ${ref.watch(groupListProvider).isOwed} groups"
         ))
         )
       ]));

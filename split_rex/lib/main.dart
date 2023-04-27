@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:path/path.dart';
 import 'package:split_rex/src/screens/account/account.dart';
 import 'package:split_rex/src/screens/account/account_edit.dart';
 import 'package:split_rex/src/screens/account/change_password.dart';
@@ -32,6 +31,13 @@ import 'package:split_rex/src/screens/settle/unsettled_payments.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:split_rex/src/services/notification.dart';
 
+import 'src/screens/forgot_password/create_new_password.dart';
+import 'src/screens/forgot_password/forgot_pasword.dart';
+import 'src/screens/forgot_password/reset_password_sucess.dart';
+import 'src/screens/forgot_password/verify_token.dart';
+import 'src/screens/splashscreen.dart';
+import 'src/screens/statistics.dart';
+
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -47,7 +53,7 @@ Future main() async{
           ),
         ),
         builder: EasyLoading.init(),
-        initialRoute: '/sign_up',
+        initialRoute: '/splash_screen',
         routes: {
           '/': (context) => const Home(),
           '/sign_up': (context) => const SignUpScreen(),
@@ -75,7 +81,13 @@ Future main() async{
           '/settle_up': (context) => const SettleUp(),
           '/unsettled_payments': (context) => const UnsettledPayments(),
           '/transaction_detail': (context) => const TransactionDetail(),
-          '/confirm_payment': (context) => const ConfirmPayment()
+          '/confirm_payment': (context) => const ConfirmPayment(),
+          '/statistics': (context) => const Statistics(),
+          '/forgot_password': (context) => const ForgotPassword(),
+          '/verify_token': (context) => const VerifyToken(),
+          '/create_password': (context) => const CreateNewPassword(),
+          '/reset_pass_success': (context) => const ResetPassSuccess(),
+          '/splash_screen': (context) => const SplashScreen(),
         },
       )
     ),

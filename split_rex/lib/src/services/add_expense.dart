@@ -63,31 +63,32 @@ class AddExpenseServices {
       });
     }
 
-    Response resp = await post(Uri.parse("$endpoint/userCreateTransaction"),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
-        },
-        body: jsonEncode(<String, dynamic>{
-          "name": newBill.name,
-          "description": newBill.desc,
-          "group_id": newBill.groupId,
-          "date": DateTime.parse(newBill.date).toUtc().toIso8601String(),
-          "subtotal": newBill.subtotal,
-          "tax": newBill.tax,
-          "service": newBill.service,
-          "total": newBill.total,
-          "bill_owner": newBill.billOwner,
-          "items": itemsObj
-        }));
-    var data = jsonDecode(resp.body);
-    logger.d(data);
-    if (data["message"] == "SUCCESS") {
-      // ignore: use_build_context_synchronously
-      updatePayment(ref, context);
-    } else {
-      ref.read(errorProvider).changeError(data["message"]);
-    }
+    await post(Uri.parse("$endpoint/userCreateTransaction"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "name": newBill.name,
+        "description": newBill.desc,
+        "group_id": newBill.groupId,
+        "date": DateTime.parse(newBill.date).toUtc().toIso8601String(),
+        "subtotal": newBill.subtotal,
+        "tax": newBill.tax,
+        "service": newBill.service,
+        "total": newBill.total,
+        "bill_owner": newBill.billOwner,
+        "items": itemsObj
+      })
+    ).then((Response resp) {
+      var data = jsonDecode(resp.body);
+      logger.d(data);
+      if (data["message"] == "SUCCESS") {
+        updatePayment(ref, context);
+      } else {
+        ref.read(errorProvider).changeError(data["message"]);
+      }
+    });
   }
 
   Future<void> updatePayment(WidgetRef ref, BuildContext context) async {
@@ -126,47 +127,50 @@ class AddExpenseServices {
 
     logger.d(listPayment);
 
-    Response resp = await post(Uri.parse("$endpoint/updatePayment"),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
-        },
-        body: jsonEncode(<String, dynamic>{
-          "group_id": currGroupId,
-          "list_payment": listPayment
-        }));
-    var data = jsonDecode(resp.body);
-    logger.d(data);
-    if (data["message"] == "SUCCESS") {
-      // ignore: use_build_context_synchronously
-      resolveTransaction(ref, context);
-    } else {
-      ref.read(errorProvider).changeError(data["message"]);
-    }
+    await post(Uri.parse("$endpoint/updatePayment"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "group_id": currGroupId,
+        "list_payment": listPayment
+      })
+    ).then((Response resp) {
+      var data = jsonDecode(resp.body);
+      logger.d(data);
+      if (data["message"] == "SUCCESS") {
+        resolveTransaction(ref, context);
+      } else {
+        ref.read(errorProvider).changeError(data["message"]);
+      } 
+    });
   }
 
   Future<void> resolveTransaction(WidgetRef ref, BuildContext context) async {
     String currGroupId = ref.watch(groupListProvider).currGroup.groupId;
 
-    Response resp = await post(Uri.parse("$endpoint/resolveTransaction"),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
-        },
-        body: jsonEncode(<String, dynamic>{
-          "group_id": currGroupId,
-        }));
-    var data = jsonDecode(resp.body);
-    logger.d(data);
-    if (data["message"] == "SUCCESS") {
-      ref.watch(addExpenseProvider).resetAll();      
-      GroupServices().getGroupTransactions(ref).then((value) {
-        ref.read(routeProvider).changeNavbarIdx(context, 1);
-        ref.read(routeProvider).changePage(context, "/group_detail");
-      });
-    } else {
-      ref.read(errorProvider).changeError(data["message"]);
-    }
+    await post(Uri.parse("$endpoint/resolveTransaction"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "group_id": currGroupId,
+      })
+    ).then((Response resp) {
+      var data = jsonDecode(resp.body);
+      logger.d(data);
+      if (data["message"] == "SUCCESS") {
+        ref.watch(addExpenseProvider).resetAll();      
+        GroupServices().getGroupTransactions(ref).then((value) {
+          ref.read(routeProvider).changeNavbarIdx(context, 1);
+          ref.read(routeProvider).changePage(context, "/group_detail");
+        });
+      } else {
+        ref.read(errorProvider).changeError(data["message"]);
+      }
+    });
   }
 
   Future<void> getTransactionDetail(WidgetRef ref, String transactionId, BuildContext context) async {

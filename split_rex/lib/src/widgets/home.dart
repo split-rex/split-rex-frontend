@@ -5,7 +5,6 @@ import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/statisticsprovider.dart';
-import 'package:split_rex/src/services/group.dart';
 import 'package:split_rex/src/services/statistics.dart';
 import 'package:split_rex/src/widgets/group_list.dart';
 
@@ -161,14 +160,14 @@ class HomeReport extends ConsumerWidget {
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Total Lent"),
+                    children: const [
+                      Text("Total Lent"),
                       // TODO update total lent and owed here
                       SizedBox(
                         width: 100,
                         child: Text(
                           "Rp. 10.000",
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       )
@@ -180,14 +179,14 @@ class HomeReport extends ConsumerWidget {
                       color: const Color(0xFFE0E0E0)),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Total Owed"),
+                    children: const [
+                      Text("Total Owed"),
                       // TODO update total lent and owed here
                       SizedBox(
                         width: 100,
                         child: Text(
                           "Rp. 1000",
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       )
@@ -217,8 +216,9 @@ class HomeReport extends ConsumerWidget {
                     ref.read(statisticsProvider).changeEndUnsettledDate("");
                     ref.read(statisticsProvider).changeStartSettleDate("");
                     ref.read(statisticsProvider).changeEndSettleDate("");
-                    await StatisticsServices().readJson(ref);
-                    ref.read(routeProvider).changePage("statistics");
+                    await StatisticsServices().readJson(ref).then((value) {
+                      ref.read(routeProvider).changePage(context, "/statistics");
+                    });
                   },
                   child: const Text(
                     "View Detailed Report",

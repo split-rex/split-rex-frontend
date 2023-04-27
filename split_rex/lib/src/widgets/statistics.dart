@@ -1,11 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/providers/statisticsprovider.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StatisticsHeader extends ConsumerWidget {
   const StatisticsHeader({super.key});
@@ -366,7 +364,7 @@ class TopSpendingBuddies extends ConsumerWidget {
                             barRods: [
                               BarChartRodData(
                                 toY: 10,
-                                color: Color(0xff60D5C0),
+                                color: const Color(0xff60D5C0),
                               )
                             ],
                             showingTooltipIndicators: [0],
@@ -376,7 +374,7 @@ class TopSpendingBuddies extends ConsumerWidget {
                             barRods: [
                               BarChartRodData(
                                 toY: 30,
-                                color: Color(0xff44A4B2),
+                                color: const Color(0xff44A4B2),
                               )
                             ],
                             showingTooltipIndicators: [0],
@@ -386,7 +384,7 @@ class TopSpendingBuddies extends ConsumerWidget {
                             barRods: [
                               BarChartRodData(
                                 toY: 20,
-                                color: Color(0xff45B5AF)
+                                color: const Color(0xff45B5AF)
                               )
                             ],
                             showingTooltipIndicators: [0],
@@ -405,7 +403,7 @@ class TopSpendingBuddies extends ConsumerWidget {
 }
 
 Widget getTitles(double value, TitleMeta meta) {
-    final style = const TextStyle(
+    const  style = TextStyle(
       color: Color(0XFF4f4f4f),
       fontWeight: FontWeight.bold,
       fontSize: 14,
@@ -610,11 +608,12 @@ class MutationUnsettled extends ConsumerWidget {
           ],
         ),
         Visibility(
-          child: const SizedBox(height: 20),
           visible: ref.watch(statisticsProvider).showUnsettled,
+          child: const SizedBox(height: 20),
         ),
 
         Visibility(
+          visible: ref.watch(statisticsProvider).showUnsettled,
           child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -655,15 +654,15 @@ class MutationUnsettled extends ConsumerWidget {
             ])
           ],
         ),
-        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
 
         Visibility(
+          visible: ref.watch(statisticsProvider).showUnsettled,
           child: const SizedBox(height: 30),
-          visible: ref.watch(statisticsProvider).showUnsettled,
         ),
 
         Visibility(
+          visible: ref.watch(statisticsProvider).showUnsettled,
           child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -694,15 +693,15 @@ class MutationUnsettled extends ConsumerWidget {
             )
           ],
         ),
-        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
 
         Visibility(
+          visible: ref.watch(statisticsProvider).showUnsettled,
           child: const SizedBox(height: 10),
-          visible: ref.watch(statisticsProvider).showUnsettled,
         ),
 
         Visibility(
+          visible: ref.watch(statisticsProvider).showUnsettled,
           child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -733,15 +732,15 @@ class MutationUnsettled extends ConsumerWidget {
             )
           ],
         ),
-        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
 
         Visibility(
+          visible: ref.watch(statisticsProvider).showUnsettled,
           child: const SizedBox(height: 10),
-          visible: ref.watch(statisticsProvider).showUnsettled,
         ),
 
         Visibility(
+          visible: ref.watch(statisticsProvider).showUnsettled,
           child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -772,7 +771,6 @@ class MutationUnsettled extends ConsumerWidget {
             )
           ],
         ),
-        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
         
         
@@ -909,11 +907,12 @@ class MutationSettled extends ConsumerWidget {
           ],
         ),
         Visibility(
-          child: const SizedBox(height: 20),
           visible: ref.watch(statisticsProvider).showSettled,
+          child: const SizedBox(height: 20),
         ),
 
         Visibility(
+          visible: ref.watch(statisticsProvider).showSettled,
           child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -954,15 +953,15 @@ class MutationSettled extends ConsumerWidget {
             ])
           ],
         ),
-        visible: ref.watch(statisticsProvider).showSettled,
         ),
 
          Visibility(
+          visible: ref.watch(statisticsProvider).showSettled,
           child: const SizedBox(height: 30),
-          visible: ref.watch(statisticsProvider).showSettled,
         ),
 
         Visibility(
+        visible: ref.watch(statisticsProvider).showSettled,
           child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -993,15 +992,15 @@ class MutationSettled extends ConsumerWidget {
             )
           ],
         ),
-        visible: ref.watch(statisticsProvider).showSettled,
         ),
 
         Visibility(
+          visible: ref.watch(statisticsProvider).showSettled,
           child: const SizedBox(height: 10),
-          visible: ref.watch(statisticsProvider).showSettled,
         ),
 
         Visibility(
+        visible: ref.watch(statisticsProvider).showSettled,
           child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -1032,15 +1031,15 @@ class MutationSettled extends ConsumerWidget {
             )
           ],
         ),
-        visible: ref.watch(statisticsProvider).showSettled,
         ),
 
         Visibility(
+          visible: ref.watch(statisticsProvider).showSettled,
           child: const SizedBox(height: 10),
-          visible: ref.watch(statisticsProvider).showSettled,
         ),
 
         Visibility(
+        visible: ref.watch(statisticsProvider).showSettled,
           child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -1071,7 +1070,6 @@ class MutationSettled extends ConsumerWidget {
             )
           ],
         ),
-        visible: ref.watch(statisticsProvider).showSettled,
         ),
         
         

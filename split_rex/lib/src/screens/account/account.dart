@@ -23,7 +23,7 @@ class Account extends ConsumerWidget {
         context,
         ref,
         "Account",
-        "/",
+        "/home",
         SingleChildScrollView(
           child: Container(
               padding: const EdgeInsets.all(16.0),

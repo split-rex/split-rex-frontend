@@ -15,7 +15,7 @@ class Statistics extends ConsumerWidget {
         context,
         ref,
         "Detailed Report",
-        "/",
+        "/home",
         const StatisticsHeader()
       )
     );

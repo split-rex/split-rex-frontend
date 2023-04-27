@@ -27,7 +27,7 @@ class GroupList extends ConsumerWidget {
                 context,
                 ref,
                 "Groups",
-                "/",
+                "/home",
                 Container(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Column(

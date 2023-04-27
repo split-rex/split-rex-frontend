@@ -211,7 +211,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
               InkWell(
                 onTap: () => ref
                   .read(routeProvider)
-                  .changePage(context, "/"),
+                  .changePage(context, "/home"),
                   child: Container(
                     padding: const EdgeInsets.only(left: 8, top: 8),
                     child: const Icon(Icons.navigate_before,
@@ -245,7 +245,7 @@ class PreviewPage extends ConsumerWidget {
           InkWell(
               onTap: () => ref
                 .read(routeProvider)
-                .changePage(context, "/"),
+                .changePage(context, "/home"),
                 child: Container(
                   padding: const EdgeInsets.only(left: 8, top: 8),
                   child: const Icon(Icons.navigate_before,

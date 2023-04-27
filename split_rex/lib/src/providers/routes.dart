@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/screens/auth/sign_up.dart';
 import 'package:split_rex/src/screens/home.dart';
 
+import '../common/logger.dart';
+
 class RouteProvider extends ChangeNotifier {
   int currentNavbarIdx = 0;
 
@@ -21,18 +23,19 @@ class RouteProvider extends ChangeNotifier {
         ModalRoute.withName("/sign_up")
       );
     } else if (
-      (ModalRoute.of(context)?.settings.name == "/sign_up"
+      (ModalRoute.of(context)?.settings.name == "/"
+      || ModalRoute.of(context)?.settings.name == "/sign_up"
       || ModalRoute.of(context)?.settings.name == "/sign_in") 
-      && value == "/") {
+      && value == "/home") {
         Navigator.pushAndRemoveUntil(
         context, 
         MaterialPageRoute(
           builder: (context) => const Home()
         ), 
-        ModalRoute.withName("/")
+        ModalRoute.withName("/home")
       );
     } else if (ModalRoute.of(context)?.settings.name == "/scan_bill") {
-      if (value == "/") {
+      if (value == "/home") {
         Navigator.pop(context);
       } else {
         Navigator.pushReplacementNamed(context, value);
@@ -47,7 +50,7 @@ class RouteProvider extends ChangeNotifier {
     currentNavbarIdx = value;
     switch (value) {
       case 0:
-        changePage(context, "/");
+        changePage(context, "/home");
         break;
       case 1:
         changePage(context, "/group_list");

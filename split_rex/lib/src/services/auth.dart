@@ -134,7 +134,7 @@ class ApiServices {
           ref.read(paymentProvider).resetAll();
           ref.read(transactionProvider).clearTransProvider();
           EasyLoading.dismiss();
-          ref.read(routeProvider).changePage(context, "/");
+          ref.read(routeProvider).changePage(context, "/home");
         });
       } else {
         EasyLoading.dismiss();
@@ -167,7 +167,7 @@ class ApiServices {
                 FriendServices().friendRequestSentList(ref).then((value) {
                   getGroupOwedLent(ref).then((data) {
                     EasyLoading.dismiss();
-                    ref.read(routeProvider).changePage(context, "/");
+                    ref.read(routeProvider).changePage(context, "/home");
                   });
                 });
               });

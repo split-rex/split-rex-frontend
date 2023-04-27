@@ -15,7 +15,7 @@ class AddExpense extends ConsumerWidget {
         context, 
         ref,
         "Add Expense",
-        "/",
+        "/home",
         Container(
           padding: const EdgeInsets.only(top: 8.0),
           child: 

@@ -52,10 +52,11 @@ Future main() async{
             displayColor: const Color(0xFF4F4F4F),
           ),
         ),
+        initialRoute: "/",
         builder: EasyLoading.init(),
-        initialRoute: '/splash_screen',
         routes: {
-          '/': (context) => const Home(),
+          '/': (context) => const SplashScreen(),
+          '/home': (context) => const Home(),
           '/sign_up': (context) => const SignUpScreen(),
           '/sign_in': (context) => const SignInScreen(),
           '/group_list': (context) => const GroupList(),
@@ -87,7 +88,6 @@ Future main() async{
           '/verify_token': (context) => const VerifyToken(),
           '/create_password': (context) => const CreateNewPassword(),
           '/reset_pass_success': (context) => const ResetPassSuccess(),
-          '/splash_screen': (context) => const SplashScreen(),
         },
       )
     ),

@@ -28,7 +28,7 @@ class Activity extends ConsumerWidget {
                 context,
                 ref,
                 "Activity", 
-                "/",
+                "/home",
                 Container(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Column(children: [Expanded(flex: 5, child: activityListWidget(context, ref)),],)

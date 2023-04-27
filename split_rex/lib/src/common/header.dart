@@ -154,7 +154,7 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
         ));
 
 Future<void> _signOut(BuildContext context, WidgetRef ref) async {
-  ref.read(routeProvider).changePage(context, "/sign_up");
+  ref.read(routeProvider).changePage(context, "/sign_in");
   ref.read(activityProvider).activities.clear();
   ref.read(groupListProvider).clearGroupListProvider();
   ref.read(friendProvider).clearFriendProvider();

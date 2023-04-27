@@ -215,8 +215,9 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 8, top: 8),
                     child: const Icon(Icons.navigate_before,
-                      color: Colors.white, size: 36)
-                    ),
+                      color: Colors.white, size: 36
+                    )
+                  ),
               )
           ]
         ),

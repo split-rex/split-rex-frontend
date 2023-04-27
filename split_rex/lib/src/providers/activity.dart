@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/model/activity.dart';
 
 class ActivityProvider extends ChangeNotifier {
-  List<ActivityModel> activities = <ActivityModel>[
-    ActivityModel(
-        activityId: "",
-        activityType: "",
-        date: "",
-        redirectId: "",
-        paymentActivityId: null,
-        name: null,
-        status: null,
-        amount: null,
-        groupName: null,
-        transactionActivityId: null),
-  ];
+  List<ActivityModel> activities = <ActivityModel>[];
   // String _activityId = "";
   // String _activityType = "";
   // String _date = "";
@@ -29,12 +18,11 @@ class ActivityProvider extends ChangeNotifier {
   // String get detail => _detail;
 
   void loadActivityData(dynamic modelList) {
-    List<ActivityModel> builder = activities;
-    builder.clear();
+    activities.clear();
     if (modelList != null) {
       for(int i = 0; i < modelList?.length; i++) {
         if(modelList[i]['activity_type'] == "PAYMENT"){
-          builder.add(ActivityModel(
+          activities.add(ActivityModel(
           activityId: modelList[i]['activity_id'],
           activityType: modelList[i]['activity_type'],
           date: modelList[i]['date'],
@@ -46,7 +34,7 @@ class ActivityProvider extends ChangeNotifier {
           groupName: modelList[i]['detail']['group_name'],
         ));
         } else {
-          builder.add(ActivityModel(
+          activities.add(ActivityModel(
             activityId: modelList[i]['activity_id'],
             activityType: modelList[i]['activity_type'],
             date: modelList[i]['date'],

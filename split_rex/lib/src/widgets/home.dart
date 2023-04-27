@@ -161,11 +161,6 @@ class HomeFooter extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue<bool> getGroupOwedLentResp = 
-      ref.watch(getGroupOwedLent(
-        ref.watch(groupListProvider).isOwed
-      ));
-
     return 
     Expanded(
       child: Container(
@@ -197,7 +192,6 @@ class HomeFooter extends ConsumerWidget {
                           child: InkWell(
                             onTap: () {
                               ref.watch(groupListProvider).changeIsOwed(true);
-                              getGroupOwedLentResp = ref.refresh(getGroupOwedLent(true));
                             },
                             child: Container(
                               // color: Colors.white,
@@ -227,7 +221,6 @@ class HomeFooter extends ConsumerWidget {
                           child: InkWell(
                             onTap: () {
                               ref.watch(groupListProvider).changeIsOwed(true);
-                              getGroupOwedLentResp = ref.refresh(getGroupOwedLent(true));
                             },
                             child: Container(
                               // color: Colors.white,
@@ -245,7 +238,6 @@ class HomeFooter extends ConsumerWidget {
                         child: InkWell(
                           onTap: () {
                             ref.watch(groupListProvider).changeIsOwed(false);
-                            getGroupOwedLentResp = ref.refresh(getGroupOwedLent(false));
                           },
                           child: Container(
                             // color: Colors.white,
@@ -267,7 +259,6 @@ class HomeFooter extends ConsumerWidget {
                         child: InkWell(
                           onTap: () {
                             ref.watch(groupListProvider).changeIsOwed(false);
-                            getGroupOwedLentResp = ref.refresh(getGroupOwedLent(false));
                           },
                           child: Container(
                             // color: Colors.white,
@@ -297,26 +288,7 @@ class HomeFooter extends ConsumerWidget {
                 ),
               ),
               searchBar(context, ref),
-                getGroupOwedLentResp.when(
-                  data: (data) {
-                    Future(() {
-                      if (ref.watch(groupListProvider).isOwed) {
-                        ref.read(groupListProvider).updateHasOwedGroups(data);
-                      } else {
-                        ref.read(groupListProvider).updateHasLentGroups(data);
-                      }
-                    });
-                    return Expanded(flex: 5, child: showGroups(context, ref));
-                },
-                error: ((error, stackTrace) {
-                  return Text('Error: ${error.toString()}');
-                }), 
-                loading: (() {
-                  return (
-                    const Expanded(child: Center(child: CircularProgressIndicator()))
-                  );
-                })
-              )
+              Expanded(flex: 5, child: showGroups(context, ref))
             ],
           ),
         )

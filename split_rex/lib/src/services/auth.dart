@@ -5,16 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/providers/group_list.dart';
+import 'package:split_rex/src/providers/group_settings.dart';
+import 'package:split_rex/src/providers/payment.dart';
 
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/model/user.dart';
+import 'package:split_rex/src/providers/transaction.dart';
 import 'package:split_rex/src/services/group.dart';
 
 import '../common/const.dart';
+import '../providers/activity.dart';
+import '../providers/add_expense.dart';
+import '../providers/friend.dart';
+import '../providers/group_list.dart';
+import 'activity.dart';
 import 'friend.dart';
 
 class ApiServices {
@@ -115,17 +122,16 @@ class ApiServices {
         ref.read(authProvider).changeJwtToken(data["data"]);
         log("fegeg");
         getProfile(ref).then((value) {
-          FriendServices().userFriendList(ref).then((value) {
-            FriendServices().friendRequestReceivedList(ref).then((value) {
-              FriendServices().friendRequestSentList(ref).then((value) {
-                EasyLoading.dismiss();
-                ref.read(routeProvider).changePage(context, "/");
-              });
-            });
-          });
+          ref.watch(activityProvider).activities.clear();
+          ref.read(addExpenseProvider).resetAll();
+          ref.read(friendProvider).clearFriendProvider();
+          ref.read(groupListProvider).clearGroupListProvider();
+          ref.read(groupSettingsProvider).resetAll();
+          ref.read(paymentProvider).resetAll();
+          ref.read(transactionProvider).clearTransProvider();
+          EasyLoading.dismiss();
+          ref.read(routeProvider).changePage(context, "/");
         });
-
-        // ignore: use_build_context_synchronously
       } else {
         EasyLoading.dismiss();
         ref.read(errorProvider).changeError(data["message"]);
@@ -146,26 +152,16 @@ class ApiServices {
       ref.read(authProvider).changeJwtToken(data["data"]);
       ref.read(errorProvider).changeError(data["message"]);
       getProfile(ref).then((value) {
-        GroupServices().userGroupList(ref).then((value) {
-          FriendServices().userFriendList(ref).then((value) {
-            FriendServices().friendRequestReceivedList(ref).then((value) {
-              FriendServices().friendRequestSentList(ref).then((value) {
-                log("fpf");
-                AsyncValue<bool> val = ref.refresh(getGroupOwedLent(true));
-                log("fpf1");
-                val.when(
-                  loading: () => {},
-                  error: (error, stack){
-                    ref.read(errorProvider).changeError("ERROR_INTERNAL_SERVER");
-                    EasyLoading.dismiss();
-                  },
-                  data: (data) {
-                    log("fpf3");
-                    ref.read(groupListProvider).updateHasOwedGroups(data);
+        ActivityServices().getActivity(ref).then((value) {
+          GroupServices().userGroupList(ref).then((value) {
+            FriendServices().userFriendList(ref).then((value) {
+              FriendServices().friendRequestReceivedList(ref).then((value) {
+                FriendServices().friendRequestSentList(ref).then((value) {
+                  ref.read(getGroupOwedLent).then((data) {
                     EasyLoading.dismiss();
                     ref.read(routeProvider).changePage(context, "/");
-                  },
-                );
+                  });
+                });
               });
             });
           });

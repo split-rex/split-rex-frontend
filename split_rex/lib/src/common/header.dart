@@ -9,8 +9,12 @@ import 'package:split_rex/src/providers/firebaseauth.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/services/friend.dart';
 import 'package:split_rex/src/services/group.dart';
+
+import '../providers/activity.dart';
+import '../providers/group_settings.dart';
+import '../providers/payment.dart';
+import '../providers/transaction.dart';
 
 Widget header(BuildContext context, WidgetRef ref, String pagename,
         String prevPage, Widget widget) =>
@@ -75,16 +79,7 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                 alignment: Alignment.centerRight,
                                 child: GestureDetector(
                                   onTap: () {
-                                    FriendServices()
-                                    .userFriendList(ref).then((value) {
-                                      FriendServices()
-                                      .friendRequestReceivedList(ref).then((value) {
-                                        FriendServices()
-                                        .friendRequestSentList(ref).then((value) {
-                                          ref.read(routeProvider).changePage(context, "/friends");
-                                        });
-                                      });
-                                    });
+                                    ref.read(routeProvider).changePage(context, "/friends");
                                   },
                                   child: const Text("All Friends",
                                     style: TextStyle(
@@ -123,15 +118,15 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                 alignment: Alignment.centerRight,
                                 padding: const EdgeInsets.only(right: 20),
                                 child: InkWell(
-                                  onTap: () async {
+                                  onTap: () {
                                     if (FirebaseAuth.instance.currentUser !=
                                         null) {
                                       log("firebase logout");
-                                      await ref
-                                          .watch(googleSignInProvider)
-                                          .googleLogout();
+                                      ref
+                                        .watch(googleSignInProvider)
+                                        .googleLogout();
                                     }
-                                    await _signOut(ref);
+                                    _signOut(context, ref);
                                   },
                                   child: const Icon(Icons.logout,
                                       color: Color(0XFF4F4F4F), size: 24),
@@ -161,12 +156,17 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
           ],
         ));
 
-Future<void> _signOut(WidgetRef ref) async {
+Future<void> _signOut(BuildContext context, WidgetRef ref) async {
+  ref.read(routeProvider).changePage(context, "/sign_up");
+  ref.read(activityProvider).activities.clear();
   ref.read(groupListProvider).clearGroupListProvider();
   ref.read(friendProvider).clearFriendProvider();
   ref.read(authProvider).clearAuthProvider();
   ref.read(addExpenseProvider).resetAll();
   ref.read(routeProvider).clearRouteProvider();
+  ref.read(groupSettingsProvider).resetAll();
+  ref.read(paymentProvider).resetAll();
+  ref.read(transactionProvider).clearTransProvider();
 }
 
 helpDialogUnsettledPayments(context) {

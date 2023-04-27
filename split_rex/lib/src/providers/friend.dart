@@ -22,6 +22,9 @@ class FriendProvider extends ChangeNotifier {
     friendReceivedList = <Friend>[];
     friendSentList = <Friend>[];
     friendSearched = <Friend>[];
+    friendNotInGroup = <Friend>[];
+    friendNotInGroupLoaded = <Friend>[];
+    friendInGroup = <Friend>[];
     addFriend = Friend(name: "");
     isReceived = true;
     notifyListeners();

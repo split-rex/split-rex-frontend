@@ -11,6 +11,7 @@ import 'package:split_rex/src/screens/account/change_password.dart';
 import 'package:split_rex/src/screens/auth/username_fill.dart';
 import 'package:split_rex/src/screens/expense/confirm_payment.dart';
 import 'package:split_rex/src/screens/expense/transaction_detail.dart';
+import 'package:split_rex/src/screens/forgot_password/verify_token.dart';
 import 'package:split_rex/src/screens/friends/add_friends.dart';
 import 'package:split_rex/src/screens/friends/choose_friend.dart';
 import 'package:split_rex/src/screens/friends/friend_requests.dart';
@@ -34,6 +35,10 @@ import '../providers/camera.dart';
 import '../screens/scan_bill.dart';
 import '../screens/settle/settle_up.dart';
 import '../screens/settle/unsettled_payments.dart';
+
+import '../screens/forgot_password/create_new_password.dart';
+import '../screens/forgot_password/forgot_pasword.dart';
+import '../screens/forgot_password/reset_password_sucess.dart';
 
 class PageRouting extends ConsumerWidget {
   const PageRouting({super.key});
@@ -62,6 +67,15 @@ class PageRouting extends ConsumerWidget {
       // report statistics
       case "statistics":
         return const Statistics();
+      // password
+      case "forgot_password":
+        return const ForgotPassword();
+      case "verify_token":
+        return const VerifyToken();
+      case "create_password":
+        return const CreateNewPassword();
+      case "reset_pass_success":
+        return const ResetPassSuccess();
 
       // friends
       case "friend_requests":

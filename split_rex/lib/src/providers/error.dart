@@ -18,12 +18,13 @@ class ErrorProvider extends ChangeNotifier {
     "ERROR_CANNOT_ADD_SELF": "You cannot add yourself",
     "ERROR_ALREADY_FRIEND": "User is already friend",
     "ERROR_USER_NOT_FOUND": "User not found",
-    "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH": "Your password and confirmation does not match!",
-
-    "ERROR_ALREADY_REQUESTED_SENT" : "Friend request sent",
-    "ERROR_ALREADY_REQUESTED_RECEIVED" : "This user has sent friend request to you",
-
+    "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH":
+        "Your password and confirmation does not match!",
+    "ERROR_ALREADY_REQUESTED_SENT": "Friend request sent",
+    "ERROR_ALREADY_REQUESTED_RECEIVED":
+        "This user has sent friend request to you",
     "INVALID_PAYMENT_METHOD": "Change payment method",
+    "ERROR_FAILED_PASS_CHANGE": "Failed to change password",
   };
 
   void changeError(String value) {
@@ -32,8 +33,6 @@ class ErrorProvider extends ChangeNotifier {
 
     notifyListeners();
   }
-
-  
 }
 
 final errorProvider = ChangeNotifierProvider((ref) => ErrorProvider());

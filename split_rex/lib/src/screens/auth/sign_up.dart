@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/routes.dart';
@@ -22,25 +23,27 @@ class SignUpScreen extends ConsumerWidget {
           if (snapshot.hasData) {
             // ref.read(routeProvider).changePage("fill_username");
 
-            //  () async {
-            // final user = FirebaseAuth.instance.currentUser;
-            //   ref.read(authProvider).changeSignUpData(user?.displayName,
-            //       user?.displayName, user?.email, user?.uid, user?.uid);
-            //   await ApiServices().postRegister(ref);
-            //   if (ref.watch(errorProvider).errorType == "ERROR_EMAIL_EXISTED")
-            //   {
-            //     ref
-            //         .read(authProvider)
-            //         .changeSignInData(user?.email, user?.uid);
-            //     await ApiServices().postLogin(ref);
-            //   }}();
-            return SingleChildScrollView(
-                child: Column(
-              children: const [
-                UsernameFill(),
+             () async {
+            final user = FirebaseAuth.instance.currentUser;
+              ref
+                    .read(authProvider)
+                    .changeSignInData(user?.email, user?.uid);
+              await ApiServices().postLogin(ref);
+              
+              }();
+              
+              if (ref.watch(errorProvider).errorType == "ERROR_FAILED_LOGIN")
+              {
+               
                 
-              ],
-            ));
+                return SingleChildScrollView(
+                    child: Column(
+                  children: const [
+                    UsernameFill(),
+                  ],
+                ));
+              }
+            return const Center(child: CircularProgressIndicator());
             // ignore: use_build_context_synchronously
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             // log("Waiting");
@@ -49,6 +52,7 @@ class SignUpScreen extends ConsumerWidget {
             // log("Error");
             return const Text("Error");
           } else {
+            logger.d(ref.watch(authProvider).jwtToken);
             // log("Not signed in");
             return SingleChildScrollView(
                 child: Column(

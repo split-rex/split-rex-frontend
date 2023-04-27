@@ -58,6 +58,8 @@ dependencies:
   # image_gallery_saver: ^1.7.1
   share_plus: ^6.3.1
   flutter_easyloading: ^3.0.5
+  shared_preferences:
+  jwt_decoder:
 
 dev_dependencies:
   flutter_test:

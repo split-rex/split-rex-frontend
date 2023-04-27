@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/screens/account/account.dart';
@@ -24,6 +26,7 @@ import 'package:split_rex/src/screens/friends/friends.dart';
 
 import 'package:split_rex/src/screens/expense/edit_items.dart';
 import 'package:split_rex/src/screens/expense/split_bill.dart';
+import 'package:split_rex/src/screens/splashscreen.dart';
 
 import '../screens/groups/group_setting.dart';
 import '../providers/camera.dart';
@@ -37,8 +40,11 @@ class PageRouting extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var currentPage = ref.watch(routeProvider).currentPage;
+   
 
     switch (currentPage) {
+      case "splash_screen":
+        return const SplashScreen();
       case "sign_up":
         return const SignUpScreen();
       case "sign_in":

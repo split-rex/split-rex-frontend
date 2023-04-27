@@ -24,6 +24,7 @@ class ErrorProvider extends ChangeNotifier {
     "ERROR_ALREADY_REQUESTED_RECEIVED":
         "This user has sent friend request to you",
     "INVALID_PAYMENT_METHOD": "Change payment method",
+    "ERROR_FAILED_PASS_CHANGE": "Failed to change password",
   };
 
   void changeError(String value) {

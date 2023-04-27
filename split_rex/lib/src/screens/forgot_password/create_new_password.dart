@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/providers/auth.dart';
 
 import '../../common/header.dart';
+import '../../services/password.dart';
 
 class CreateNewPassword extends ConsumerWidget {
   const CreateNewPassword({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    TextEditingController passController = TextEditingController();
+    TextEditingController confPassController = TextEditingController();
+
     return header(
       context,
       ref,
@@ -44,17 +49,19 @@ class CreateNewPassword extends ConsumerWidget {
                 ),
               ),
               PasswordField(
-                // controller: passController,
+                controller: passController,
                 key: UniqueKey(),
                 placeholderText: 'Password',
               ),
               PasswordField(
-                // controller: confPassController,
+                controller: confPassController,
                 key: UniqueKey(),
                 placeholderText: 'Confirm Password',
               ),
               const SizedBox(height: 10),
               ResetButton(
+                passController: passController,
+                confPassController: confPassController,
                 key: UniqueKey(),
               ),
             ],
@@ -64,11 +71,11 @@ class CreateNewPassword extends ConsumerWidget {
 }
 
 class PasswordField extends ConsumerWidget {
-  // final TextEditingController controller;
+  final TextEditingController controller;
   final String placeholderText;
   const PasswordField({
     required Key key,
-    // required this.controller,
+    required this.controller,
     required this.placeholderText,
   }) : super(key: key);
 
@@ -105,7 +112,7 @@ class PasswordField extends ConsumerWidget {
       child: TextField(
         key: key,
         obscureText: passwordVisible,
-        // controller: controller,
+        controller: controller,
         cursorColor: const Color(0xFF59C4B0),
         decoration: InputDecoration(
             icon: const Icon(
@@ -134,18 +141,71 @@ class PasswordField extends ConsumerWidget {
 }
 
 class ResetButton extends ConsumerWidget {
-  // final TextEditingController nameController;
-
+  final TextEditingController passController;
+  final TextEditingController confPassController;
   const ResetButton({
     required Key key,
-    // required this.nameController,
+    required this.passController,
+    required this.confPassController,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () {
-        ref.read(routeProvider).changePage("create_password");
+      onTap: () async {
+        EasyLoading.instance
+          ..displayDuration = const Duration(seconds: 3)
+          ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+          ..loadingStyle = EasyLoadingStyle.custom
+          ..indicatorSize = 45.0
+          ..radius = 16.0
+          ..textColor = Colors.white
+          ..progressColor = const Color(0xFF4F9A99)
+          ..backgroundColor = const Color(0xFF4F9A99)
+          ..indicatorColor = Colors.white
+          ..maskType = EasyLoadingMaskType.custom
+          ..maskColor = const Color.fromARGB(155, 255, 255, 255);
+        EasyLoading.show(
+            status: 'Loading...', maskType: EasyLoadingMaskType.custom);
+        await ForgotPassServices()
+            .changePasword(ref, passController.text, confPassController.text);
+
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+            padding: const EdgeInsets.all(16),
+            height: 70,
+            decoration: BoxDecoration(
+                color: Color(ref.watch(errorProvider).errorType ==
+                            "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" ||
+                        ref.watch(errorProvider).errorType ==
+                            "ERROR_FAILED_PASS_CHANGE"
+                    ? 0xFFF44336
+                    : 0xFF6DC7BD),
+                borderRadius: const BorderRadius.all(Radius.circular(15))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  ref.watch(errorProvider).errorType ==
+                              "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_FAILED_PASS_CHANGE"
+                      ? ref.watch(errorProvider).errorMsg
+                      : "Password Reset Successful",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ));
       },
       child: Container(
           padding: const EdgeInsets.all(16.0),

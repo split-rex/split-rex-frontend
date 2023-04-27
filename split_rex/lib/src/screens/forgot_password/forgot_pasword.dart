@@ -6,6 +6,7 @@ import 'package:split_rex/src/providers/routes.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/header.dart';
+import '../../services/password.dart';
 
 class ForgotPassword extends ConsumerWidget {
   const ForgotPassword({super.key});
@@ -148,10 +149,9 @@ class ResetButton extends ConsumerWidget {
           ..maskColor = const Color.fromARGB(155, 255, 255, 255);
         EasyLoading.show(
             status: 'Loading...', maskType: EasyLoadingMaskType.custom);
-        ref.read(forgotPasswordProvider).changeEmail(emailController.text);
-        // await ForgotPassServices().generatePassToken(ref, emailController.text);
+        await ForgotPassServices().generatePassToken(ref, emailController.text);
+        ref.watch(forgotPasswordProvider).changeEmail(emailController.text);
         ref.read(routeProvider).changePage("verify_token");
-        EasyLoading.dismiss();
       },
       child: Container(
           padding: const EdgeInsets.all(16.0),

@@ -6,8 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/password.dart';
 
 import '../common/const.dart';
-import '../common/logger.dart';
 import '../providers/error.dart';
+import '../providers/routes.dart';
 
 class ForgotPassServices {
   String endpoint = getUrl();
@@ -22,43 +22,62 @@ class ForgotPassServices {
         }));
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-      logger.d(data);
-      // var token = data["data"]["token"];
-      // var seal = data["data"]["encrypted_token"];
-      // ref.read(forgotPasswordProvider).changeToken(token, seal);
-
       EasyLoading.dismiss();
     } else {
       ref.read(errorProvider).changeError(data["message"]);
+      EasyLoading.dismiss();
     }
   }
 
-  Future<void> verifyResetPassToken(
-      WidgetRef ref, String email, String code) async {
+  Future<void> verifyResetPassToken(WidgetRef ref, String code) async {
+    var email = ref.read(forgotPasswordProvider).email;
     Response resp = await post(Uri.parse("$endpoint/verifyResetPassToken"),
         headers: <String, String>{
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({"email": email, "encypted_token": "", "code": code}));
+        body: jsonEncode({"email": email, "code": code}));
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-    } else {}
+      ref
+          .read(forgotPasswordProvider)
+          .changeToken(data["data"]["encrypted_token"]);
+      ref.read(forgotPasswordProvider).changeCode(code);
+      EasyLoading.dismiss();
+    } else {
+      ref.read(errorProvider).changeError(data["message"]);
+      EasyLoading.dismiss();
+    }
   }
 
   Future<void> changePasword(
-      WidgetRef ref, String email, String code, String newPassword) async {
+      WidgetRef ref, String newPassword, String newConfPassword) async {
+    if (newPassword != newConfPassword) {
+      ref
+          .watch(errorProvider)
+          .changeError("ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH");
+      EasyLoading.dismiss();
+      return;
+    }
+    var email = ref.watch(forgotPasswordProvider).email;
+    var encryptedToken = ref.watch(forgotPasswordProvider).encryptedToken;
+    var code = ref.watch(forgotPasswordProvider).code;
     Response resp = await post(Uri.parse("$endpoint/changePassword"),
         headers: <String, String>{
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
           "email": email,
-          "encypted_token": "",
+          "encrypted_token": encryptedToken,
           "code": code,
           "new_password": newPassword,
         }));
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
-    } else {}
+      ref.watch(routeProvider).changePage("reset_pass_success");
+      EasyLoading.dismiss();
+    } else {
+      ref.watch(errorProvider).changeError("ERROR_FAILED_PASS_CHANGE");
+      EasyLoading.dismiss();
+    }
   }
 }

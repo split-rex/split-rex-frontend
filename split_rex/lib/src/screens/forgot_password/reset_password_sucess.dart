@@ -9,7 +9,6 @@ class ResetPassSuccess extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(errorProvider).changeError("");
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 25),
         child: Column(

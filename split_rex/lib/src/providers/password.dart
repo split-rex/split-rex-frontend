@@ -9,11 +9,15 @@ import '../common/logger.dart';
 
 class ForgotPasswordProvider extends ChangeNotifier {
   String email = "";
-  String token = "";
+  String code = "";
   String encryptedToken = "";
   bool timerStopped = false;
-  final key = enc.Key.fromUtf8("112ksdf68jk2as768kj124ds0fsn1jhg");
-  final iv = enc.IV.fromLength(16);
+
+  changeCode(String newCode) {
+    code = newCode;
+
+    notifyListeners();
+  }
 
   changeEmail(String newEmail) {
     email = newEmail;
@@ -21,34 +25,10 @@ class ForgotPasswordProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  changeToken(String token, String seal) async {
-    token = token;
+  changeToken(String newEncryptedToken) async {
+    encryptedToken = newEncryptedToken;
 
-    AesGcm algorithm = AesGcm.with256bits();
-    SecretKey secretKey =
-        SecretKey(utf8.encode("112ksdf68jk2as768kj124ds0fsn1jhg"));
-    List<int> nonce = algorithm.newNonce();
-    logger.d(nonce);
-
-    SecretBox secretBox = await algorithm.encrypt(
-      utf8.encode(seal),
-      secretKey: secretKey,
-      nonce: nonce
-    );
-
-    logger.d(secretBox.toString());
-    logger.d(base64.encode(secretBox.cipherText));
-    // // encrypt token
-    // enc.Encrypter encrypter = enc.Encrypter(enc.AES(key));
-    // encryptedToken = encrypter.encrypt(token, iv: iv).base64;
-
-    // logger.d(encryptedToken);
-    // logger.d(encrypter.encrypt(seal, iv:iv).base64);
-
-    // String testBox = await algorithm.decryptString(
-    //   secretBox,
-    //   secretKey: secretKey
-    // )
+    notifyListeners();
   }
 
   changeTimerStopped(bool stopped) {

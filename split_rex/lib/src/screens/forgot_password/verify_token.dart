@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/header.dart';
 import '../../providers/auth.dart';
 import '../../providers/password.dart';
 import '../../providers/routes.dart';
+import '../../services/password.dart';
 
 bool timerStart = false;
 
@@ -90,7 +92,7 @@ class VerifyToken extends ConsumerWidget {
               ),
               ref.watch(forgotPasswordProvider).timerStopped
                   ? const DisabledResetButton()
-                  : ResetButton(
+                  : VerifyTokenButton(
                       codeController: controller,
                       key: UniqueKey(),
                     ),
@@ -129,6 +131,7 @@ class TokenFormField extends ConsumerWidget {
       child: TextField(
         key: key,
         cursorColor: const Color(0xFF59C4B0),
+        controller: controller,
         decoration: InputDecoration(
             icon: const Icon(
               Icons.lock,
@@ -164,7 +167,7 @@ class TokenTimer extends ConsumerStatefulWidget {
 
 class _TokenTimerState extends ConsumerState<TokenTimer> {
   Timer? countdownTimer;
-  Duration myDuration = const Duration(seconds: 2);
+  Duration myDuration = const Duration(minutes: 2);
 
   void startTimer() {
     countdownTimer =
@@ -233,10 +236,10 @@ class DisabledResetButton extends ConsumerWidget {
   }
 }
 
-class ResetButton extends ConsumerWidget {
+class VerifyTokenButton extends ConsumerWidget {
   final TextEditingController codeController;
 
-  const ResetButton({
+  const VerifyTokenButton({
     required Key key,
     required this.codeController,
   }) : super(key: key);
@@ -244,7 +247,23 @@ class ResetButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        EasyLoading.instance
+          ..displayDuration = const Duration(seconds: 3)
+          ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+          ..loadingStyle = EasyLoadingStyle.custom
+          ..indicatorSize = 45.0
+          ..radius = 16.0
+          ..textColor = Colors.white
+          ..progressColor = const Color(0xFF4F9A99)
+          ..backgroundColor = const Color(0xFF4F9A99)
+          ..indicatorColor = Colors.white
+          ..maskType = EasyLoadingMaskType.custom
+          ..maskColor = const Color.fromARGB(155, 255, 255, 255);
+        EasyLoading.show(
+            status: 'Loading...', maskType: EasyLoadingMaskType.custom);
+        await ForgotPassServices()
+            .verifyResetPassToken(ref, codeController.text);
         ref.read(routeProvider).changePage("create_password");
       },
       child: Container(

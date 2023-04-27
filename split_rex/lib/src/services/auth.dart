@@ -15,7 +15,6 @@ import 'package:split_rex/src/model/user.dart';
 import 'package:split_rex/src/services/group.dart';
 
 import '../common/const.dart';
-import '../common/logger.dart';
 import 'friend.dart';
 
 class ApiServices {
@@ -147,8 +146,8 @@ class ApiServices {
       await FriendServices().friendRequestSentList(ref);
       EasyLoading.dismiss();
       ref.read(routeProvider).changePage("home");
-      AsyncValue<bool> val = ref.refresh(getGroupOwedLent(true));
-      ref.read(groupListProvider).updateHasOwedGroups(val as bool);
+      // AsyncValue<bool> val = ref.refresh(getGroupOwedLent(true));
+      // ref.read(groupListProvider).updateHasOwedGroups(val as bool);
     } else {
       EasyLoading.dismiss();
       ref.read(errorProvider).changeError(data["message"]);

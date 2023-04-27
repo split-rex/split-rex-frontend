@@ -10,11 +10,13 @@ class Friends extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return header(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: header(
         context,
         ref,
         "Friends",
-        "group_list",
+        "/group_list",
         Container(
           padding: const EdgeInsets.only(top: 8.0),
           child:Column(
@@ -35,6 +37,7 @@ class Friends extends ConsumerWidget {
             ],
           )
         )
-      );
-    }
+      ),
+    );
+  }
 }

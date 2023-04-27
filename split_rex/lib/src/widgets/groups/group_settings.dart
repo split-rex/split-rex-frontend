@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,7 +34,7 @@ class GroupNameSection extends ConsumerWidget {
             InkWell(
               onTap: () => {
                 logger.d("tapped"),
-                ref.read(routeProvider).changePage("group_settings_edit"),
+                ref.read(routeProvider).changePage(context, "/group_settings_edit"),
               },
               child: const Icon(
                 Icons.edit,
@@ -91,11 +89,11 @@ class AddGroupMembersSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
-        ref.watch(friendProvider).resetAddFriend();
-        ref.watch(friendProvider).getFriendNotInGroup(
+        ref.read(friendProvider).resetAddFriend();
+        ref.read(friendProvider).getFriendNotInGroup(
             ref.watch(groupListProvider).currGroup.members);
-        ref.watch(groupSettingsProvider).clearMember();
-        ref.watch(routeProvider).changePage("choose_friend_group_settings");
+        ref.read(groupSettingsProvider).clearMember();
+        ref.read(routeProvider).changePage(context, "/choose_friend_group_settings");
       },
       child: Container(
           height: 60,

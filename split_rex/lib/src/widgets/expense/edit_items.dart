@@ -294,13 +294,15 @@ Widget summaryField(WidgetRef ref, String title) => Column(children: [
   const SizedBox(height: 8.0)
 ],);
 
-Widget confirmButton(WidgetRef ref) => GestureDetector(
-  onTap: () async {
+Widget confirmButton(WidgetRef ref, BuildContext context) => GestureDetector(
+  onTap: () {
     if (ref.watch(addExpenseProvider).items.isNotEmpty) {
       if (!ref.watch(addExpenseProvider).isNewGroup) {
-        await GroupServices().getGroupDetail(ref, ref.watch(addExpenseProvider).existingGroup.groupId);
+        GroupServices().getGroupDetail(ref, ref.watch(addExpenseProvider).existingGroup.groupId).then((value) {
+          ref.read(routeProvider).changePage(context, "/split_bill");
+        });
       }
-      ref.read(routeProvider).changePage("split_bill");
+      ref.read(routeProvider).changePage(context, "/split_bill");
     } else {
       null;
     }

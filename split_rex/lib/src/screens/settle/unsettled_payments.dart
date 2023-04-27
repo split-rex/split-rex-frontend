@@ -9,13 +9,16 @@ class UnsettledPayments extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return header(
-      context,
-      ref,
-      "Unsettled Payments",
-      "group_detail",
-      Column(
-        children: const [UnsettledPaymentsBody()],
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: header(
+        context,
+        ref,
+        "Unsettled Payments",
+        "/group_detail",
+        Column(
+          children: const [UnsettledPaymentsBody()],
+        ),
       ),
     );
   }

@@ -121,22 +121,25 @@ Widget activityListWidget(BuildContext context, WidgetRef ref) {
                                               fontWeight: FontWeight.bold,
                                               color: Color(0xFF4F9A99)),
                                           recognizer: TapGestureRecognizer()
-                                            ..onTap = () async {
+                                            ..onTap = () {
                                               ref
                                                   .read(groupListProvider)
                                                   .changeCurrGroupById(ref
                                                       .watch(activityProvider)
                                                       .activities[index]
                                                       .redirectId);
-                                              await GroupServices()
-                                                  .getGroupTransactions(ref);
+                                              GroupServices()
+                                              .getGroupTransactions(ref).then((val) {
+                                                PaymentServices()
+                                                .getUnconfirmedPayment(ref).then((val) {
+                                                  ref
+                                                      .read(routeProvider)
+                                                      .changePage(context, 
+                                                          "/confirm_payment");
+                                                });
+
+                                                  });
     
-                                              await PaymentServices()
-                                                  .getUnconfirmedPayment(ref);
-                                              ref
-                                                  .watch(routeProvider)
-                                                  .changePage(
-                                                      "confirm_payment");
                                             },
                                         ),
                                       ]),
@@ -271,19 +274,21 @@ Widget activityListWidget(BuildContext context, WidgetRef ref) {
                                               fontWeight: FontWeight.bold,
                                               color: Color(0xFF4F9A99)),
                                           recognizer: TapGestureRecognizer()
-                                            ..onTap = () async {
-                                              await AddExpenseServices()
+                                            ..onTap = () {
+                                              AddExpenseServices()
                                                   .getTransactionDetail(
                                                       ref,
                                                       ref
                                                           .watch(
                                                               activityProvider)
                                                           .activities[index]
-                                                          .redirectId);
-                                              ref
-                                                  .read(routeProvider)
-                                                  .changePage(
-                                                      "transaction_detail");
+                                                          .redirectId, context).then((value) {
+                                                ref
+                                                    .read(routeProvider)
+                                                    .changePage(context, 
+                                                        "/transaction_detail");
+
+                                                          });
                                             },
                                         ),
                                       ]),

@@ -187,10 +187,10 @@ class SettleUpButton extends ConsumerWidget {
         int amount = int.parse(amountController.text);
         if (curr.totalUnpaid > 0) {
           await PaymentServices()
-              .settlePaymentOwed(ref, curr.paymentId, amount);
+              .settlePaymentOwed(ref, curr.paymentId, amount, context);
         } else {
           await PaymentServices()
-              .settlePaymentLent(ref, curr.paymentId, amount);
+              .settlePaymentLent(ref, curr.paymentId, amount, context);
         }
       },
       child: Container(

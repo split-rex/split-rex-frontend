@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
@@ -206,7 +207,7 @@ class GroupServices {
     }
   }
 
-  Future<void> addFriendToGroup(WidgetRef ref) async {
+  Future<void> addFriendToGroup(WidgetRef ref, BuildContext context) async {
     Response resp = await post(
       Uri.parse("$endpoint/addGroupMember"),
       headers: <String, String>{
@@ -223,8 +224,9 @@ class GroupServices {
     logger.d(data);
     log(data["message"]);
     if (data["message"] == "SUCCESS") {
-      await getGroupDetail(ref, ref.watch(groupListProvider).currGroup.groupId);
-      ref.read(routeProvider).changePage("group_settings");
+      getGroupDetail(ref, ref.watch(groupListProvider).currGroup.groupId).then((value) {
+        ref.read(routeProvider).changePage(context, "/group_settings");
+      });
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

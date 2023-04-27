@@ -112,13 +112,14 @@ class FriendRequest extends ConsumerWidget {
                 ],
               )),
           InkWell(
-            onTap: () async {
-              await FriendServices().friendRequestReceivedList(ref);
-              await FriendServices().friendRequestSentList(ref);
+            onTap: () {
+              FriendServices().friendRequestReceivedList(ref).then((value) {
+                FriendServices().friendRequestSentList(ref).then((value) {
+                  ref.watch(friendProvider).resetAddFriend();
+                  ref.read(routeProvider).changePage(context, "/friend_requests");
+                });
+              });
 
-              ref.watch(friendProvider).resetAddFriend();
-              ref.read(routeProvider).changeNavbarIdx(1);
-              ref.read(routeProvider).changePage("friend_requests");
             },
             child: const Text("Review",
                 textAlign: TextAlign.end,

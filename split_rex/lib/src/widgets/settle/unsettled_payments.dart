@@ -180,7 +180,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                       ref
                           .watch(paymentProvider)
                           .changeCurrUnsettledPayment(index);
-                      ref.read(routeProvider).changePage("settle_up");
+                      ref.read(routeProvider).changePage(context, "/settle_up");
                     },
                     child: Container(
                       alignment: Alignment.center,

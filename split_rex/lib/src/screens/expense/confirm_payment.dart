@@ -10,12 +10,15 @@ class ConfirmPayment extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return header(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: header(
         context,
         ref,
         "Confirm Payment",
-        "group_detail",
+        "/group_detail",
         const UnconfirmedPayment()
-      );
+      ),
+    );
   }
 }

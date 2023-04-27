@@ -56,7 +56,7 @@ class ApiServices {
     }
   }
 
-  Future<void> updatePass(WidgetRef ref) async {
+  Future<void> updatePass(WidgetRef ref, BuildContext context) async {
     UserUpdatePass newPass = ref.watch(authProvider).newPass;
     if (newPass.confNewPass != newPass.newPass) {
       ref
@@ -75,8 +75,9 @@ class ApiServices {
       var data = jsonDecode(resp.body);
       if (data["message"] == "SUCCESS") {
         ref.read(authProvider).resetNewPass();
-        await getProfile(ref);
-        ref.read(routeProvider).changePage("edit_account");
+        getProfile(ref).then((value) {
+          ref.read(routeProvider).changePage(context, "/edit_account");
+        });
       } else {
         ref.read(errorProvider).changeError(data["message"]);
       }
@@ -89,7 +90,7 @@ class ApiServices {
         .hasMatch(email);
   }
 
-  Future<void> postRegister(WidgetRef ref) async {
+  Future<void> postRegister(WidgetRef ref, BuildContext context) async {
     log("postRegister");
     SignUpModel signUpData = ref.watch(authProvider).signUpData;
     if (!isEmailValid(signUpData.email)) {
@@ -112,17 +113,23 @@ class ApiServices {
       if (data["message"] == "SUCCESS") {
         ref.read(errorProvider).changeError(data["message"]);
         ref.read(authProvider).changeJwtToken(data["data"]);
+        log("fegeg");
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString("jwtToken", data["data"]);
         prefs.setString("email", signUpData.email);
         prefs.setString("password", signUpData.pass);
-        await getProfile(ref);
+        await getProfile(ref).then((value) {
+          FriendServices().userFriendList(ref).then((value) {
+            FriendServices().friendRequestReceivedList(ref).then((value) {
+              FriendServices().friendRequestSentList(ref).then((value) {
+                EasyLoading.dismiss();
+                ref.read(routeProvider).changePage(context, "/");
+              });
+            });
+          });
+        });
 
-        await FriendServices().userFriendList(ref);
-        await FriendServices().friendRequestReceivedList(ref);
-        await FriendServices().friendRequestSentList(ref);
-        EasyLoading.dismiss();
-        ref.read(routeProvider).changePage("home");
+        // ignore: use_build_context_synchronously
       } else {
         EasyLoading.dismiss();
         ref.read(errorProvider).changeError(data["message"]);
@@ -130,7 +137,7 @@ class ApiServices {
     }
   }
 
-  Future<void> postLogin(WidgetRef ref) async {
+  Future<void> postLogin(WidgetRef ref, BuildContext context) async {
     SignInModel signInData = ref.watch(authProvider).signInData;
     Response resp = await post(Uri.parse("$endpoint/login"),
         headers: <String, String>{'Content-Type': 'application/json'},
@@ -146,16 +153,32 @@ class ApiServices {
       prefs.setString("email", signInData.email);
       prefs.setString("password", signInData.pass);
       ref.read(errorProvider).changeError(data["message"]);
-      await getProfile(ref);
-      
-      await GroupServices().userGroupList(ref);
-      await FriendServices().userFriendList(ref);
-      await FriendServices().friendRequestReceivedList(ref);
-      await FriendServices().friendRequestSentList(ref);
-      EasyLoading.dismiss();
-      ref.read(routeProvider).changePage("home");
-      // AsyncValue<bool> val = ref.refresh(getGroupOwedLent(true));
-      // ref.read(groupListProvider).updateHasOwedGroups(val as bool);
+      getProfile(ref).then((value) {
+        GroupServices().userGroupList(ref).then((value) {
+          FriendServices().userFriendList(ref).then((value) {
+            FriendServices().friendRequestReceivedList(ref).then((value) {
+              FriendServices().friendRequestSentList(ref).then((value) {
+                log("fpf");
+                AsyncValue<bool> val = ref.refresh(getGroupOwedLent(true));
+                log("fpf1");
+                val.when(
+                  loading: () => {},
+                  error: (error, stack){
+                    ref.read(errorProvider).changeError("ERROR_INTERNAL_SERVER");
+                    EasyLoading.dismiss();
+                  },
+                  data: (data) {
+                    log("fpf3");
+                    ref.read(groupListProvider).updateHasOwedGroups(data);
+                    EasyLoading.dismiss();
+                    ref.read(routeProvider).changePage(context, "/");
+                  },
+                );
+              });
+            });
+          });
+        });
+      });
     } else {
       EasyLoading.dismiss();
       ref.read(errorProvider).changeError(data["message"]);
@@ -241,9 +264,10 @@ class ApiServices {
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       getProfile(ref);
-      ref.read(routeProvider).changePage("account");
       // ignore: use_build_context_synchronously
-      Navigator.of(context).pop();
+      ref.read(routeProvider).changePage(context, "/account");
+      // ignore: use_build_context_synchronously
+      // Navigator.of(context).pop();
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

@@ -1,20 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/providers/auth.dart';
-import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/services/auth.dart';
 import 'package:split_rex/src/widgets/auth.dart';
 
-class UsernameFill extends StatefulWidget {
+class UsernameFill extends ConsumerStatefulWidget {
   const UsernameFill({super.key});
 
   @override
-  State<UsernameFill> createState() => _UsernameFillState();
+  ConsumerState<UsernameFill> createState() => _UsernameFillState();
 }
 
-class _UsernameFillState extends State<UsernameFill> {
+class _UsernameFillState extends ConsumerState<UsernameFill> {
   final usernamecontroller = TextEditingController();
 
   @override
@@ -23,61 +21,61 @@ class _UsernameFillState extends State<UsernameFill> {
     super.dispose();
   }
 
-
-  
   @override
   Widget build(BuildContext context) {
-    return 
-        SingleChildScrollView(
-            child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(left: 20, right: 20, top: 70),
-              child: Column(children: [
-                mainJumbotron("Create your username"),
-                subJumbotron("username"),
-                Container(
-      alignment: Alignment.center,
-      margin: const EdgeInsets.only(left: 20, right: 20, top: 17),
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      height: 56,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: Colors.grey[200],
-          boxShadow: const [
-            BoxShadow(
-              offset: Offset(0, 10),
-              blurRadius: 50,
-              color: Color(0xffEEEEEE),
-            ),
-          ],
-          border: Border.all(
-              color: const Color(0xffEEEEEE))),
-      child:
-                TextField(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+          child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(left: 20, right: 20, top: 70),
+            child: Column(children: [
+              mainJumbotron("Create your username"),
+              subJumbotron("username"),
+              Container(
+    alignment: Alignment.center,
+    margin: const EdgeInsets.only(left: 20, right: 20, top: 17),
+    padding: const EdgeInsets.only(left: 20, right: 20),
+    height: 56,
+    decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.grey[200],
+        boxShadow: const [
+          BoxShadow(
+            offset: Offset(0, 10),
+            blurRadius: 50,
+            color: Color(0xffEEEEEE),
+          ),
+        ],
+        border: Border.all(
+            color: const Color(0xffEEEEEE))),
+    child:
+              TextField(
 
-                  controller: usernamecontroller,
-                  cursorColor: const Color(0xFF59C4B0),
-                  decoration: const InputDecoration(
-                      icon: Icon(
-                        Icons.verified_user,
-                        color: Color(0xFF59C4B0),
-                      ),
-                      hintText: "username",
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      hintStyle: TextStyle(
-                        fontSize: 14,
-                  )),
+                controller: usernamecontroller,
+                cursorColor: const Color(0xFF59C4B0),
+                decoration: const InputDecoration(
+                    icon: Icon(
+                      Icons.verified_user,
+                      color: Color(0xFF59C4B0),
+                    ),
+                    hintText: "username",
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintStyle: TextStyle(
+                      fontSize: 14,
                 )),
-                SetUsername(
-                  key: UniqueKey(),
-                  usernamecontroller: usernamecontroller,
-                ),
-              ]),
-            ),
-          ],
-        ));
+              )),
+              SetUsername(
+                key: UniqueKey(),
+                usernamecontroller: usernamecontroller,
+              ),
+            ]),
+          ),
+        ],
+      )),
+    );
   }
 }
 
@@ -96,7 +94,7 @@ class SetUsername extends ConsumerWidget {
       onTap: () async {
         ref.read(authProvider).changeSignUpData(user?.displayName,
             usernamecontroller.text, user?.email, user?.uid, user?.uid);
-        await ApiServices().postRegister(ref);
+        await ApiServices().postRegister(ref, context);
         // ignore: use_build_context_synchronously
         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         //   content: Container(

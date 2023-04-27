@@ -43,7 +43,9 @@ class Navbar extends ConsumerWidget {
             if (value == 3) {
               await ActivityServices().getActivity(ref);
             }
-            ref.read(routeProvider).changeNavbarIdx(value);
+            if (context.mounted) {
+              ref.read(routeProvider).changeNavbarIdx(context, value);
+            }
           }
         },
         items: const [
@@ -93,11 +95,11 @@ class _PopupExpense extends ConsumerWidget {
                         const Divider(
                             thickness: 0, height: 2, color: Colors.white),
                         GestureDetector(
-                          onTap: () async {
-                            await GroupServices().userGroupList(ref);
-                            ref.read(routeProvider).changePage("add_expense");
-                            // ignore: use_build_context_synchronously
-                            Navigator.pop(context);
+                          onTap: () {
+                            GroupServices().userGroupList(ref).then((value) {
+                              Navigator.pop(context);
+                              ref.read(routeProvider).changePage(context, "/add_expense");
+                            });
                           },
                           child: const Text("Manual Input"),
                         ),
@@ -114,16 +116,17 @@ class _PopupExpense extends ConsumerWidget {
                         const Divider(
                             thickness: 1, height: 24, color: Color(0XFFDCDCDC)),
                         GestureDetector(
-                          onTap: () async {
+                          onTap: () {
                             // take photo
-                            if (ref.watch(cameraProvider).cameras == null) {
-                              await availableCameras().then((value) {
-                                ref.read(cameraProvider).setCameras(value);
-                              });
-                            }
-                            ref.read(routeProvider).changePage("scan_bill");
-                            // ignore: use_build_context_synchronously
                             Navigator.pop(context);
+                            if (ref.watch(cameraProvider).cameras == null) {
+                              availableCameras().then((value) {
+                                ref.read(cameraProvider).setCameras(value);
+                                ref.read(routeProvider).changePage(context, "/scan_bill");
+                              });
+                            } else {
+                              ref.read(routeProvider).changePage(context, "/scan_bill");
+                            }
                           },
                           child: const Text("Take Photo"),
                         ),

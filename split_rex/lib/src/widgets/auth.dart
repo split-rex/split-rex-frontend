@@ -263,7 +263,7 @@ class SubmitBtn extends ConsumerWidget {
           ref
               .read(authProvider)
               .changeSignInData(emailController.text, passController.text);
-          await ApiServices().postLogin(ref);
+          await ApiServices().postLogin(ref, context);
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Container(
@@ -302,7 +302,7 @@ class SubmitBtn extends ConsumerWidget {
               emailController.text,
               passController.text,
               confController!.text);
-          await ApiServices().postRegister(ref);
+          await ApiServices().postRegister(ref, context);
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Container(

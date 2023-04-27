@@ -60,7 +60,7 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Expanded(
             child: 
-            ref.watch(routeProvider).currentPage == "group_list"
+            ModalRoute.of(context)?.settings.name == "/group_list"
             ||
             ((
               ref.watch(groupListProvider).hasLentGroups
@@ -70,7 +70,7 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
               ref.watch(groupListProvider).hasOwedGroups
               && (ref.watch(groupListProvider).isOwed)
             )
-            && ref.watch(routeProvider).currentPage == "home")
+            && ModalRoute.of(context)?.settings.name == "/")
           ?
           ListView.builder(
           padding: EdgeInsets.zero,
@@ -79,14 +79,14 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
           itemCount: ref.watch(groupListProvider).groups.length,
           itemBuilder: (BuildContext context, int index) {
             return 
-            ref.watch(routeProvider).currentPage == "group_list"
+            ModalRoute.of(context)?.settings.name == "/group_list"
             ||
             ((ref.watch(groupListProvider).isOwed 
             && ref.watch(groupListProvider).groups[index].type == "OWED")
             ||
             ((!ref.watch(groupListProvider).isOwed) 
             && ref.watch(groupListProvider).groups[index].type == "LENT")
-            && ref.watch(routeProvider).currentPage == "home") 
+            && ModalRoute.of(context)?.settings.name == "/") 
             ?
             Container(
                 margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -98,13 +98,15 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                 key: ValueKey(
                     ref.watch(groupListProvider).groups[index].groupId),
                 child: InkWell(
-                  onTap: () async {
+                  onTap: () {
                     var currGroup = ref.watch(groupListProvider).groups[index];
                     ref.read(groupListProvider).changeCurrGroup(currGroup);
                     ref.read(groupSettingsProvider).changeCurrGroup(currGroup);
-                    await GroupServices().getGroupTransactions(ref);
-                    await GroupServices().getGroupActivity(ref);
-                    ref.read(routeProvider).changePage("group_detail");
+                    GroupServices().getGroupTransactions(ref).then((value) {
+                      GroupServices().getGroupActivity(ref).then((value) {
+                        ref.read(routeProvider).changePage(context, "/group_detail");
+                      });
+                    });
                     // Navigator.push(
                     //     context,
                     //     MaterialPageRoute(

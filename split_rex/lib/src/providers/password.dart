@@ -1,11 +1,5 @@
-import 'dart:convert';
-
-import 'package:cryptography/cryptography.dart';
-import 'package:encrypt/encrypt.dart' as enc;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../common/logger.dart';
 
 class ForgotPasswordProvider extends ChangeNotifier {
   String email = "";

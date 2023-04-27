@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/screens/auth/sign_up.dart';
-import 'package:split_rex/src/screens/home.dart';
-
-import '../common/logger.dart';
 
 class RouteProvider extends ChangeNotifier {
   int currentNavbarIdx = 0;
@@ -14,25 +10,19 @@ class RouteProvider extends ChangeNotifier {
   }
 
   void changePage(context, value) {
-    if (ModalRoute.of(context)?.settings.name == "/account" && value == "/sign_up") {
-      Navigator.pushAndRemoveUntil(
-        context, 
-        MaterialPageRoute(
-          builder: (context) => const SignUpScreen()
-        ), 
-        ModalRoute.withName("/sign_up")
-      );
-    } else if (
+    if (
+      (ModalRoute.of(context)?.settings.name == "/account" && value == "/sign_in")
+      ||
+      (
       (ModalRoute.of(context)?.settings.name == "/"
       || ModalRoute.of(context)?.settings.name == "/sign_up"
       || ModalRoute.of(context)?.settings.name == "/sign_in") 
-      && value == "/home") {
-        Navigator.pushAndRemoveUntil(
+      && value == "/home")
+    ) {
+      Navigator.pushNamedAndRemoveUntil(
         context, 
-        MaterialPageRoute(
-          builder: (context) => const Home()
-        ), 
-        ModalRoute.withName("/home")
+        value, 
+        (Route<dynamic> route) => false
       );
     } else if (ModalRoute.of(context)?.settings.name == "/scan_bill") {
       if (value == "/home") {

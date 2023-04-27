@@ -147,15 +147,17 @@ class HomeReport extends ConsumerWidget {
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
             boxShadow: [
               BoxShadow(
-                  offset: Offset(0, 10),
-                  blurRadius: 50,
-                  color: Color(0xffEEEEEE)),
+                offset: Offset(0, 0),
+                blurRadius: 4,
+                color: Color.fromARGB(40, 0, 0, 0)
+              ),
             ],
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               IntrinsicHeight(
-                  child: Row(
+                child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
@@ -264,137 +266,144 @@ class HomeFooter extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return 
-    Expanded(
-      child: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-          colors: [
-            Color(0xFFFFFFFF),
-            Color(0XFFE0F2F1),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        )),
-        child: Container(
-          margin: const EdgeInsets.only(top: 55.0),
-          child: Column(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width - 40.0,
-                decoration: const BoxDecoration(
-                  color: Color(0XFFF9F7F7),
-                  borderRadius: BorderRadius.all(Radius.circular(24.0)),
-                ),
-                padding: const EdgeInsets.all(10.0),
-                child: Row(children: [
-                  (ref.watch(groupListProvider).isOwed)
-                      ? Expanded(
-                          flex: 5,
-                          child: InkWell(
-                            onTap: () {
-                              ref.watch(groupListProvider).changeIsOwed(true);
-                            },
-                            child: Container(
-                              // color: Colors.white,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(24.0)),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: const Color(0XFF4F4F4F)
-                                          .withOpacity(0.1),
-                                      spreadRadius: 0.0,
-                                      blurRadius: 5.0,
-                                      offset: Offset.zero),
-                                ],
+    Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        Expanded(
+          child: 
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                colors: [
+                  Color(0xFFFFFFFF),
+                  Color(0XFFE0F2F1),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              )),
+              child: Container(
+                margin: const EdgeInsets.only(top: 100.0),
+                child: Column(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width - 40.0,
+                      decoration: const BoxDecoration(
+                        color: Color(0XFFF9F7F7),
+                        borderRadius: BorderRadius.all(Radius.circular(24.0)),
+                      ),
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(children: [
+                        (ref.watch(groupListProvider).isOwed)
+                          ? Expanded(
+                              flex: 5,
+                              child: InkWell(
+                                onTap: () {
+                                  ref.watch(groupListProvider).changeIsOwed(true);
+                                },
+                                child: Container(
+                                  // color: Colors.white,
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(24.0)),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: const Color(0XFF4F4F4F)
+                                              .withOpacity(0.1),
+                                          spreadRadius: 0.0,
+                                          blurRadius: 5.0,
+                                          offset: Offset.zero),
+                                    ],
+                                  ),
+                                child: const Text(
+                                    "Owed",
+                                    style: TextStyle(fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                              ))
+                          : Expanded(
+                              flex: 5,
+                              child: InkWell(
+                                onTap: () {
+                                  ref.watch(groupListProvider).changeIsOwed(true);
+                                },
+                                child: Container(
+                                  // color: Colors.white,
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: const Text(
+                                    "Owed",
+                                    style: TextStyle(fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              )),
+                      (ref.watch(groupListProvider).isOwed)
+                        ? Expanded(
+                            flex: 5,
+                            child: InkWell(
+                              onTap: () {
+                                ref.watch(groupListProvider).changeIsOwed(false);
+                              },
+                              child: Container(
+                                // color: Colors.white,
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: const BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(24.0)),
+                                ),
+                                child: const Text(
+                                  "Lent",
+                                  style: TextStyle(fontWeight: FontWeight.w400),
+                                ),
                               ),
-                            child: const Text(
-                                "Owed",
-                                style: TextStyle(fontWeight: FontWeight.w700),
+                            )
+                          )
+                        : Expanded(
+                            flex: 5,
+                            child: InkWell(
+                              onTap: () {
+                                ref.watch(groupListProvider).changeIsOwed(false);
+                              },
+                              child: Container(
+                                // color: Colors.white,
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(24.0)),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: const Color(0XFF4F4F4F)
+                                            .withOpacity(0.1),
+                                        spreadRadius: 0.0,
+                                        blurRadius: 5.0,
+                                        offset: Offset.zero),
+                                  ],
+                                ),
+                                child: const Text(
+                                  "Lent",
+                                  style: TextStyle(fontWeight: FontWeight.w700),
+                                ),
                               ),
                             ),
-                          ))
-                      : Expanded(
-                          flex: 5,
-                          child: InkWell(
-                            onTap: () {
-                              ref.watch(groupListProvider).changeIsOwed(true);
-                            },
-                            child: Container(
-                              // color: Colors.white,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(8.0),
-                              child: const Text(
-                                "Owed",
-                                style: TextStyle(fontWeight: FontWeight.w400),
-                              ),
-                            ),
-                          )),
-                  (ref.watch(groupListProvider).isOwed)
-                    ? Expanded(
-                        flex: 5,
-                        child: InkWell(
-                          onTap: () {
-                            ref.watch(groupListProvider).changeIsOwed(false);
-                          },
-                          child: Container(
-                            // color: Colors.white,
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(24.0)),
-                            ),
-                            child: const Text(
-                              "Lent",
-                              style: TextStyle(fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                        )
-                      )
-                    : Expanded(
-                        flex: 5,
-                        child: InkWell(
-                          onTap: () {
-                            ref.watch(groupListProvider).changeIsOwed(false);
-                          },
-                          child: Container(
-                            // color: Colors.white,
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(24.0)),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: const Color(0XFF4F4F4F)
-                                        .withOpacity(0.1),
-                                    spreadRadius: 0.0,
-                                    blurRadius: 5.0,
-                                    offset: Offset.zero),
-                              ],
-                            ),
-                            child: const Text(
-                              "Lent",
-                              style: TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ),
-                      )
-                  ]
-                ),
+                          )
+                      ]
+                    ),
+                  ),
+                  searchBar(context, ref),
+                  Expanded(flex: 5, child: showGroups(context, ref))
+                ],
               ),
-              searchBar(context, ref),
-              Expanded(flex: 5, child: showGroups(context, ref))
-            ],
+            )
           ),
-        )
-      )
+        ),
+        const HomeReport(),
+      ]
     );
   }
 }

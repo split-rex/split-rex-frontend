@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 
 import 'package:split_rex/src/providers/routes.dart';
@@ -98,7 +99,7 @@ class ApiServices {
           .read(errorProvider)
           .changeError("ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH");
     } else {
-      log("postRegisterefefefe");
+      
       Response resp = await post(Uri.parse("$endpoint/register"),
           headers: <String, String>{'Content-Type': 'application/json'},
           body: jsonEncode(<String, String>{
@@ -109,10 +110,12 @@ class ApiServices {
           }));
       var data = jsonDecode(resp.body);
       if (data["message"] == "SUCCESS") {
-        log("SUCCESS");
         ref.read(errorProvider).changeError(data["message"]);
         ref.read(authProvider).changeJwtToken(data["data"]);
-        log("fegeg");
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString("jwtToken", data["data"]);
+        prefs.setString("email", signUpData.email);
+        prefs.setString("password", signUpData.pass);
         await getProfile(ref);
 
         await FriendServices().userFriendList(ref);
@@ -138,8 +141,13 @@ class ApiServices {
     var data = jsonDecode(resp.body);
     if (data["message"] == "SUCCESS") {
       ref.read(authProvider).changeJwtToken(data["data"]);
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("jwtToken", data["data"]);
+      prefs.setString("email", signInData.email);
+      prefs.setString("password", signInData.pass);
       ref.read(errorProvider).changeError(data["message"]);
       await getProfile(ref);
+      
       await GroupServices().userGroupList(ref);
       await FriendServices().userFriendList(ref);
       await FriendServices().friendRequestReceivedList(ref);

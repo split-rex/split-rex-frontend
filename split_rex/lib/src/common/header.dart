@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/firebaseauth.dart';
@@ -165,6 +166,10 @@ Future<void> _signOut(WidgetRef ref) async {
   ref.read(authProvider).clearAuthProvider();
   ref.read(addExpenseProvider).resetAll();
   ref.read(routeProvider).clearRouteProvider();
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.remove('email');
+  prefs.remove('password');
+  prefs.remove('jwtToken');
 }
 
 helpDialogUnsettledPayments(context) {

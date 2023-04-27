@@ -9,7 +9,6 @@ import 'package:split_rex/src/providers/firebaseauth.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/services/group.dart';
 
 import '../providers/activity.dart';
 import '../providers/group_settings.dart';
@@ -46,14 +45,11 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                 padding: const EdgeInsets.only(left: 20),
                                 child: InkWell(
                                   onTap: () { 
-                                    if (prevPage == "add_expense") {
-                                      ref.read(addExpenseProvider).resetNewGroup();
+                                    if (prevPage == "/edit_items") {
+                                      ref.read(addExpenseProvider).selectedMember = (ref.watch(authProvider).userData.userId);
                                     }
-                                    if (prevPage == "group_detail") {
-                                      // await GroupServices().userGroupList(ref);
-                                      GroupServices().getGroupDetail(ref, ref.watch(groupListProvider).currGroup.groupId).then((value) {
-                                        Navigator.pop(context);
-                                      });
+                                    if (prevPage == "/add_expense") {
+                                      ref.read(addExpenseProvider).resetNewGroup();
                                     }
                                     Navigator.pop(context);
                                   },

@@ -1,9 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/providers/payment.dart';
 import 'package:split_rex/src/providers/routes.dart';
-
+import '../../providers/group_list.dart';
+import '../../services/notification.dart';
+import 'package:timezone/timezone.dart' as tz;
 import '../../common/functions.dart';
 
 class UnsettledPaymentsBody extends ConsumerWidget {
@@ -123,7 +129,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                               color: Color(0xFF4F4F4F),
                             ),
                             children: [
-                              const TextSpan(text: "You owes "),
+                              const TextSpan(text: "You owe "),
                               TextSpan(
                                   text: "Rp.${oweOrLent.toString()}",
                                   style: const TextStyle(
@@ -156,6 +162,34 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                 const SizedBox(height: 8),
                 Row(children: [
                   InkWell(
+                    onTap: () async {
+                      if (oweOrLent > 0) {
+                        logger.d("haha");
+                        var reminderID = Random().nextInt(99);
+                        try {
+                          await flutterLocalNotificationsPlugin.zonedSchedule(
+                            reminderID,
+                            "Settle your payments!",
+                            "Don't forget to pay Rp.${oweOrLent.toString()} to $name",
+                            tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+                            NotificationDetails(
+                              android: AndroidNotificationDetails(
+                                "$reminderID", 
+                                "reminderChannel",
+                                color: const Color(0xFF5CC6BF),
+                              )
+                            ),
+                            uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+                          );
+                          logger.d("anjay");
+                        } catch (error) {
+                          logger.d(error);
+                        }
+                        logger.d("hoho");
+                      } else {
+                        null;
+                      }
+                    },
                     child: Container(
                       alignment: Alignment.center,
                       width: 117,

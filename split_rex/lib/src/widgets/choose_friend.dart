@@ -202,7 +202,7 @@ class AddFriendToGroupButton extends ConsumerWidget {
                   padding: const EdgeInsets.all(16),
                   height: 70,
                   decoration: const BoxDecoration(
-                      color: Color(0xFF388E3C),
+                      color: Color(0xFF6DC7BD),
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

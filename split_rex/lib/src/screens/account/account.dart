@@ -409,9 +409,8 @@ class AddPaymentInfoButton extends ConsumerWidget {
                       int.parse(accountNumberController.text))
                   .then((value) {
                 ref.read(authProvider).resetPaymentMethod();
-                ref.read(routeProvider).changePage(context, "/account");
-                // ignore: use_build_context_synchronously
                 Navigator.of(context).pop();
+                ref.read(routeProvider).changePage(context, "/account");
               })
             },
         child: Container(

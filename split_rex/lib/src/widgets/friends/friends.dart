@@ -174,7 +174,7 @@ class FriendsSection extends ConsumerWidget {
                     itemCount: ref.watch(friendProvider).friendSearched.length,
                     itemBuilder: (context, index) {
                       return FriendList(
-                        index: index,
+                        user: ref.watch(friendProvider).friendSearched[index],
                       );
                     },
                     separatorBuilder: (context, index) => const Divider(
@@ -195,14 +195,12 @@ class FriendsSection extends ConsumerWidget {
 
 
 class FriendList extends ConsumerWidget {
-  const FriendList({super.key, required this.index});
+  const FriendList({super.key, required this.user});
 
-  final int index;
+  final Friend user;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var user = ref.watch(friendProvider).friendSentList[index];
-
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: InkWell(

@@ -207,8 +207,6 @@ class AddExpenseServices {
         newTrans.items.add(tempItem);
       }
       ref.read(transactionProvider).changeTrans(newTrans);
-      // ignore: use_build_context_synchronously
-      ref.read(routeProvider).changePage(context, "/transaction_detail");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

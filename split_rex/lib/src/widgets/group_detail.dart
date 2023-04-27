@@ -156,7 +156,7 @@ class BalanceInfo extends ConsumerWidget {
                                             .currGroup
                                             .type ==
                                         "OWED"
-                                    ? const Color(0xff4F4F4F)
+                                    ? const Color(0xFFFFFFFF)
                                     : const Color(0xFF4F9A99),
                                 fontWeight: FontWeight.w800,
                               )),

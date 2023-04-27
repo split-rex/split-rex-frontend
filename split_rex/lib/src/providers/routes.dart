@@ -20,8 +20,7 @@ class RouteProvider extends ChangeNotifier {
         ), 
         ModalRoute.withName("/sign_up")
       );
-    }
-    else if (
+    } else if (
       (ModalRoute.of(context)?.settings.name == "/sign_up"
       || ModalRoute.of(context)?.settings.name == "/sign_in") 
       && value == "/") {

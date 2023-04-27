@@ -5,6 +5,7 @@ import 'package:split_rex/src/providers/routes.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../providers/add_expense.dart';
+import '../../providers/auth.dart';
 
 
 class CreateNewGroup extends ConsumerStatefulWidget {
@@ -147,6 +148,7 @@ class NextButton extends ConsumerWidget {
         ? dateController.selectedRange?.startDate.toString()
         : dateController.selectedRange?.endDate.toString()
       );
+      ref.read(addExpenseProvider).selectedMember = (ref.watch(authProvider).userData.userId);
       ref.read(routeProvider).changePage(context, "/edit_items");
     },
     child: Container(

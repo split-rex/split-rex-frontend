@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:split_rex/src/common/logger.dart';
 import '../widgets/home.dart';
 
 
@@ -7,6 +8,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Column(
           children: const [
             HomeHeader(),

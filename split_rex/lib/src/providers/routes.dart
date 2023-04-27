@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RouteProvider extends ChangeNotifier {
-  String currentPage = "sign_up";
+  String currentPage = "splash_screen";
   int currentNavbarIdx = 0;
   bool isNavbarRevealed = false;
 
   void clearRouteProvider() {
-    currentPage = "sign_up";
+    currentPage = "splash_screen";
     currentNavbarIdx = 0;
     isNavbarRevealed = false;
     notifyListeners();

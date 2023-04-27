@@ -27,6 +27,7 @@ import 'package:split_rex/src/screens/friends/friends.dart';
 import 'package:split_rex/src/screens/expense/edit_items.dart';
 import 'package:split_rex/src/screens/expense/split_bill.dart';
 import 'package:split_rex/src/screens/splashscreen.dart';
+import 'package:split_rex/src/screens/statistics.dart';
 
 import '../screens/groups/group_setting.dart';
 import '../providers/camera.dart';
@@ -57,6 +58,10 @@ class PageRouting extends ConsumerWidget {
         return const Activity();
       case "account":
         return const Account();
+
+      // report statistics
+      case "statistics":
+        return const Statistics();
 
       // friends
       case "friend_requests":

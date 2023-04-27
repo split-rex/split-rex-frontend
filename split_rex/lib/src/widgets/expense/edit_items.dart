@@ -301,8 +301,9 @@ Widget confirmButton(WidgetRef ref, BuildContext context) => GestureDetector(
         GroupServices().getGroupDetail(ref, ref.watch(addExpenseProvider).existingGroup.groupId).then((value) {
           ref.read(routeProvider).changePage(context, "/split_bill");
         });
+      } else {
+        ref.read(routeProvider).changePage(context, "/split_bill");
       }
-      ref.read(routeProvider).changePage(context, "/split_bill");
     } else {
       null;
     }

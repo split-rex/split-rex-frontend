@@ -1,13 +1,17 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/providers/group_list.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/services/activity.dart';
 import 'package:split_rex/src/services/group.dart';
 import 'package:camera/camera.dart';
-
-import '../providers/auth.dart';
+import 'package:split_rex/src/widgets/groups/group_settings.dart';
 import '../providers/camera.dart';
+import '../services/scan_bill.dart';
 
 
 class Navbar extends ConsumerWidget {
@@ -91,9 +95,27 @@ class _PopupExpense extends ConsumerWidget {
                         const Divider(
                             thickness: 1, height: 24, color: Color(0XFFDCDCDC)),
                         GestureDetector(
-                          onTap: () {
-                            // upload photo from library
-                            Navigator.pop(context);
+                          onTap: () async {
+                            XFile? pickedFile = await ImagePicker().pickImage(
+                              source: ImageSource.gallery,
+                            );
+                            if (pickedFile != null) {
+                              EasyLoading.show(
+                                status: 'Scanning...',
+                                maskType: EasyLoadingMaskType.custom
+                              );
+                              logger.d("MASOKK1");
+                              String filename = DateTime.now().toIso8601String();
+                              final directory = await getApplicationDocumentsDirectory();
+                              var imagePath = await File('${directory.path}/$filename.png').create();
+                              Uint8List image = await pickedFile.readAsBytes();
+                              await imagePath.writeAsBytes(image);
+                              ScanBillServices().postBill(ref, imagePath).then((value) {
+                                EasyLoading.dismiss();
+                                Navigator.pop(context);
+                                ref.read(routeProvider).changePage(context, "/add_expense");
+                              });
+                            }
                           },
                           child: const Text(
                               "Upload from Photo Library\t\t\t\t\t\t\t\t"),

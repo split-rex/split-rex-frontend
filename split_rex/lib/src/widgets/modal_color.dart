@@ -40,8 +40,8 @@ class ModalColorState extends State<ModalColor> {
 
   @override
   void initState() {
-    widget.ref.read(authProvider).resetColor();
     super.initState();
+    widget.ref.read(authProvider).resetColor();
   }
 
   @override

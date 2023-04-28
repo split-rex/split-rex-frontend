@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
@@ -157,7 +158,7 @@ class GroupServices {
     }
   }
 
-  Future<bool> getGroupOwed(String jwtToken) async {
+  Future<dynamic> getGroupOwed(String jwtToken) async {
     Response response = await get(
       Uri.parse("$endpoint/userGroupOwed"),
       headers: <String, String>{
@@ -166,11 +167,10 @@ class GroupServices {
       },
     );
     var data = await json.decode(response.body);
-    // logger.d(data["data"]);
-    return data["data"]["list_group"].isNotEmpty;
+    return data;
   }
 
-  Future<bool> getGroupLent(String jwtToken) async {
+  Future<dynamic> getGroupLent(String jwtToken) async {
     Response response = await get(
       Uri.parse("$endpoint/userGroupLent"),
       headers: <String, String>{
@@ -179,12 +179,11 @@ class GroupServices {
       },
     );
     var data = await json.decode(response.body);
-    // logger.d(data["data"]);
-    return (data["data"]["list_group"].isNotEmpty);
+    return data;
   }
 
   Future<void> editGroupInfo(
-      WidgetRef ref, String groupId, String newGroupName) async {
+    WidgetRef ref, String groupId, String newGroupName) async {
     Response resp = await post(
       Uri.parse("$endpoint/editGroupInfo"),
       headers: <String, String>{
@@ -206,7 +205,7 @@ class GroupServices {
     }
   }
 
-  Future<void> addFriendToGroup(WidgetRef ref) async {
+  Future<void> addFriendToGroup(WidgetRef ref, BuildContext context) async {
     Response resp = await post(
       Uri.parse("$endpoint/addGroupMember"),
       headers: <String, String>{
@@ -223,8 +222,9 @@ class GroupServices {
     logger.d(data);
     log(data["message"]);
     if (data["message"] == "SUCCESS") {
-      await getGroupDetail(ref, ref.watch(groupListProvider).currGroup.groupId);
-      ref.read(routeProvider).changePage("group_settings");
+      getGroupDetail(ref, ref.watch(groupListProvider).currGroup.groupId).then((value) {
+        ref.read(routeProvider).changePage(context, "/group_settings");
+      });
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
@@ -233,14 +233,24 @@ class GroupServices {
 
 final groupServicesProvider = Provider<GroupServices>((ref) => GroupServices());
 
-final getGroupOwedLent = FutureProvider.family<bool, bool>((ref, isOwed) async {
-  if (isOwed) {
-    return ref.read(groupServicesProvider).getGroupOwed(
-      ref.watch(authProvider).jwtToken
-    );
+Future<void> getGroupOwedLent(WidgetRef ref) async {
+  var groupsOwed = await ref.read(groupServicesProvider).getGroupOwed(
+    ref.watch(authProvider).jwtToken
+  );
+  var groupsLent = await ref.read(groupServicesProvider).getGroupLent(
+    ref.watch(authProvider).jwtToken
+  );
+  
+  if (groupsOwed["message"] == "SUCCESS") {
+    ref.read(groupListProvider).updateHasOwedGroups(groupsOwed["data"]["list_group"].isNotEmpty);
   } else {
-    return ref.read(groupServicesProvider).getGroupLent(
-      ref.watch(authProvider).jwtToken
-    );
+    ref.read(errorProvider).changeError(groupsOwed["message"]);
   }
-});
+
+  if (groupsLent["message"] == "SUCCESS") {
+    logger.d(groupsLent);
+    ref.read(groupListProvider).updateHasLentGroups(groupsLent["data"]["list_group"].isNotEmpty);
+  } else {
+    ref.read(errorProvider).changeError(groupsLent["message"]);
+  }
+}

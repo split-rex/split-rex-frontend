@@ -9,7 +9,6 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/firebaseauth.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/screens/forgot_password/create_new_password.dart';
 import '../services/auth.dart';
 
 const String assetName = 'assets/LogoSVG.svg';
@@ -149,6 +148,15 @@ class _SignUpFormState extends State<SignUpForm> {
             icon: Icons.email,
             placeholderText: "E-mail",
           ),
+          const SizedBox(
+            height: 6
+          ),
+          const Text(
+            "*forgot password is only supported for gmail accounts",
+            style: TextStyle(
+              fontSize: 12,
+            ),
+          ),
           PasswordField(
             controller: passController,
             key: UniqueKey(),
@@ -216,7 +224,7 @@ class ForgotPass extends ConsumerWidget {
             ),
             onTap: () {
               // Write Tap Code Here.
-              ref.read(routeProvider).changePage("forgot_password");
+              ref.read(routeProvider).changePage(context, "/forgot_password");
             },
           ),
         ]));
@@ -263,38 +271,7 @@ class SubmitBtn extends ConsumerWidget {
           ref
               .read(authProvider)
               .changeSignInData(emailController.text, passController.text);
-          await ApiServices().postLogin(ref);
-          // ignore: use_build_context_synchronously
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Container(
-              padding: const EdgeInsets.all(16),
-              height: 70,
-              decoration: BoxDecoration(
-                  color: Color(
-                      ref.watch(errorProvider).errorMsg == "Login Failed"
-                          ? 0xFFF44336
-                          : 0xFF6DC7BD),
-                  borderRadius: const BorderRadius.all(Radius.circular(15))),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    ref.watch(errorProvider).errorMsg == "Login Failed"
-                        ? "Login failed, email or password are wrong!"
-                        : "Logged in successfully!",
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-          ));
+          await ApiServices().postLogin(ref, context);
         } else {
           ref.read(authProvider).changeSignUpData(
               nameController!.text,
@@ -302,7 +279,7 @@ class SubmitBtn extends ConsumerWidget {
               emailController.text,
               passController.text,
               confController!.text);
-          await ApiServices().postRegister(ref);
+          await ApiServices().postRegister(ref, context);
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Container(

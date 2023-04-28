@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/model/group_model.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/group.dart';
 import 'package:split_rex/src/widgets/groups/group_settings.dart';
@@ -9,22 +8,20 @@ import '../../common/header.dart';
 import '../../providers/group_list.dart';
 
 class GroupSettings extends ConsumerWidget {
-  const GroupSettings({super.key, required this.group});
-
-  final GroupListModel group;
+  const GroupSettings({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return header(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: header(
         context,
         ref,
         "Group Settings",
-        "group_detail",
-        Container(
-          child:  Column(
+        "/group_detail",
+        Column(
           children: const [
             GroupNameSection(),
-            // TODO: bisa add new member ke group
             SizedBox(height: 15),
             AddGroupMembersSection(),
             SizedBox(height: 15),
@@ -34,8 +31,8 @@ class GroupSettings extends ConsumerWidget {
               ),
           ],
         )
-        ),
-       );
+      ),
+    );
   }
 }
 
@@ -51,11 +48,13 @@ class _GroupNameSectionEdit extends ConsumerState<GroupSettingsEdit> {
 
   @override
   Widget build(BuildContext context) {
-    return header(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: header(
         context,
         ref,
         "Edit Group",
-        "group_settings",
+        "/group_settings",
         Column(
           children: [
             Container(
@@ -80,7 +79,9 @@ class _GroupNameSectionEdit extends ConsumerState<GroupSettingsEdit> {
               nameController: nameController,
             )
           ],
-        ));
+        )
+      ),
+    );
   }
 }
 
@@ -117,7 +118,7 @@ class SubmitGroupSettingBtn extends ConsumerWidget {
               ref,
               ref.watch(groupListProvider).currGroup.groupId,
               nameController!.text),
-          ref.read(routeProvider).changePage("group_settings"),
+          ref.read(routeProvider).changePage(context, "/group_settings"),
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Container(
               padding: const EdgeInsets.all(16),

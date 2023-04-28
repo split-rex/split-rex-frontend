@@ -121,7 +121,6 @@ class AddBtn extends ConsumerWidget {
             elevation: 0,
           ));
           await Future.delayed(const Duration(seconds: 4));
-          ref.read(errorProvider).changeError("");
         });
       },
       child: Container(

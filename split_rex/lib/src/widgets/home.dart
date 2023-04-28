@@ -5,7 +5,6 @@ import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/statisticsprovider.dart';
-import 'package:split_rex/src/services/group.dart';
 import 'package:split_rex/src/services/statistics.dart';
 import 'package:split_rex/src/widgets/group_list.dart';
 
@@ -112,13 +111,14 @@ class FriendRequest extends ConsumerWidget {
                 ],
               )),
           InkWell(
-            onTap: () async {
-              await FriendServices().friendRequestReceivedList(ref);
-              await FriendServices().friendRequestSentList(ref);
+            onTap: () {
+              FriendServices().friendRequestReceivedList(ref).then((value) {
+                FriendServices().friendRequestSentList(ref).then((value) {
+                  ref.watch(friendProvider).resetAddFriend();
+                  ref.read(routeProvider).changePage(context, "/friend_requests");
+                });
+              });
 
-              ref.watch(friendProvider).resetAddFriend();
-              ref.read(routeProvider).changeNavbarIdx(1);
-              ref.read(routeProvider).changePage("friend_requests");
             },
             child: const Text("Review",
                 textAlign: TextAlign.end,
@@ -141,33 +141,38 @@ class HomeReport extends ConsumerWidget {
       offset: const Offset(0, -22),
       child: Container(
           width: MediaQuery.of(context).size.width - 55.0,
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+            vertical: 12.0
+          ),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
             boxShadow: [
               BoxShadow(
-                  offset: Offset(0, 10),
-                  blurRadius: 50,
-                  color: Color(0xffEEEEEE)),
+                offset: Offset(0, 0),
+                blurRadius: 4,
+                color: Color.fromARGB(40, 0, 0, 0)
+              ),
             ],
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               IntrinsicHeight(
-                  child: Row(
+                child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Total Lent"),
+                    children: const [
+                      Text("Total Lent"),
                       // TODO update total lent and owed here
                       SizedBox(
                         width: 100,
                         child: Text(
                           "Rp. 10.000",
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       )
@@ -179,14 +184,14 @@ class HomeReport extends ConsumerWidget {
                       color: const Color(0xFFE0E0E0)),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Total Owed"),
+                    children: const [
+                      Text("Total Owed"),
                       // TODO update total lent and owed here
                       SizedBox(
                         width: 100,
                         child: Text(
                           "Rp. 1000",
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       )
@@ -216,8 +221,9 @@ class HomeReport extends ConsumerWidget {
                     ref.read(statisticsProvider).changeEndUnsettledDate("");
                     ref.read(statisticsProvider).changeStartSettleDate("");
                     ref.read(statisticsProvider).changeEndSettleDate("");
-                    await StatisticsServices().readJson(ref);
-                    ref.read(routeProvider).changePage("statistics");
+                    await StatisticsServices().readJson(ref).then((value) {
+                      ref.read(routeProvider).changePage(context, "/statistics");
+                    });
                   },
                   child: const Text(
                     "View Detailed Report",
@@ -262,43 +268,41 @@ class HomeFooter extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue<bool> getGroupOwedLentResp =
-        ref.watch(getGroupOwedLent(ref.watch(groupListProvider).isOwed));
-
-    return Expanded(
-        child: Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-              colors: [
-                Color(0xFFFFFFFF),
-                Color(0XFFE0F2F1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            )),
-            child: Container(
-              child: Column(
-                children: [
-                  HomeReport(),
-                  Container(
-                    width: MediaQuery.of(context).size.width - 40.0,
-                    decoration: const BoxDecoration(
-                      color: Color(0XFFF9F7F7),
-                      borderRadius: BorderRadius.all(Radius.circular(24.0)),
-                    ),
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(children: [
-                      (ref.watch(groupListProvider).isOwed)
+    return 
+    Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        Expanded(
+          child: 
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                colors: [
+                  Color(0xFFFFFFFF),
+                  Color(0XFFE0F2F1),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              )),
+              child: Container(
+                margin: const EdgeInsets.only(top: 100.0),
+                child: Column(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width - 40.0,
+                      decoration: const BoxDecoration(
+                        color: Color(0XFFF9F7F7),
+                        borderRadius: BorderRadius.all(Radius.circular(24.0)),
+                      ),
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(children: [
+                        (ref.watch(groupListProvider).isOwed)
                           ? Expanded(
                               flex: 5,
                               child: InkWell(
                                 onTap: () {
-                                  ref
-                                      .watch(groupListProvider)
-                                      .changeIsOwed(true);
-                                  getGroupOwedLentResp =
-                                      ref.refresh(getGroupOwedLent(true));
+                                  ref.watch(groupListProvider).changeIsOwed(true);
                                 },
                                 child: Container(
                                   // color: Colors.white,
@@ -317,10 +321,9 @@ class HomeFooter extends ConsumerWidget {
                                           offset: Offset.zero),
                                     ],
                                   ),
-                                  child: const Text(
+                                child: const Text(
                                     "Owed",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w700),
+                                    style: TextStyle(fontWeight: FontWeight.w700),
                                   ),
                                 ),
                               ))
@@ -328,11 +331,7 @@ class HomeFooter extends ConsumerWidget {
                               flex: 5,
                               child: InkWell(
                                 onTap: () {
-                                  ref
-                                      .watch(groupListProvider)
-                                      .changeIsOwed(true);
-                                  getGroupOwedLentResp =
-                                      ref.refresh(getGroupOwedLent(true));
+                                  ref.watch(groupListProvider).changeIsOwed(true);
                                 },
                                 child: Container(
                                   // color: Colors.white,
@@ -340,92 +339,74 @@ class HomeFooter extends ConsumerWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: const Text(
                                     "Owed",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w400),
+                                    style: TextStyle(fontWeight: FontWeight.w400),
                                   ),
                                 ),
                               )),
                       (ref.watch(groupListProvider).isOwed)
-                          ? Expanded(
-                              flex: 5,
-                              child: InkWell(
-                                onTap: () {
-                                  ref
-                                      .watch(groupListProvider)
-                                      .changeIsOwed(false);
-                                  getGroupOwedLentResp =
-                                      ref.refresh(getGroupOwedLent(false));
-                                },
-                                child: Container(
-                                  // color: Colors.white,
-                                  alignment: Alignment.center,
-                                  padding: const EdgeInsets.all(8.0),
-                                  decoration: const BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(24.0)),
-                                  ),
-                                  child: const Text(
-                                    "Lent",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w400),
-                                  ),
+                        ? Expanded(
+                            flex: 5,
+                            child: InkWell(
+                              onTap: () {
+                                ref.watch(groupListProvider).changeIsOwed(false);
+                              },
+                              child: Container(
+                                // color: Colors.white,
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: const BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(24.0)),
                                 ),
-                              ))
-                          : Expanded(
-                              flex: 5,
-                              child: InkWell(
-                                onTap: () {
-                                  ref
-                                      .watch(groupListProvider)
-                                      .changeIsOwed(false);
-                                  getGroupOwedLentResp =
-                                      ref.refresh(getGroupOwedLent(false));
-                                },
-                                child: Container(
-                                  // color: Colors.white,
-                                  alignment: Alignment.center,
-                                  padding: const EdgeInsets.all(8.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(24.0)),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: const Color(0XFF4F4F4F)
-                                              .withOpacity(0.1),
-                                          spreadRadius: 0.0,
-                                          blurRadius: 5.0,
-                                          offset: Offset.zero),
-                                    ],
-                                  ),
-                                  child: const Text(
-                                    "Lent",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w700),
-                                  ),
+                                child: const Text(
+                                  "Lent",
+                                  style: TextStyle(fontWeight: FontWeight.w400),
                                 ),
                               ),
                             )
-                    ]),
+                          )
+                        : Expanded(
+                            flex: 5,
+                            child: InkWell(
+                              onTap: () {
+                                ref.watch(groupListProvider).changeIsOwed(false);
+                              },
+                              child: Container(
+                                // color: Colors.white,
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(24.0)),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: const Color(0XFF4F4F4F)
+                                            .withOpacity(0.1),
+                                        spreadRadius: 0.0,
+                                        blurRadius: 5.0,
+                                        offset: Offset.zero),
+                                  ],
+                                ),
+                                child: const Text(
+                                  "Lent",
+                                  style: TextStyle(fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ),
+                          )
+                      ]
+                    ),
                   ),
                   searchBar(context, ref),
-                  getGroupOwedLentResp.when(data: (data) {
-                    Future(() {
-                      if (ref.watch(groupListProvider).isOwed) {
-                        ref.read(groupListProvider).updateHasOwedGroups(data);
-                      } else {
-                        ref.read(groupListProvider).updateHasLentGroups(data);
-                      }
-                    });
-                    return Expanded(flex: 5, child: showGroups(context, ref));
-                  }, error: ((error, stackTrace) {
-                    return Text('Error: ${error.toString()}');
-                  }), loading: (() {
-                    return (const Expanded(
-                        child: Center(child: CircularProgressIndicator())));
-                  }))
+                  Expanded(flex: 5, child: showGroups(context, ref))
                 ],
               ),
-            )));
+            )
+          ),
+        ),
+        const HomeReport(),
+      ]
+    );
   }
 }

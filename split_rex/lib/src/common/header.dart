@@ -10,8 +10,11 @@ import 'package:split_rex/src/providers/firebaseauth.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/services/friend.dart';
-import 'package:split_rex/src/services/group.dart';
+
+import '../providers/activity.dart';
+import '../providers/group_settings.dart';
+import '../providers/payment.dart';
+import '../providers/transaction.dart';
 
 Widget header(BuildContext context, WidgetRef ref, String pagename,
         String prevPage, Widget widget) =>
@@ -27,32 +30,29 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                         top: 50.0, bottom: 10.0, left: 5.0, right: 5.0),
                     child: Stack(
                       alignment:
-                          ref.watch(routeProvider).currentPage == "account"
+                          ModalRoute.of(context)?.settings.name == "/account"
                               ? Alignment.centerRight
                               : Alignment.centerLeft,
                       children: [
-                        ref.watch(routeProvider).currentPage !=
-                                    ("group_list") &&
-                                ref.watch(routeProvider).currentPage !=
-                                    ("activity") &&
-                                ref.watch(routeProvider).currentPage !=
-                                    ("account")
+                        ModalRoute.of(context)?.settings.name !=
+                                    ("/group_list") &&
+                                ModalRoute.of(context)?.settings.name !=
+                                    ("/activity") &&
+                                ModalRoute.of(context)?.settings.name !=
+                                    ("/account")
                             ? Container(
                                 width: MediaQuery.of(context).size.width - 20.0,
                                 alignment: Alignment.centerLeft,
                                 padding: const EdgeInsets.only(left: 20),
                                 child: InkWell(
-                                  onTap: () async { 
-                                    if (prevPage == "add_expense") {
+                                  onTap: () { 
+                                    if (prevPage == "/edit_items") {
+                                      ref.read(addExpenseProvider).selectedMember = (ref.watch(authProvider).userData.userId);
+                                    }
+                                    if (prevPage == "/add_expense") {
                                       ref.read(addExpenseProvider).resetNewGroup();
                                     }
-                                    if (prevPage == "group_detail") {
-                                      // await GroupServices().userGroupList(ref);
-                                      await GroupServices().getGroupDetail(ref, ref.watch(groupListProvider).currGroup.groupId);
-                                    }
-                                    ref
-                                      .watch(routeProvider)
-                                      .changePage(prevPage);
+                                    Navigator.pop(context);
                                   },
                                   child: const Icon(Icons.navigate_before,
                                       color: Color(0XFF4F4F4F), size: 35),
@@ -69,32 +69,26 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                 fontSize: 18),
                           ),
                         ),
-                        ref.watch(routeProvider).currentPage == ("group_list")
+                        ModalRoute.of(context)?.settings.name == ("/group_list")
                             ? Container(
                                 width: MediaQuery.of(context).size.width - 20.0,
                                 padding: const EdgeInsets.only(right: 20),
                                 alignment: Alignment.centerRight,
                                 child: GestureDetector(
-                                    onTap: () async {
-                                      await FriendServices()
-                                          .userFriendList(ref);
-                                      await FriendServices()
-                                          .friendRequestReceivedList(ref);
-                                      await FriendServices()
-                                          .friendRequestSentList(ref);
-                                      ref
-                                          .watch(routeProvider)
-                                          .changePage("friends");
-                                    },
-                                    child: const Text("All Friends",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFF4F9A99),
-                                        ))),
+                                  onTap: () {
+                                    ref.read(routeProvider).changePage(context, "/friends");
+                                  },
+                                  child: const Text("All Friends",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF4F9A99),
+                                    )
+                                  )
+                                ),
                               )
                             : const SizedBox(width: 0),
-                        ref.watch(routeProvider).currentPage == ("settle_up")
+                            ModalRoute.of(context)?.settings.name == ("/settle_up")
                             ? Container(
                                 width: MediaQuery.of(context).size.width - 20.0,
                                 alignment: Alignment.centerRight,
@@ -105,7 +99,7 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                         Icons.help_outline_outlined)),
                               )
                             : const SizedBox(width: 0),
-                        ref.watch(routeProvider).currentPage == ("settle_up")
+                            ModalRoute.of(context)?.settings.name == ("/settle_up")
                             ? Container(
                                 width: MediaQuery.of(context).size.width - 20.0,
                                 alignment: Alignment.centerRight,
@@ -115,22 +109,21 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                         Icons.help_outline_outlined)),
                               )
                             : const SizedBox(width: 0),
-                        ref.watch(routeProvider).currentPage == ("account")
+                            ModalRoute.of(context)?.settings.name == ("/account")
                             ? Container(
                                 width: MediaQuery.of(context).size.width - 20.0,
                                 alignment: Alignment.centerRight,
                                 padding: const EdgeInsets.only(right: 20),
                                 child: InkWell(
-                                  onTap: () async {
+                                  onTap: () {
                                     if (FirebaseAuth.instance.currentUser !=
                                         null) {
                                       log("firebase logout");
-                                      await ref
-                                          .watch(googleSignInProvider)
-                                          .googleLogout();
+                                      ref
+                                        .watch(googleSignInProvider)
+                                        .googleLogout();
                                     }
-
-                                    await _signOut(ref);
+                                    _signOut(context, ref);
                                   },
                                   child: const Icon(Icons.logout,
                                       color: Color(0XFF4F4F4F), size: 24),
@@ -160,12 +153,17 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
           ],
         ));
 
-Future<void> _signOut(WidgetRef ref) async {
+Future<void> _signOut(BuildContext context, WidgetRef ref) async {
+  ref.read(routeProvider).changePage(context, "/sign_in");
+  ref.read(activityProvider).activities.clear();
   ref.read(groupListProvider).clearGroupListProvider();
   ref.read(friendProvider).clearFriendProvider();
   ref.read(authProvider).clearAuthProvider();
   ref.read(addExpenseProvider).resetAll();
   ref.read(routeProvider).clearRouteProvider();
+  ref.read(groupSettingsProvider).resetAll();
+  ref.read(paymentProvider).resetAll();
+  ref.read(transactionProvider).clearTransProvider();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.remove('email');
   prefs.remove('password');

@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/common/logger.dart';
 
 import '../model/friends.dart';
 
@@ -22,6 +21,9 @@ class FriendProvider extends ChangeNotifier {
     friendReceivedList = <Friend>[];
     friendSentList = <Friend>[];
     friendSearched = <Friend>[];
+    friendNotInGroup = <Friend>[];
+    friendNotInGroupLoaded = <Friend>[];
+    friendInGroup = <Friend>[];
     addFriend = Friend(name: "");
     isReceived = true;
     notifyListeners();

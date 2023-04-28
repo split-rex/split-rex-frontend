@@ -5,6 +5,7 @@ import 'package:split_rex/src/model/friends.dart';
 import 'package:split_rex/src/providers/routes.dart';
 
 import '../../common/functions.dart';
+import '../../providers/error.dart';
 import '../../providers/friend.dart';
 
 class AddFriendsSection extends ConsumerWidget {
@@ -14,8 +15,9 @@ class AddFriendsSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
-        ref.watch(friendProvider).resetAddFriend();
-        ref.read(routeProvider).changePage("add_friends");
+        ref.read(friendProvider).resetAddFriend();
+        ref.read(errorProvider).changeError("");
+        ref.read(routeProvider).changePage(context, "/add_friends");
       },
       child: Container(
           height: 60,
@@ -67,7 +69,7 @@ class FriendRequestSection extends ConsumerWidget {
     }
 
     return InkWell(
-      onTap: () => ref.read(routeProvider).changePage("friend_requests"),
+      onTap: () => ref.read(routeProvider).changePage(context, "/friend_requests"),
       child: Container(
           height: 72,
           width: MediaQuery.of(context).size.width - 40.0,
@@ -154,7 +156,7 @@ class FriendsSection extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ref.watch(friendProvider).friendList.isEmpty
-              ? const Text("You don't have any friend at the moment")
+              ? const Center(child: Text("You don't have any friend at the moment"))
               : Text(
                   "Friends (${ref.watch(friendProvider).friendList.length})",
                   style: const TextStyle(
@@ -172,7 +174,7 @@ class FriendsSection extends ConsumerWidget {
                     itemCount: ref.watch(friendProvider).friendSearched.length,
                     itemBuilder: (context, index) {
                       return FriendList(
-                        index: index,
+                        user: ref.watch(friendProvider).friendSearched[index],
                       );
                     },
                     separatorBuilder: (context, index) => const Divider(
@@ -193,16 +195,14 @@ class FriendsSection extends ConsumerWidget {
 
 
 class FriendList extends ConsumerWidget {
-  const FriendList({super.key, required this.index});
+  const FriendList({super.key, required this.user});
 
-  final int index;
+  final Friend user;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var user = ref.watch(friendProvider).friendSearched[index];
-
     return Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 16),
         child: InkWell(
           onTap: () => friendInfoDialog(context, user),
           child: Row(

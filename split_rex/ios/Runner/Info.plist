@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>split_rex</string>
+	<string>Split Rex</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -47,7 +47,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+  	<string>Split-Rex needs to access your library to upload bill.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>ESplit-Rex needs to access your camera to scan bill.</string>
+	<string>Split-Rex needs to access your camera to scan bill.</string>
+	<key>NSMicrophoneUsageDescription</key>
+  	<string>Post videos to profile</string>
 </dict>
 </plist>

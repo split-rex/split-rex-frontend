@@ -1,13 +1,17 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/providers/group_list.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/services/activity.dart';
 import 'package:split_rex/src/services/group.dart';
 import 'package:camera/camera.dart';
-
-import '../providers/auth.dart';
+import 'package:split_rex/src/widgets/groups/group_settings.dart';
 import '../providers/camera.dart';
+import '../services/scan_bill.dart';
 
 
 class Navbar extends ConsumerWidget {
@@ -30,20 +34,7 @@ class Navbar extends ConsumerWidget {
                   return const _PopupExpense();
                 });
           } else {
-            if (value == 0) {
-              if (ref.watch(groupListProvider).isOwed) {
-                await GroupServices().getGroupOwed(ref.watch(authProvider).jwtToken);
-              } else {
-                await GroupServices().getGroupLent(ref.watch(authProvider).jwtToken);
-              }
-            }
-            if (value == 1)  {
-              await GroupServices().userGroupList(ref);
-            }
-            if (value == 3) {
-              await ActivityServices().getActivity(ref);
-            }
-            ref.read(routeProvider).changeNavbarIdx(value);
+            ref.read(routeProvider).changeNavbarIdx(context, value);
           }
         },
         items: const [
@@ -93,20 +84,38 @@ class _PopupExpense extends ConsumerWidget {
                         const Divider(
                             thickness: 0, height: 2, color: Colors.white),
                         GestureDetector(
-                          onTap: () async {
-                            await GroupServices().userGroupList(ref);
-                            ref.read(routeProvider).changePage("add_expense");
-                            // ignore: use_build_context_synchronously
-                            Navigator.pop(context);
+                          onTap: () {
+                            GroupServices().userGroupList(ref).then((value) {
+                              Navigator.pop(context);
+                              ref.read(routeProvider).changePage(context, "/add_expense");
+                            });
                           },
                           child: const Text("Manual Input"),
                         ),
                         const Divider(
                             thickness: 1, height: 24, color: Color(0XFFDCDCDC)),
                         GestureDetector(
-                          onTap: () {
-                            // upload photo from library
-                            Navigator.pop(context);
+                          onTap: () async {
+                            XFile? pickedFile = await ImagePicker().pickImage(
+                              source: ImageSource.gallery,
+                            );
+                            if (pickedFile != null) {
+                              EasyLoading.show(
+                                status: 'Scanning...',
+                                maskType: EasyLoadingMaskType.custom
+                              );
+                              logger.d("MASOKK1");
+                              String filename = DateTime.now().toIso8601String();
+                              final directory = await getApplicationDocumentsDirectory();
+                              var imagePath = await File('${directory.path}/$filename.png').create();
+                              Uint8List image = await pickedFile.readAsBytes();
+                              await imagePath.writeAsBytes(image);
+                              ScanBillServices().postBill(ref, imagePath).then((value) {
+                                EasyLoading.dismiss();
+                                Navigator.pop(context);
+                                ref.read(routeProvider).changePage(context, "/add_expense");
+                              });
+                            }
                           },
                           child: const Text(
                               "Upload from Photo Library\t\t\t\t\t\t\t\t"),
@@ -114,16 +123,17 @@ class _PopupExpense extends ConsumerWidget {
                         const Divider(
                             thickness: 1, height: 24, color: Color(0XFFDCDCDC)),
                         GestureDetector(
-                          onTap: () async {
+                          onTap: () {
                             // take photo
-                            if (ref.watch(cameraProvider).cameras == null) {
-                              await availableCameras().then((value) {
-                                ref.read(cameraProvider).setCameras(value);
-                              });
-                            }
-                            ref.read(routeProvider).changePage("scan_bill");
-                            // ignore: use_build_context_synchronously
                             Navigator.pop(context);
+                            if (ref.watch(cameraProvider).cameras == null) {
+                              availableCameras().then((value) {
+                                ref.read(cameraProvider).setCameras(value);
+                                ref.read(routeProvider).changePage(context, "/scan_bill");
+                              });
+                            } else {
+                              ref.read(routeProvider).changePage(context, "/scan_bill");
+                            }
                           },
                           child: const Text("Take Photo"),
                         ),

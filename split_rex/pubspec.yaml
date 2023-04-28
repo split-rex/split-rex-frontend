@@ -62,6 +62,17 @@ dependencies:
   jwt_decoder:
   syncfusion_flutter_charts: ^21.1.41
   fl_chart: ^0.62.0
+  flutter_local_notifications: ^14.0.0
+  flutter_launcher_icons: "^0.13.1"
+  timezone: ^0.9.2
+  image_picker: ^0.8.7+4
+  flutter_datetime_picker: ^1.5.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo_splitrex.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
 
 dev_dependencies:
   flutter_test:

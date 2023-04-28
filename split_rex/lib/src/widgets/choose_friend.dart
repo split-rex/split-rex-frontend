@@ -2,12 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/providers/add_expense.dart';
-import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/providers/group_settings.dart';
-import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/group.dart';
 
 import '../common/functions.dart';
@@ -197,33 +194,34 @@ class AddFriendToGroupButton extends ConsumerWidget {
     return GestureDetector(
         onTap: () async {
           if (ref.watch(groupSettingsProvider).memberId.isNotEmpty) {
-            // ref.watch(routeProvider).changePage("group_settings");
+            // ref.read(routeProvider).changePage(context, "/group_settings");
             log(ref.watch(groupSettingsProvider).memberId.toString());
-            await GroupServices().addFriendToGroup(ref);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Container(
-                padding: const EdgeInsets.all(16),
-                height: 70,
-                decoration: const BoxDecoration(
-                    color: Color(0xFF388E3C),
-                    borderRadius: BorderRadius.all(Radius.circular(15))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      "Friends added to group",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
+            GroupServices().addFriendToGroup(ref, context).then((value) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Container(
+                  padding: const EdgeInsets.all(16),
+                  height: 70,
+                  decoration: const BoxDecoration(
+                      color: Color(0xFF6DC7BD),
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Friends added to group",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-            ));
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+              ));
+            });
           } else {
             null;
           }
@@ -265,7 +263,7 @@ class AddFriendToGroupButton extends ConsumerWidget {
 // Widget addFriendToGroupButton(WidgetRef ref) => GestureDetector(
 //     onTap: () async {
 //       if (ref.watch(groupSettingsProvider).memberId.isNotEmpty) {
-//         // ref.watch(routeProvider).changePage("group_settings");
+//         // ref.read(routeProvider).changePage(context, "/group_settings");
 //         log(ref.watch(groupSettingsProvider).memberId.toString());
 //         await GroupServices().addFriendToGroup(ref);
 //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

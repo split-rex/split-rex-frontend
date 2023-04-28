@@ -9,29 +9,32 @@ class AddExpense extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return header(
-      context, 
-      ref,
-      "Add Expense",
-      "home",
-      Container(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: 
-        Column(
-          children: [
-            searchBar(ref),
-            Expanded(
-              flex: 5, 
-              child: addExistingGroup(context, ref)
-            ),
-            Expanded(
-              flex: 7, 
-              child: addNewGroup(context, ref)
-            ),
-            addButton(ref)                
-          ],
-        ),
-      )
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: header(
+        context, 
+        ref,
+        "Add Expense",
+        "/home",
+        Container(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: 
+          Column(
+            children: [
+              searchBar(ref),
+              Expanded(
+                flex: 5, 
+                child: addExistingGroup(context, ref)
+              ),
+              Expanded(
+                flex: 7, 
+                child: addNewGroup(context, ref)
+              ),
+              addButton(ref, context)                
+            ],
+          ),
+        )
+      ),
     );
   }
 }

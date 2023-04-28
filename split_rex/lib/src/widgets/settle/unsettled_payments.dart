@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/providers/payment.dart';
 import 'package:split_rex/src/providers/routes.dart';
-
+import 'package:split_rex/src/services/scheduled_notification.dart';
+import '../../providers/group_list.dart';
+import '../../services/notification.dart';
+import 'package:timezone/timezone.dart' as tz;
 import '../../common/functions.dart';
 
 class UnsettledPaymentsBody extends ConsumerWidget {
@@ -123,7 +129,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                               color: Color(0xFF4F4F4F),
                             ),
                             children: [
-                              const TextSpan(text: "You owes "),
+                              const TextSpan(text: "You owe "),
                               TextSpan(
                                   text: "Rp.${oweOrLent.toString()}",
                                   style: const TextStyle(
@@ -156,6 +162,30 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                 const SizedBox(height: 8),
                 Row(children: [
                   InkWell(
+                    onTap: () {
+                      var currentDate = DateTime.now();
+                      DatePicker.showDateTimePicker(
+                        context,
+                        showTitleActions: true,
+                        minTime: currentDate.add(const Duration(seconds: 60)),
+                        maxTime: currentDate.add(const Duration(days: 365)),
+                        theme: const DatePickerTheme(
+                          headerColor: Colors.white,
+                          backgroundColor: Colors.white,
+                          itemStyle: TextStyle(
+                              color: Color(0xFF6DC7BD),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18
+                          ),
+                          doneStyle: TextStyle(color: Color(0xFF38AFA2), fontSize: 16, fontWeight: FontWeight.bold)
+                        ),
+                        onConfirm: (date) {
+                          _setReminder(name, userId, oweOrLent, date, currentDate, context, ref);
+                        }, 
+                        currentTime: currentDate.add(const Duration(seconds: 60)), 
+                        locale: LocaleType.en
+                      );
+                    },
                     child: Container(
                       alignment: Alignment.center,
                       width: 117,
@@ -180,7 +210,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                       ref
                           .watch(paymentProvider)
                           .changeCurrUnsettledPayment(index);
-                      ref.read(routeProvider).changePage("settle_up");
+                      ref.read(routeProvider).changePage(context, "/settle_up");
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -205,5 +235,94 @@ class UnsettlePaymentDetail extends ConsumerWidget {
             )
           ]),
     );
+  }
+
+  void _setReminder(String name, String userId, int oweOrLent, DateTime destinedTime, DateTime curTime, BuildContext context, WidgetRef ref) async {
+    if (oweOrLent > 0) {
+      logger.d(destinedTime);
+      logger.d(curTime);
+      var intervalSeconds = 0;
+      if (curTime.isAfter(destinedTime)) {
+        intervalSeconds = 1;
+      } else {
+        intervalSeconds = destinedTime.difference(curTime).inSeconds;
+      }
+      var reminderID = curTime;
+
+      logger.d(intervalSeconds);
+      
+      try {
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+          reminderID.microsecond,
+          "Let's settle up!",
+          "Don't forget to pay Rp.${oweOrLent.toString()} to $name in group '${ref.watch(groupListProvider).currGroup.name}'",
+          tz.TZDateTime.now(tz.local).add(Duration(seconds: intervalSeconds)),
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              "$reminderID", 
+              "Self Reminder",
+              color: const Color(0xFF5CC6BF),
+            )
+          ),
+          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        ).then((value) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+            padding: const EdgeInsets.all(16),
+            height: 70,
+            decoration: const BoxDecoration(
+                color: Color(0xFF6DC7BD),
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  "Reminder set!",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ));
+      });
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+            padding: const EdgeInsets.all(16),
+            height: 70,
+            decoration: const BoxDecoration(
+                color: Color(0xFFF44336),
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  "Unable to set reminder!",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ));
+      }
+    } else {
+      ScheduledNotificationServices().insertScheduledNotifation(
+        context, ref, userId, (-1 * oweOrLent).toString(), name, destinedTime
+      );
+    }
   }
 }

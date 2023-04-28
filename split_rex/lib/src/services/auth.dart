@@ -13,7 +13,9 @@ import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/model/user.dart';
+import 'package:split_rex/src/screens/statistics.dart';
 import 'package:split_rex/src/services/group.dart';
+import 'package:split_rex/src/services/statistics.dart';
 
 import '../common/const.dart';
 import 'friend.dart';
@@ -99,7 +101,6 @@ class ApiServices {
           .read(errorProvider)
           .changeError("ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH");
     } else {
-      
       Response resp = await post(Uri.parse("$endpoint/register"),
           headers: <String, String>{'Content-Type': 'application/json'},
           body: jsonEncode(<String, String>{
@@ -121,6 +122,10 @@ class ApiServices {
         await FriendServices().userFriendList(ref);
         await FriendServices().friendRequestReceivedList(ref);
         await FriendServices().friendRequestSentList(ref);
+        await StatisticsServices().expenseChart(ref);
+        await StatisticsServices().owedLentPercentage(ref);
+        await StatisticsServices().spendingBuddies(ref);
+        await StatisticsServices().owedLentPercentage(ref);
         EasyLoading.dismiss();
         ref.read(routeProvider).changePage("home");
       } else {
@@ -147,17 +152,22 @@ class ApiServices {
       prefs.setString("password", signInData.pass);
       ref.read(errorProvider).changeError(data["message"]);
       await getProfile(ref);
-      
+
       await GroupServices().userGroupList(ref);
       await FriendServices().userFriendList(ref);
       await FriendServices().friendRequestReceivedList(ref);
       await FriendServices().friendRequestSentList(ref);
+      await StatisticsServices().expenseChart(ref);
+      await StatisticsServices().owedLentPercentage(ref);
+      await StatisticsServices().spendingBuddies(ref);
+      await StatisticsServices().owedLentPercentage(ref);
       EasyLoading.dismiss();
       ref.read(routeProvider).changePage("home");
       // AsyncValue<bool> val = ref.refresh(getGroupOwedLent(true));
       // ref.read(groupListProvider).updateHasOwedGroups(val as bool);
     } else {
       EasyLoading.dismiss();
+      log(data["message"]);
       ref.read(errorProvider).changeError(data["message"]);
     }
   }
@@ -192,12 +202,8 @@ class ApiServices {
     }
   }
 
-  Future<void> editPaymentInfo(
-      WidgetRef ref,
-      BuildContext context,
-      int accountNumber,
-      String accountName,
-      int index) async {
+  Future<void> editPaymentInfo(WidgetRef ref, BuildContext context,
+      int accountNumber, String accountName, int index) async {
     var curPinfo = ref.watch(authProvider).userData.flattenPaymentInfo[index];
 
     Response resp = await post(Uri.parse("$endpoint/editPaymentInfo"),

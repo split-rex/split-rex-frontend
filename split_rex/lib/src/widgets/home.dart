@@ -216,7 +216,7 @@ class HomeReport extends ConsumerWidget {
                     ref.read(statisticsProvider).changeEndUnsettledDate("");
                     ref.read(statisticsProvider).changeStartSettleDate("");
                     ref.read(statisticsProvider).changeEndSettleDate("");
-                    await StatisticsServices().readJson(ref);
+                    
                     ref.read(routeProvider).changePage("statistics");
                   },
                   child: const Text(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:split_rex/src/common/header.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/auth.dart';
@@ -31,8 +32,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         ref.read(authProvider).changeJwtToken(jwtToken);
         String? email = prefs.getString('email');
         String? password = prefs.getString('password');
+        ref.read(routeProvider).changePage("sign_in");
         ref.read(authProvider).changeSignInData(email, password);
         await ApiServices().postLogin(ref);
+        // await signOut(ref);
       }
     } else {
       log("hewrerere");

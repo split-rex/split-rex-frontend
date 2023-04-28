@@ -130,7 +130,7 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                           .googleLogout();
                                     }
 
-                                    await _signOut(ref);
+                                    await signOut(ref);
                                   },
                                   child: const Icon(Icons.logout,
                                       color: Color(0XFF4F4F4F), size: 24),
@@ -160,7 +160,7 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
           ],
         ));
 
-Future<void> _signOut(WidgetRef ref) async {
+Future<void> signOut(WidgetRef ref) async {
   ref.read(groupListProvider).clearGroupListProvider();
   ref.read(friendProvider).clearFriendProvider();
   ref.read(authProvider).clearAuthProvider();

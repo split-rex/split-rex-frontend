@@ -1,0 +1,21 @@
+{
+    "message": "SUCCESS",
+    "data": {
+      "total_paid": 5000,
+      "total_received": 10000,
+      "list_mutation": [
+        {
+          "name": "patrick",
+          "color": 1,
+          "mutation_type": "PAID",
+          "amount": 5000
+        },
+        {
+          "name": "nando",
+          "color": 1,
+          "mutation_type": "RECEIVED",
+          "amount": 10000
+        }
+      ]
+    }
+  }

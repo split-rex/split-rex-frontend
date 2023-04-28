@@ -320,9 +320,8 @@ class UnsettlePaymentDetail extends ConsumerWidget {
         ));
       }
     } else {
-      logger.d("masuk insert schedule $userId $name $destinedTime ${-1 * oweOrLent}");
       ScheduledNotificationServices().insertScheduledNotifation(
-        context, ref, userId, (-1 * oweOrLent), name, destinedTime
+        context, ref, userId, (-1 * oweOrLent), destinedTime
       );
     }
   }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/screens/account/account.dart';
 import 'package:split_rex/src/screens/account/account_edit.dart';
 import 'package:split_rex/src/screens/account/change_password.dart';

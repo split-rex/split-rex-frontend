@@ -79,11 +79,11 @@ class ScheduledNotificationServices {
     WidgetRef ref,
     String userId,
     int amount,
-    String name,
     DateTime date,
   ) async {
     String groupId = ref.watch(groupListProvider).currGroup.groupId;
     String groupName = ref.watch(groupListProvider).currGroup.name;
+    String name = ref.watch(authProvider).userData.name;
 
     Duration offset = date.timeZoneOffset;
     String dateTime = "${date.toIso8601String()}000";

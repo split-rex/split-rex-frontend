@@ -24,16 +24,17 @@ class RouteProvider extends ChangeNotifier {
       Navigator.pushNamedAndRemoveUntil(
         context, 
         value, 
-        (Route<dynamic> route) => false
+        (Route<dynamic> route) => false,
+        arguments: ModalRoute.of(context)?.settings.name
       );
     } else if (ModalRoute.of(context)?.settings.name == "/scan_bill") {
       if (value == "/home") {
         Navigator.pop(context);
       } else {
-        Navigator.pushReplacementNamed(context, value);
+        Navigator.pushReplacementNamed(context, value, arguments: ModalRoute.of(context)?.settings.name);
       }
     } else {
-      Navigator.pushNamed(context, value);
+      Navigator.pushNamed(context, value, arguments: ModalRoute.of(context)?.settings.name);
     }
     notifyListeners();
   }

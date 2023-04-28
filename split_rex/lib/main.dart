@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/screens/account/account.dart';
 import 'package:split_rex/src/screens/account/account_edit.dart';
 import 'package:split_rex/src/screens/account/change_password.dart';
@@ -165,15 +166,26 @@ Future main() async{
                 Animation<double> secondaryAnimation) {
               return builder(context);
             },
-            transitionsBuilder: (
+            transitionsBuilder: 
+            (
               BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation,
               Widget child
             ) {
+              if (settings.name == "/" || settings.arguments == "/") {
+                return FadeTransition(opacity: animation, child: child);
+              } else {
                 return child;
-            },
-            transitionDuration: const Duration(milliseconds: 0),
+              }
+            }
+            ,
+            transitionDuration: 
+            settings.name == "/" || settings.arguments == "/"
+            ?
+            const Duration(seconds: 2)
+            :
+            const Duration(milliseconds: 0),
           );
         },
       )

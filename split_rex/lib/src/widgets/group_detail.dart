@@ -38,9 +38,8 @@ class GroupInfo extends ConsumerWidget {
             children: [
               InkWell(
                   onTap: () => {
-                        ref.read(routeProvider).changeNavbarIdx(context, 1),
-                        ref.read(routeProvider).changePage(context, prevPage),
-                      },
+                    Navigator.pop(context),
+                  },
                   child: const Icon(Icons.navigate_before,
                       color: Colors.white, size: 35)),
               Text(

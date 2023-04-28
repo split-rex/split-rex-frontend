@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:split_rex/src/providers/password.dart';
-import 'package:split_rex/src/providers/routes.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

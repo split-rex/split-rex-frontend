@@ -269,8 +269,8 @@ class SubmitBtn extends ConsumerWidget {
               emailController.text,
               passController.text,
               confController!.text);
-          await ApiServices().postRegister(ref, context);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          await ApiServices().postRegister(ref, context).then((value) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Container(
               padding: const EdgeInsets.all(16),
               height: 70,
@@ -337,6 +337,7 @@ class SubmitBtn extends ConsumerWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
           ));
+          });
         }
       },
       child: Container(

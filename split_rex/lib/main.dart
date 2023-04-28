@@ -54,40 +54,127 @@ Future main() async{
         ),
         initialRoute: "/",
         builder: EasyLoading.init(),
-        routes: {
-          '/': (context) => const SplashScreen(),
-          '/home': (context) => const Home(),
-          '/sign_up': (context) => const SignUpScreen(),
-          '/sign_in': (context) => const SignInScreen(),
-          '/group_list': (context) => const GroupList(),
-          '/activity': (context) => const Activity(),
-          '/account': (context) => const Account(),
-          '/friend_requests': (context) => const FriendRequests(),
-          '/friends': (context) => const Friends(),
-          '/add_friends': (context) => const AddFriends(),
-          '/add_expense': (context) => const AddExpense(),
-          '/edit_items': (context) => const EditItems(),
-          '/split_bill': (context) => const SplitBill(),
-          '/new_group': (context) => const CreateNewGroup(),
-          '/group_detail': (context) => const GroupDetail(),
-          '/choose_friend': (context) => const ChooseFriend(),
-          '/edit_account': (context) => const EditAccount(),
-          '/change_password': (context) => const ChangePassword(),
-          '/fill_username': (context) => const UsernameFill(),
-          '/group_settings': (context) => const GroupSettings(),
-          '/group_settings_edit': (context) => const GroupSettingsEdit(),
-          '/choose_friend_group_settings': (context) => const ChooseFriendInGroupSetting(),
-          '/scan_bill': (context) => const CameraPage(),
-          '/preview_image': (context) => const PreviewPage(),
-          '/settle_up': (context) => const SettleUp(),
-          '/unsettled_payments': (context) => const UnsettledPayments(),
-          '/transaction_detail': (context) => const TransactionDetail(),
-          '/confirm_payment': (context) => const ConfirmPayment(),
-          '/statistics': (context) => const Statistics(),
-          '/forgot_password': (context) => const ForgotPassword(),
-          '/verify_token': (context) => const VerifyToken(),
-          '/create_password': (context) => const CreateNewPassword(),
-          '/reset_pass_success': (context) => const ResetPassSuccess(),
+        onGenerateRoute: (RouteSettings settings) {
+          WidgetBuilder builder;
+          switch (settings.name) {
+            case '/':
+              builder = (BuildContext context) => const SplashScreen();
+              break;
+            case '/home':
+              builder = (BuildContext context) => const Home();
+              break;
+            case '/sign_up':
+              builder = (BuildContext context) => const SignUpScreen();
+              break;
+            case '/sign_in':
+              builder = (BuildContext context) => const SignInScreen();
+              break;
+            case '/group_list':
+              builder = (BuildContext context) => const GroupList();
+              break;
+            case '/activity':
+              builder = (BuildContext context) => const Activity();
+              break;
+            case '/account':
+              builder = (BuildContext context) => const Account();
+              break;
+            case '/friend_requests':
+              builder = (BuildContext context) => const FriendRequests();
+              break;
+            case '/friends':
+              builder = (BuildContext context) => const Friends();
+              break;
+            case '/add_friends':
+              builder = (BuildContext context) => const AddFriends();
+              break;
+            case '/add_expense':
+              builder = (BuildContext context) => const AddExpense();
+              break;
+            case '/edit_items':
+              builder = (BuildContext context) => const EditItems();
+              break;
+            case '/split_bill':
+              builder = (BuildContext context) => const SplitBill();
+              break;
+            case '/new_group':
+              builder = (BuildContext context) => const CreateNewGroup();
+              break;
+            case '/group_detail':
+              builder = (BuildContext context) => const GroupDetail();
+              break;
+            case '/choose_friend':
+              builder = (BuildContext context) => const ChooseFriend();
+              break;
+            case '/edit_account':
+              builder = (BuildContext context) => const EditAccount();
+              break;
+            case '/change_password':
+              builder = (BuildContext context) => const ChangePassword();
+              break;
+            case '/fill_username':
+              builder = (BuildContext context) => const UsernameFill();
+              break;
+            case '/group_settings':
+              builder = (BuildContext context) => const GroupSettings();
+              break;
+            case '/group_settings_edit':
+              builder = (BuildContext context) => const GroupSettingsEdit();
+              break;
+            case '/choose_friend_group_settings':
+              builder = (BuildContext context) => const ChooseFriendInGroupSetting();
+              break;
+            case '/scan_bill':
+              builder = (BuildContext context) => const CameraPage();
+              break;
+            case '/preview_image':
+              builder = (BuildContext context) => const PreviewPage();
+              break;
+            case '/settle_up':
+              builder = (BuildContext context) => const SettleUp();
+              break;
+            case '/unsettled_payments':
+              builder = (BuildContext context) => const UnsettledPayments();
+              break;
+            case '/transaction_detail':
+              builder = (BuildContext context) => const TransactionDetail();
+              break;
+            case '/confirm_payment':
+              builder = (BuildContext context) => const ConfirmPayment();
+              break;
+            case '/statistics':
+              builder = (BuildContext context) => const Statistics();
+              break;
+            case '/forgot_password':
+              builder = (BuildContext context) => const ForgotPassword();
+              break;
+            case '/verify_token':
+              builder = (BuildContext context) => const VerifyToken();
+              break;
+            case '/create_password':
+              builder = (BuildContext context) => const CreateNewPassword();
+              break;
+            case '/reset_pass_success':
+              builder = (BuildContext context) => const ResetPassSuccess();
+              break;
+            default:
+              throw Exception('Invalid route: ${settings.name}');
+          }
+          return PageRouteBuilder(
+            settings: settings,
+            pageBuilder: (BuildContext context, Animation<double> animation,
+                Animation<double> secondaryAnimation) {
+              return builder(context);
+            },
+            transitionsBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child
+            ) {
+                return child;
+            },
+            transitionDuration: const Duration(milliseconds: 0),
+          );
         },
       )
     ),

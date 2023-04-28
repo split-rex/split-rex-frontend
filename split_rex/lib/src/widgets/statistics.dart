@@ -4,6 +4,7 @@ import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/providers/statisticsprovider.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StatisticsHeader extends ConsumerWidget {
   const StatisticsHeader({super.key});
@@ -21,12 +22,10 @@ class StatisticsHeader extends ConsumerWidget {
           SizedBox(
             height: 10,
           ),
-          MutationUnsettled(),
+          MutationSettled(),
           SizedBox(
             height: 10,
           ),
-          MutationSettled(),
-          SizedBox(height: 10,),
           TopSpendingBuddies(),
         ],
       ),
@@ -61,45 +60,50 @@ class PercentageChart extends ConsumerWidget {
               "Your Split-rex Personality",
               style: TextStyle(fontSize: 13),
             ),
-             Text(
-              ref.watch(statisticsProvider).lentPercentage < 50 ? "Si Tukang Ngutang" : ref.watch(statisticsProvider).lentPercentage == 50 ? "Si Paling Balance": "Si Murah Hati",
+            Text(
+              ref.watch(statisticsProvider).lentPercentage < 50
+                  ? "Si Tukang Ngutang"
+                  : ref.watch(statisticsProvider).lentPercentage == 50
+                      ? "Si Paling Balance"
+                      : "Si Murah Hati",
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 10,
             ),
-
             SizedBox(
               width: 200,
               height: 200,
-              child: PieChart(
-              PieChartData(
-                borderData: FlBorderData(show: false),
-                sectionsSpace: 1,
-                sections: [
-                  PieChartSectionData(
-                    value: ref.watch(statisticsProvider).lentPercentage.toDouble(),
-                    title: "Lent\n${ref.watch(statisticsProvider).lentPercentage}%",
-                    titleStyle: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12, 
+              child: PieChart(PieChartData(
+                  borderData: FlBorderData(show: false),
+                  sectionsSpace: 1,
+                  sections: [
+                    PieChartSectionData(
+                        value: ref
+                            .watch(statisticsProvider)
+                            .lentPercentage
+                            .toDouble(),
+                        title:
+                            "Lent\n${ref.watch(statisticsProvider).lentPercentage}%",
+                        titleStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                        color: const Color(0xFF44A4B2)),
+                    PieChartSectionData(
+                      value: ref
+                          .watch(statisticsProvider)
+                          .owedPercentage
+                          .toDouble(),
+                      title:
+                          "Owed\n${ref.watch(statisticsProvider).owedPercentage}%",
+                      color: const Color(0xFF6DC7BD),
+                      titleStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
                       ),
-                    color: const Color(0xFF44A4B2)
-                  ),
-                  PieChartSectionData(
-                    value: ref.watch(statisticsProvider).owedPercentage.toDouble(),
-                    title: "Owed\n${ref.watch(statisticsProvider).owedPercentage}%",
-                    color: const Color(0xFF6DC7BD),
-                    titleStyle: const TextStyle(
-                      color: Colors.white, 
-                      fontSize: 12, 
-                      ),
-                  ),
-                  
-
-                ]
-              )
-            ),
+                    ),
+                  ])),
             ),
             const SizedBox(
               height: 25,
@@ -107,33 +111,34 @@ class PercentageChart extends ConsumerWidget {
             RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Color(0XFF4f4f4f),
-                  fontWeight: FontWeight.w400
-                ),
-                children: [
-                  TextSpan(
-                    text: 
-                    ref.watch(statisticsProvider).lentPercentage < 50 ? "Si Tukang Ngutang " : ref.watch(statisticsProvider).lentPercentage == 50 ? "Si Paling Balance ": "Si Murah Hati ",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                  style: const TextStyle(
+                      fontSize: 12,
                       color: Color(0XFF4f4f4f),
+                      fontWeight: FontWeight.w400),
+                  children: [
+                    TextSpan(
+                      text: ref.watch(statisticsProvider).lentPercentage < 50
+                          ? "Si Tukang Ngutang "
+                          : ref.watch(statisticsProvider).lentPercentage == 50
+                              ? "Si Paling Balance "
+                              : "Si Murah Hati ",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0XFF4f4f4f),
+                      ),
                     ),
-                  ),
-
-                  TextSpan(
-                    text: 
-                    ref.watch(statisticsProvider).lentPercentage < 50 ? "are the ones who owe more than they lend. It is strongly advised for these types of people to pay up and not ghost their debtors!" : ref.watch(statisticsProvider).lentPercentage == 50 ? "are those who have discovered peace and balance. You have mastered the art of zen in the universe of debts. Way to go.": "are those who resemble Nelson Mandela. They are willing to help others in need without asking for anything in return (just kidding, don’t forget to pay these people back please).",
-                    style: const TextStyle(
-                      color: Color(0XFF4f4f4f),
+                    TextSpan(
+                      text: ref.watch(statisticsProvider).lentPercentage < 50
+                          ? "are the ones who owe more than they lend. It is strongly advised for these types of people to pay up and not ghost their debtors!"
+                          : ref.watch(statisticsProvider).lentPercentage == 50
+                              ? "are those who have discovered peace and balance. You have mastered the art of zen in the universe of debts. Way to go."
+                              : "are those who resemble Nelson Mandela. They are willing to help others in need without asking for anything in return (just kidding, don’t forget to pay these people back please).",
+                      style: const TextStyle(
+                        color: Color(0XFF4f4f4f),
+                      ),
                     ),
-                  ),
-                ]
-              ),
+                  ]),
             )
-
-            
           ],
         ));
   }
@@ -163,113 +168,108 @@ class ChartTotalExpenses extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Total expenses acroll all group",
+              "Total expenses across all group",
               style: TextStyle(fontSize: 13),
             ),
-            const Text(
-              "Rp 6.750.000",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              "Rp${ref.watch(statisticsProvider).expenseChart.totalExpense}",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 30,
             ),
             SizedBox(
-                  width: 300,
-                  height: 400,
-                  child: LineChart(
-                    
-                    LineChartData(
-                       minX: 0,
-                      maxX: 11,
-                      minY: 0,
-                      maxY: 6,
-                      titlesData: FlTitlesData(
-                          show: true,
-                          rightTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                          topTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 30,
-                              interval: 1,
-                              getTitlesWidget: bottomTitleWidgets,
-                            ),
-                          ),
-                          leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              interval: 1,
-                              getTitlesWidget: leftTitleWidgets,
-                              reservedSize: 30,
-                            ),
-                          ),
-                        ),
-                      gridData: FlGridData(
-                        show: true,
-                        drawVerticalLine: true,
-                        horizontalInterval: 1,
-                        verticalInterval: 1,
-                        getDrawingHorizontalLine: (value) {
-                          return FlLine(
-                            color: const Color(0xff37434d),
-                            strokeWidth: 0.35,
-                          );
-                        },
-                        getDrawingVerticalLine: (value) {
-                          return FlLine(
-                            color: const Color(0xff37434d),
-                            strokeWidth: 0.35,
-                          );
-                        },
-                      ),
-                      borderData: FlBorderData(
-                        show: true,
-                        
-                        border: Border.all(
-                          color: const Color(0xffC4C4C4), 
-                          width: 1,
-                          
-                        ),
-                      ),
-                      lineBarsData: [
-                        LineChartBarData(
-                          spots: [
-                            const FlSpot(0, 3),
-                            const FlSpot(2.6, 2),
-                            const FlSpot(4.9, 5),
-                            const FlSpot(6.8, 2.5),
-                            const FlSpot(8, 4),
-                            const FlSpot(9.5, 3),
-                            const FlSpot(11, 4),
-                          ],
-                          isCurved: true,
-                          dotData: FlDotData(show: false),
-                          gradient: const LinearGradient(
-                            colors: [
-                              Color(0xff23b6e6),
-                              Color(0xff02d39a),
-                            ]
-                          ),                    
-                          barWidth: 5,
-                          // dotData: FlDotData(show: false),
-                          
-                        ),
-                      ],
-
+              width: 300,
+              height: 250,
+              child: LineChart(
+                LineChartData(
+                  minX: 0,
+                  maxX: 29,
+                  minY: 0,
+                  maxY: 5,
+                  titlesData: FlTitlesData(
+                    show: true,
+                    rightTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
                     ),
+                    topTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 30,
+                        interval: 1,
+                        getTitlesWidget: bottomTitleWidgets,
+                      ),
+                    ),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        interval: 1,
+                        getTitlesWidget: leftTitleWidgets,
+                        reservedSize: 40,
+                      ),
+                    ),
+                  ),
+                  gridData: FlGridData(
+                    show: true,
+                    drawVerticalLine: true,
+                    horizontalInterval: 1,
+                    verticalInterval: 1,
+                    getDrawingHorizontalLine: (value) {
+                      return FlLine(
+                        color: const Color(0xff37434d),
+                        strokeWidth: 0.35,
+                      );
+                    },
+                    getDrawingVerticalLine: (value) {
+                      return FlLine(
+                        color: const Color(0xff37434d),
+                        strokeWidth: 0.35,
+                      );
+                    },
+                  ),
+                  borderData: FlBorderData(
+                    show: true,
+                    border: Border.all(
+                      color: const Color(0xffC4C4C4),
+                      width: 1,
+                    ),
+                  ),
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: getSpots(ref
+                          .watch(statisticsProvider)
+                          .expenseChart
+                          .dailyExpense),
 
-                  ),)
+                      isCurved: true,
+                      dotData: FlDotData(show: false),
+                      gradient: const LinearGradient(colors: [
+                        Color(0xff23b6e6),
+                        Color(0xff02d39a),
+                      ]),
+                      barWidth: 5,
+                      // dotData: FlDotData(show: false),
+                    ),
+                  ],
+                ),
+              ),
+            )
             // TODO: update chart here
-            
           ],
         ));
   }
 }
 
+List<FlSpot> getSpots(List<double> data) {
+  List<FlSpot> spots = [];
+  for (int i = 0; i < data.length; i++) {
+    spots.add(FlSpot(i.toDouble(), data[i]));
+  }
+  return spots;
+}
 
 class TopSpendingBuddies extends ConsumerWidget {
   const TopSpendingBuddies({super.key});
@@ -302,30 +302,44 @@ class TopSpendingBuddies extends ConsumerWidget {
               "Based on mutual groups",
               style: TextStyle(fontSize: 13),
             ),
-            
+
             const SizedBox(
               height: 30,
             ),
             SizedBox(
-                  width: 300,
-                  height: 300,
-                  child: BarChart(
-                    BarChartData(
-                      alignment: BarChartAlignment.spaceAround,
-                      barTouchData: BarTouchData(
-                        enabled: false,
-                        touchTooltipData: BarTouchTooltipData(
-                          tooltipBgColor: Colors.transparent,
-                          tooltipPadding: EdgeInsets.zero,
-                          tooltipMargin: 8,
-                          getTooltipItem: (
-                            BarChartGroupData group,
-                            int groupIndex,
-                            BarChartRodData rod,
-                            int rodIndex,
-                          ) {
-                            return BarTooltipItem(
-                              rod.toY.round().toString(),
+              width: 300,
+              height: 300,
+              child: BarChart(BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  barTouchData: BarTouchData(
+                      enabled: false,
+                      touchTooltipData: BarTouchTooltipData(
+                        tooltipBgColor: Colors.transparent,
+                        tooltipPadding: EdgeInsets.zero,
+                        tooltipMargin: 8,
+                        getTooltipItem: (
+                          BarChartGroupData group,
+                          int groupIndex,
+                          BarChartRodData rod,
+                          int rodIndex,
+                        ) {
+                          return BarTooltipItem(
+                              rod.toY.round().toString() == "10"
+                                  ? ref
+                                      .watch(statisticsProvider)
+                                      .spendingBuddies[2]
+                                      .name
+                                  : rod.toY.round().toString() == "30"
+                                      ? ref
+                                          .watch(statisticsProvider)
+                                          .spendingBuddies[0]
+                                          .name
+                                      : rod.toY.round().toString() == "20"
+                                          ? ref
+                                              .watch(statisticsProvider)
+                                              .spendingBuddies[1]
+                                              .name
+                                          : "",
                               const TextStyle(
                                 color: Color(0XFF4f4f4f),
                                 fontWeight: FontWeight.bold,
@@ -364,7 +378,7 @@ class TopSpendingBuddies extends ConsumerWidget {
                             barRods: [
                               BarChartRodData(
                                 toY: 10,
-                                color: const Color(0xff60D5C0),
+                                color: Color(0xff60D5C0),
                               )
                             ],
                             showingTooltipIndicators: [0],
@@ -374,7 +388,7 @@ class TopSpendingBuddies extends ConsumerWidget {
                             barRods: [
                               BarChartRodData(
                                 toY: 30,
-                                color: const Color(0xff44A4B2),
+                                color: Color(0xff44A4B2),
                               )
                             ],
                             showingTooltipIndicators: [0],
@@ -384,7 +398,7 @@ class TopSpendingBuddies extends ConsumerWidget {
                             barRods: [
                               BarChartRodData(
                                 toY: 20,
-                                color: const Color(0xff45B5AF)
+                                color: Color(0xff45B5AF)
                               )
                             ],
                             showingTooltipIndicators: [0],
@@ -396,14 +410,13 @@ class TopSpendingBuddies extends ConsumerWidget {
                   
               )
             // TODO: update chart here
-            
           ],
         ));
   }
 }
 
 Widget getTitles(double value, TitleMeta meta) {
-    const  style = TextStyle(
+    final style = const TextStyle(
       color: Color(0XFF4f4f4f),
       fontWeight: FontWeight.bold,
       fontSize: 14,
@@ -431,55 +444,51 @@ Widget getTitles(double value, TitleMeta meta) {
   }
 
 
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
-    Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = const Text('MAR', style: style);
-        break;
-      case 5:
-        text = const Text('JUN', style: style);
-        break;
-      case 8:
-        text = const Text('SEP', style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
-    }
+Widget bottomTitleWidgets(double value, TitleMeta meta) {
+  const style = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+  );
+  Widget text;
 
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: text,
-    );
+  if (value.toInt() == 0) {
+    text = const Text('1', style: style);
+  } else if (value.toInt() == 29) {
+    text = const Text('30', style: style);
+  } else if (value.toInt() == 14) {
+    text = const Text('15', style: style);
+  } else {
+    text = const Text('', style: style);
   }
 
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 15,
-    );
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '10K';
-        break;
-      case 3:
-        text = '30k';
-        break;
-      case 5:
-        text = '50k';
-        break;
-      default:
-        return Container();
-    }
+  return SideTitleWidget(
+    axisSide: meta.axisSide,
+    child: text,
+  );
+}
 
-    return Text(text, style: style, textAlign: TextAlign.left);
+Widget leftTitleWidgets(double value, TitleMeta meta) {
+  const style = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 15,
+  );
+  String text;
+  switch (value.toInt()) {
+    case 1:
+      text = '20K';
+      break;
+    case 3:
+      text = '60k';
+      break;
+    case 5:
+      text = '100k';
+      break;
+    default:
+      return Container();
   }
+
+  return Text(text, style: style, textAlign: TextAlign.left);
+}
 
 class MutationUnsettled extends ConsumerWidget {
   const MutationUnsettled({super.key});
@@ -576,6 +585,7 @@ class MutationUnsettled extends ConsumerWidget {
 
                 if (ref.watch(statisticsProvider).endUnsettledDate != "" &&
                     ref.watch(statisticsProvider).startUnsettledDate != "") {
+                  await StatisticsServices().paymentMutation(ref);
                   ref.read(statisticsProvider).changeShowUnsettled(true);
                 }
               },
@@ -611,7 +621,6 @@ class MutationUnsettled extends ConsumerWidget {
           visible: ref.watch(statisticsProvider).showUnsettled,
           child: const SizedBox(height: 20),
         ),
-
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
           child: Row(
@@ -654,13 +663,12 @@ class MutationUnsettled extends ConsumerWidget {
             ])
           ],
         ),
+        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
-
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
           child: const SizedBox(height: 30),
         ),
-
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
           child: Row(
@@ -693,13 +701,12 @@ class MutationUnsettled extends ConsumerWidget {
             )
           ],
         ),
+        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
-
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
           child: const SizedBox(height: 10),
         ),
-
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
           child: Row(
@@ -732,13 +739,12 @@ class MutationUnsettled extends ConsumerWidget {
             )
           ],
         ),
+        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
-
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
           child: const SizedBox(height: 10),
         ),
-
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
           child: Row(
@@ -771,14 +777,12 @@ class MutationUnsettled extends ConsumerWidget {
             )
           ],
         ),
+        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
-        
-        
       ]),
     );
   }
 }
-
 
 class MutationSettled extends ConsumerWidget {
   const MutationSettled({super.key});
@@ -820,10 +824,8 @@ class MutationSettled extends ConsumerWidget {
                             .changeStartSettleDate(pickeddate.toString());
                       }
 
-                      if (ref.watch(statisticsProvider).endSettleDate !=
-                              "" &&
-                          ref.watch(statisticsProvider).startSettleDate !=
-                              "") {
+                      if (ref.watch(statisticsProvider).endSettleDate != "" &&
+                          ref.watch(statisticsProvider).startSettleDate != "") {
                         ref.read(statisticsProvider).changeShowSettled(true);
                       }
                     },
@@ -845,9 +847,8 @@ class MutationSettled extends ConsumerWidget {
                       child: Text(
                         ref.watch(statisticsProvider).startSettleDate == ""
                             ? "Select Start Date"
-                            : formatDate(ref
-                                .watch(statisticsProvider)
-                                .startSettleDate),
+                            : formatDate(
+                                ref.watch(statisticsProvider).startSettleDate),
                         style: const TextStyle(
                           fontSize: 11.0, // Change the font size as desired
                         ),
@@ -875,6 +876,7 @@ class MutationSettled extends ConsumerWidget {
 
                 if (ref.watch(statisticsProvider).endSettleDate != "" &&
                     ref.watch(statisticsProvider).startSettleDate != "") {
+                  await StatisticsServices().paymentMutation(ref);
                   ref.read(statisticsProvider).changeShowSettled(true);
                 }
               },
@@ -896,8 +898,7 @@ class MutationSettled extends ConsumerWidget {
                 child: Text(
                   ref.watch(statisticsProvider).endSettleDate == ""
                       ? "Select End Date"
-                      : formatDate(
-                          ref.watch(statisticsProvider).endSettleDate),
+                      : formatDate(ref.watch(statisticsProvider).endSettleDate),
                   style: const TextStyle(
                     fontSize: 11.0, // Change the font size as desired
                   ),
@@ -910,7 +911,6 @@ class MutationSettled extends ConsumerWidget {
           visible: ref.watch(statisticsProvider).showSettled,
           child: const SizedBox(height: 20),
         ),
-
         Visibility(
           visible: ref.watch(statisticsProvider).showSettled,
           child: Row(
@@ -953,54 +953,15 @@ class MutationSettled extends ConsumerWidget {
             ])
           ],
         ),
+        visible: ref.watch(statisticsProvider).showSettled,
         ),
 
          Visibility(
-          visible: ref.watch(statisticsProvider).showSettled,
           child: const SizedBox(height: 30),
-        ),
-
-        Visibility(
-        visible: ref.watch(statisticsProvider).showSettled,
-          child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(children: [
-              Initicon(
-                text: "Ubaidillah Ariq",
-                size: 40,
-                backgroundColor: getProfileBgColor(1),
-                style: TextStyle(color: getProfileTextColor(1)),
-              ),
-              const SizedBox(width: 10),
-              const Text("Ubaidillah ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                    color: Color(0XFF4F4F4F),
-                  ))
-            ]),
-            RichText(
-              text: const TextSpan(
-                text: "Rp 60.000",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF4F9A99),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            )
-          ],
-        ),
-        ),
-
-        Visibility(
           visible: ref.watch(statisticsProvider).showSettled,
-          child: const SizedBox(height: 10),
         ),
 
         Visibility(
-        visible: ref.watch(statisticsProvider).showSettled,
           child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -1031,15 +992,15 @@ class MutationSettled extends ConsumerWidget {
             )
           ],
         ),
+        visible: ref.watch(statisticsProvider).showSettled,
         ),
 
         Visibility(
+          child: const SizedBox(height: 10),
           visible: ref.watch(statisticsProvider).showSettled,
-          child: const SizedBox(height: 10),
         ),
 
         Visibility(
-        visible: ref.watch(statisticsProvider).showSettled,
           child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -1070,9 +1031,47 @@ class MutationSettled extends ConsumerWidget {
             )
           ],
         ),
+        visible: ref.watch(statisticsProvider).showSettled,
         ),
-        
-        
+
+        Visibility(
+          child: const SizedBox(height: 10),
+          visible: ref.watch(statisticsProvider).showSettled,
+        ),
+
+        Visibility(
+          child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(children: [
+              Initicon(
+                text: "Ubaidillah Ariq",
+                size: 40,
+                backgroundColor: getProfileBgColor(1),
+                style: TextStyle(color: getProfileTextColor(1)),
+              ),
+              const SizedBox(width: 10),
+              const Text("Ubaidillah ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Color(0XFF4F4F4F),
+                  ))
+            ]),
+            RichText(
+              text: const TextSpan(
+                text: "Rp 60.000",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF4F9A99),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            )
+          ],
+        ),
+        visible: ref.watch(statisticsProvider).showSettled,
+        ),
       ]),
     );
   }

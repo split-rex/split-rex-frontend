@@ -31,92 +31,90 @@ class _VerifyTokenState extends ConsumerState<VerifyToken> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: header(
-        context,
-        ref,
-        "Verification",
-        "/forgot_password",
-        Center(
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 25),
-            child: SingleChildScrollView(
-              reverse: true,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                      padding: const EdgeInsets.all(25),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        color: const Color(0xFFf4f4f4),
-                      ),
-                      child: const Icon(
-                        Icons.lock,
-                        color: Color(0xFFb4b4b4),
-                        size: 40,
-                      )),
-                  const SizedBox(height: 30),
-                  const Text(
-                    "A password reset email has been sent to",
-                  ),
-                  Text(
-                    ref.watch(forgotPasswordProvider).email,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  // const Text("If it exists in our system"),
-                  TokenFormField(
-                    controller: controller,
-                    key: const Key("Verification"),
-                    placeholderText: 'Enter code here',
-                  ),
-                  const SizedBox(height: 10),
-                  const TokenTimer(),
-                  const SizedBox(height: 10),
-                  Row(
+        resizeToAvoidBottomInset: true,
+        body: header(
+            context,
+            ref,
+            "Verification",
+            "/forgot_password",
+            Center(
+                child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 25),
+              child: SingleChildScrollView(
+                  reverse: true,
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Container(
+                          padding: const EdgeInsets.all(25),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18),
+                            color: const Color(0xFFf4f4f4),
+                          ),
+                          child: const Icon(
+                            Icons.lock,
+                            color: Color(0xFFb4b4b4),
+                            size: 40,
+                          )),
+                      const SizedBox(height: 30),
                       const Text(
-                        "Didn't receive the code? ",
-                        style: TextStyle(fontSize: 11),
+                        "A password reset email has been sent to",
                       ),
-                      GestureDetector(
-                          child: const Text(
-                        "Resend code",
-                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
-                      )),
-                      const Text(
-                        " or ",
-                        style: TextStyle(fontSize: 11),
-                      ),
-                      GestureDetector(
-                        onTap: () =>
-                            ref.read(routeProvider).changePage(context, "/forgot_password"),
-                        child: const Text("Re-enter email",
-                            style: TextStyle(
-                                fontSize: 11, fontWeight: FontWeight.bold)),
-                      ),
-                    ],
-                  ),
-                  ref.watch(forgotPasswordProvider).timerStopped
-                      ? const DisabledResetButton()
-                      : VerifyTokenButton(
-                          codeController: controller,
-                          key: UniqueKey(),
+                      Text(
+                        ref.watch(forgotPasswordProvider).email,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                         ),
-                ],
-              )
-            ),
-          )
-        )
-      )
-    );
+                      ),
+                      // const Text("If it exists in our system"),
+                      TokenFormField(
+                        controller: controller,
+                        key: const Key("Verification"),
+                        placeholderText: 'Enter code here',
+                      ),
+                      const SizedBox(height: 10),
+                      const TokenTimer(),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Didn't receive the code? ",
+                            style: TextStyle(fontSize: 11),
+                          ),
+                          GestureDetector(
+                              child: const Text(
+                            "Resend code",
+                            style: TextStyle(
+                                fontSize: 11, fontWeight: FontWeight.bold),
+                          )),
+                          const Text(
+                            " or ",
+                            style: TextStyle(fontSize: 11),
+                          ),
+                          GestureDetector(
+                            onTap: () => ref
+                                .read(routeProvider)
+                                .changePage(context, "/forgot_password"),
+                            child: const Text("Re-enter email",
+                                style: TextStyle(
+                                    fontSize: 11, fontWeight: FontWeight.bold)),
+                          ),
+                        ],
+                      ),
+                      ref.watch(forgotPasswordProvider).timerStopped
+                          ? const DisabledResetButton()
+                          : VerifyTokenButton(
+                              codeController: controller,
+                              key: UniqueKey(),
+                            ),
+                    ],
+                  )),
+            ))));
   }
 }
 
@@ -281,9 +279,7 @@ class VerifyTokenButton extends ConsumerWidget {
         EasyLoading.show(
             status: 'Loading...', maskType: EasyLoadingMaskType.custom);
         ForgotPassServices()
-            .verifyResetPassToken(ref, codeController.text).then((value) {
-              ref.read(routeProvider).changePage(context, "/create_password");
-            });
+            .verifyResetPassToken(ref, codeController.text, context);
       },
       child: Container(
           padding: const EdgeInsets.all(16.0),

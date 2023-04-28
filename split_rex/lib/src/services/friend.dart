@@ -70,7 +70,7 @@ class FriendServices {
     if (data["message"] == "SUCCESS") {
       ref.read(friendProvider).changeUserSentList(data["data"]);
     } else if (data["message"] == "DATA_NOT_FOUND") {
-      ref.read(friendProvider).friendSentList.clear();
+      ref.watch(friendProvider).friendSentList.clear();
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

@@ -228,7 +228,7 @@ class HomeReport extends ConsumerWidget {
                   child: const Text(
                     "View Detailed Report",
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Color(0xFF6DC7BD)),
+                    style: TextStyle(color: Color.fromARGB(255, 109, 107, 107)),
                   ),
                 ),
               )

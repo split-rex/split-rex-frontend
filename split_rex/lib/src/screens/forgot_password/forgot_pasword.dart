@@ -35,66 +35,63 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body:  header(
-        context,
-        ref,
-        "Forgot Password",
-        "/sign_in",
-        Center(child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 25),
-          child: SingleChildScrollView(
-          reverse: true,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                  padding: const EdgeInsets.all(25),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    color: const Color(0xFFf4f4f4),
-                  ),
-                  child: const Icon(
-                    Icons.lock,
-                    color: Color(0xFFb4b4b4),
-                    size: 40,
+        resizeToAvoidBottomInset: true,
+        body: header(
+            context,
+            ref,
+            "Forgot Password",
+            "/sign_in",
+            Center(
+                child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 25),
+              child: SingleChildScrollView(
+                  reverse: true,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.all(25),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18),
+                            color: const Color(0xFFf4f4f4),
+                          ),
+                          child: const Icon(
+                            Icons.lock,
+                            color: Color(0xFFb4b4b4),
+                            size: 40,
+                          )),
+                      const SizedBox(height: 30),
+                      const Text(
+                        "Please input your registered e-mail",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      const Text(
+                        "to reset your password.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      FormFill(
+                        controller: emailController,
+                        key: const Key("ForgotPassword"),
+                        icon: Icons.email,
+                        placeholderText: "E-mail",
+                      ),
+                      const SizedBox(height: 10),
+                      ResetButton(
+                        emailController: emailController,
+                        key: UniqueKey(),
+                      ),
+                    ],
                   )),
-              const SizedBox(height: 30),
-              const Text(
-                "Please input your registered e-mail",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              const Text(
-                "to reset your password.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              FormFill(
-                controller: emailController,
-                key: const Key("ForgotPassword"),
-                icon: Icons.email,
-                placeholderText: "E-mail",
-              ),
-              const SizedBox(height: 10),
-              ResetButton(
-                emailController: emailController,
-                key: UniqueKey(),
-              ),
-            ],
-          )
-        ),
-      )
-        )
-      )
-    );
+            ))));
   }
 }
 
@@ -174,10 +171,8 @@ class ResetButton extends ConsumerWidget {
           ..maskColor = const Color.fromARGB(155, 255, 255, 255);
         EasyLoading.show(
             status: 'Loading...', maskType: EasyLoadingMaskType.custom);
-        await ForgotPassServices().generatePassToken(ref, emailController.text).then((value) {
-          ref.watch(forgotPasswordProvider).changeEmail(emailController.text);
-          ref.read(routeProvider).changePage(context, "/verify_token");
-        });
+        await ForgotPassServices()
+            .generatePassToken(ref, emailController.text, context);
       },
       child: Container(
           padding: const EdgeInsets.all(16.0),

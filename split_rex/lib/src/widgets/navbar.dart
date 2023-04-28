@@ -13,7 +13,6 @@ import 'package:split_rex/src/widgets/groups/group_settings.dart';
 import '../providers/camera.dart';
 import '../services/scan_bill.dart';
 
-
 class Navbar extends ConsumerWidget {
   const Navbar({super.key});
 
@@ -87,7 +86,9 @@ class _PopupExpense extends ConsumerWidget {
                           onTap: () {
                             GroupServices().userGroupList(ref).then((value) {
                               Navigator.pop(context);
-                              ref.read(routeProvider).changePage(context, "/add_expense");
+                              ref
+                                  .read(routeProvider)
+                                  .changePage(context, "/add_expense");
                             });
                           },
                           child: const Text("Manual Input"),
@@ -100,20 +101,41 @@ class _PopupExpense extends ConsumerWidget {
                               source: ImageSource.gallery,
                             );
                             if (pickedFile != null) {
+                              EasyLoading.instance
+                                ..displayDuration = const Duration(seconds: 3)
+                                ..indicatorType =
+                                    EasyLoadingIndicatorType.fadingCircle
+                                ..loadingStyle = EasyLoadingStyle.custom
+                                ..indicatorSize = 45.0
+                                ..radius = 16.0
+                                ..textColor = Colors.white
+                                ..progressColor = const Color(0xFF4F9A99)
+                                ..backgroundColor = const Color(0xFF4F9A99)
+                                ..indicatorColor = Colors.white
+                                ..maskType = EasyLoadingMaskType.custom
+                                ..maskColor =
+                                    const Color.fromARGB(155, 255, 255, 255);
                               EasyLoading.show(
-                                status: 'Scanning...',
-                                maskType: EasyLoadingMaskType.custom
-                              );
+                                  status: 'Scanning...',
+                                  maskType: EasyLoadingMaskType.custom);
                               logger.d("MASOKK1");
-                              String filename = DateTime.now().toIso8601String();
-                              final directory = await getApplicationDocumentsDirectory();
-                              var imagePath = await File('${directory.path}/$filename.png').create();
+                              String filename =
+                                  DateTime.now().toIso8601String();
+                              final directory =
+                                  await getApplicationDocumentsDirectory();
+                              var imagePath =
+                                  await File('${directory.path}/$filename.png')
+                                      .create();
                               Uint8List image = await pickedFile.readAsBytes();
                               await imagePath.writeAsBytes(image);
-                              ScanBillServices().postBill(ref, imagePath).then((value) {
+                              ScanBillServices()
+                                  .postBill(ref, imagePath)
+                                  .then((value) {
                                 EasyLoading.dismiss();
                                 Navigator.pop(context);
-                                ref.read(routeProvider).changePage(context, "/add_expense");
+                                ref
+                                    .read(routeProvider)
+                                    .changePage(context, "/add_expense");
                               });
                             }
                           },
@@ -129,10 +151,14 @@ class _PopupExpense extends ConsumerWidget {
                             if (ref.watch(cameraProvider).cameras == null) {
                               availableCameras().then((value) {
                                 ref.read(cameraProvider).setCameras(value);
-                                ref.read(routeProvider).changePage(context, "/scan_bill");
+                                ref
+                                    .read(routeProvider)
+                                    .changePage(context, "/scan_bill");
                               });
                             } else {
-                              ref.read(routeProvider).changePage(context, "/scan_bill");
+                              ref
+                                  .read(routeProvider)
+                                  .changePage(context, "/scan_bill");
                             }
                           },
                           child: const Text("Take Photo"),

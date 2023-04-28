@@ -54,11 +54,24 @@ class ScheduledNotificationServices {
             uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
           );
         }
+        await resolveScheduledNotification(token);
       } catch (error) {
         logger.d(error);
       }
     } else {
     }
+  }
+
+  Future<void> resolveScheduledNotification(String token) async {
+    await post(Uri.parse("$endpoint/deleteNotif"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    ).then((Response resp) {
+      var data = jsonDecode(resp.body);
+      logger.d(data);
+    });
   }
 
   Future<void> insertScheduledNotifation(
@@ -90,7 +103,7 @@ class ScheduledNotificationServices {
       "name": name,
       "date": dateTimeWithOffset
     };
-    
+
     await post(Uri.parse("$endpoint/insertNotif"),
       headers: <String, String>{
         'Content-Type': 'application/json',

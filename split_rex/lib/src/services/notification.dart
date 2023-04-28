@@ -3,7 +3,6 @@ import 'package:timezone/data/latest.dart' as tz;
 
 
 class NotificationService {
-
   static final NotificationService _notificationService =
       NotificationService._internal();
 

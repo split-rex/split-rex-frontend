@@ -11,6 +11,8 @@ class RouteProvider extends ChangeNotifier {
 
   void changePage(context, value) {
     if (
+      (value == "/sign_in")
+      ||
       (ModalRoute.of(context)?.settings.name == "/account" && value == "/sign_in")
       ||
       (

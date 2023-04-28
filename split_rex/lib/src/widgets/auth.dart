@@ -148,6 +148,15 @@ class _SignUpFormState extends State<SignUpForm> {
             icon: Icons.email,
             placeholderText: "E-mail",
           ),
+          const SizedBox(
+            height: 6
+          ),
+          const Text(
+            "*forgot password is only supported for gmail accounts",
+            style: TextStyle(
+              fontSize: 12,
+            ),
+          ),
           PasswordField(
             controller: passController,
             key: UniqueKey(),
@@ -263,37 +272,6 @@ class SubmitBtn extends ConsumerWidget {
               .read(authProvider)
               .changeSignInData(emailController.text, passController.text);
           await ApiServices().postLogin(ref, context);
-          // ignore: use_build_context_synchronously
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Container(
-              padding: const EdgeInsets.all(16),
-              height: 70,
-              decoration: BoxDecoration(
-                  color: Color(
-                      ref.watch(errorProvider).errorMsg == "Login Failed"
-                          ? 0xFFF44336
-                          : 0xFF6DC7BD),
-                  borderRadius: const BorderRadius.all(Radius.circular(15))),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    ref.watch(errorProvider).errorMsg == "Login Failed"
-                        ? "Login failed, email or password are wrong!"
-                        : "Logged in successfully!",
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-          ));
         } else {
           ref.read(authProvider).changeSignUpData(
               nameController!.text,

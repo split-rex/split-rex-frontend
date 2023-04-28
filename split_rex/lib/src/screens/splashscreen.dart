@@ -7,6 +7,7 @@ import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/auth.dart';
 
+
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -22,7 +23,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       String? jwtToken = prefs.getString('jwtToken');
       if (jwtToken != "" && jwtToken != null) {
         if (JwtDecoder.isExpired(jwtToken)) {
-          log("jwt not expired");
           log(jwtToken);
           ref.read(authProvider).changeJwtToken("");
           ref.read(routeProvider).changePage(context, "/sign_in");

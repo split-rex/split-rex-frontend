@@ -7,67 +7,83 @@ import 'package:split_rex/src/providers/auth.dart';
 import '../../common/header.dart';
 import '../../services/password.dart';
 
-class CreateNewPassword extends ConsumerWidget {
+class CreateNewPassword extends ConsumerStatefulWidget {
   const CreateNewPassword({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    TextEditingController passController = TextEditingController();
-    TextEditingController confPassController = TextEditingController();
+  ConsumerState<CreateNewPassword> createState() => _CreateNewPasswordState();
+}
 
+class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
+    final passController = TextEditingController();
+    final confPassController = TextEditingController();
+
+  @override
+  void dispose() {
+    confPassController.dispose();
+    passController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: header(
         context,
         ref,
         "Create a New Password",
         "/forgot_password",
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 25),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 150),
-              Container(
-                  padding: const EdgeInsets.all(25),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    color: const Color(0xFFf4f4f4),
+        Center(
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 25),
+            child: SingleChildScrollView(
+              reverse: true,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                      padding: const EdgeInsets.all(25),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        color: const Color(0xFFf4f4f4),
+                      ),
+                      child: const Icon(
+                        Icons.lock,
+                        color: Color(0xFFb4b4b4),
+                        size: 40,
+                      )),
+                  const SizedBox(height: 30),
+                  const Text(
+                    "Please input your new password.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                  child: const Icon(
-                    Icons.lock,
-                    color: Color(0xFFb4b4b4),
-                    size: 40,
-                  )),
-              const SizedBox(height: 30),
-              const Text(
-                "Please input your new password.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              PasswordField(
-                controller: passController,
-                key: UniqueKey(),
-                placeholderText: 'Password',
-              ),
-              PasswordField(
-                controller: confPassController,
-                key: UniqueKey(),
-                placeholderText: 'Confirm Password',
-              ),
-              const SizedBox(height: 10),
-              ResetButton(
-                passController: passController,
-                confPassController: confPassController,
-                key: UniqueKey(),
-              ),
-            ],
+                  PasswordField(
+                    controller: passController,
+                    key: const Key("Password-CreateNew"),
+                    placeholderText: 'Password',
+                  ),
+                  PasswordField(
+                    controller: confPassController,
+                    key: const Key("ConfirmPassword-CreateNew"),
+                    placeholderText: 'Confirm Password',
+                  ),
+                  const SizedBox(height: 10),
+                  ResetButton(
+                    key: const Key("ResetButton-CreatePassword"),
+                    passController: passController,
+                    confPassController: confPassController,
+                  ),
+                ],
+              )
+            ),
           )
-        ),
+        )
       )
     );
   }

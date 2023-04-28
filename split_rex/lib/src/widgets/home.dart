@@ -141,7 +141,10 @@ class HomeReport extends ConsumerWidget {
       offset: const Offset(0, -22),
       child: Container(
           width: MediaQuery.of(context).size.width - 55.0,
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+            vertical: 12.0
+          ),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10.0)),

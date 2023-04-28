@@ -37,7 +37,7 @@ class PaymentServices {
           tempPayment.userId = data["user_id"];
           tempPayment.name = data["fullname"];
           tempPayment.color = data["color"];
-          tempPayment.totalUnpaid = data["total_unpaid"];
+          tempPayment.totalUnpaid = (data["total_unpaid"]).round();
           ref.read(paymentProvider).addUnsettledPayment(tempPayment);
         }
       } catch (error) {

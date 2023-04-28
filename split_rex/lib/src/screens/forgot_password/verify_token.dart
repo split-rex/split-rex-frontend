@@ -12,95 +12,109 @@ import '../../services/password.dart';
 
 bool timerStart = false;
 
-class VerifyToken extends ConsumerWidget {
+class VerifyToken extends ConsumerStatefulWidget {
   const VerifyToken({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    timerStart = false;
-    TextEditingController controller = TextEditingController();
+  ConsumerState<VerifyToken> createState() => _VerifyTokenState();
+}
 
+class _VerifyTokenState extends ConsumerState<VerifyToken> {
+  final controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    timerStart = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: header(
         context,
         ref,
         "Verification",
         "/forgot_password",
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 25),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 150),
-              Container(
-                  padding: const EdgeInsets.all(25),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    color: const Color(0xFFf4f4f4),
-                  ),
-                  child: const Icon(
-                    Icons.lock,
-                    color: Color(0xFFb4b4b4),
-                    size: 40,
-                  )),
-              const SizedBox(height: 30),
-              const Text(
-                "A password reset email has been sent to",
-              ),
-              Text(
-                ref.watch(forgotPasswordProvider).email,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              // const Text("If it exists in our system"),
-              TokenFormField(
-                controller: controller,
-                key: UniqueKey(),
-                placeholderText: 'Enter code here',
-              ),
-              const SizedBox(height: 10),
-              const TokenTimer(),
-              const SizedBox(height: 10),
-              Row(
+        Center(
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 25),
+            child: SingleChildScrollView(
+              reverse: true,
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Container(
+                      padding: const EdgeInsets.all(25),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        color: const Color(0xFFf4f4f4),
+                      ),
+                      child: const Icon(
+                        Icons.lock,
+                        color: Color(0xFFb4b4b4),
+                        size: 40,
+                      )),
+                  const SizedBox(height: 30),
                   const Text(
-                    "Didn't receive the code? ",
-                    style: TextStyle(fontSize: 11),
+                    "A password reset email has been sent to",
                   ),
-                  GestureDetector(
-                      child: const Text(
-                    "Resend code",
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
-                  )),
-                  const Text(
-                    " or ",
-                    style: TextStyle(fontSize: 11),
-                  ),
-                  GestureDetector(
-                    onTap: () =>
-                        ref.read(routeProvider).changePage(context, "/forgot_password"),
-                    child: const Text("Re-enter email",
-                        style: TextStyle(
-                            fontSize: 11, fontWeight: FontWeight.bold)),
-                  ),
-                ],
-              ),
-              ref.watch(forgotPasswordProvider).timerStopped
-                  ? const DisabledResetButton()
-                  : VerifyTokenButton(
-                      codeController: controller,
-                      key: UniqueKey(),
+                  Text(
+                    ref.watch(forgotPasswordProvider).email,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
                     ),
-            ],
+                  ),
+                  // const Text("If it exists in our system"),
+                  TokenFormField(
+                    controller: controller,
+                    key: const Key("Verification"),
+                    placeholderText: 'Enter code here',
+                  ),
+                  const SizedBox(height: 10),
+                  const TokenTimer(),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Didn't receive the code? ",
+                        style: TextStyle(fontSize: 11),
+                      ),
+                      GestureDetector(
+                          child: const Text(
+                        "Resend code",
+                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                      )),
+                      const Text(
+                        " or ",
+                        style: TextStyle(fontSize: 11),
+                      ),
+                      GestureDetector(
+                        onTap: () =>
+                            ref.read(routeProvider).changePage(context, "/forgot_password"),
+                        child: const Text("Re-enter email",
+                            style: TextStyle(
+                                fontSize: 11, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                  ref.watch(forgotPasswordProvider).timerStopped
+                      ? const DisabledResetButton()
+                      : VerifyTokenButton(
+                          codeController: controller,
+                          key: UniqueKey(),
+                        ),
+                ],
+              )
+            ),
           )
-        ),
+        )
       )
     );
   }

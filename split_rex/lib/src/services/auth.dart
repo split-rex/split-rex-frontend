@@ -145,40 +145,91 @@ class ApiServices {
 
   Future<void> postLogin(WidgetRef ref, BuildContext context) async {
     SignInModel signInData = ref.watch(authProvider).signInData;
-    Response resp = await post(Uri.parse("$endpoint/login"),
-        headers: <String, String>{'Content-Type': 'application/json'},
-        body: jsonEncode(<String, String>{
-          "email": signInData.email,
-          "password": signInData.pass
-        }));
-    var data = jsonDecode(resp.body);
-    if (data["message"] == "SUCCESS") {
-      ref.read(authProvider).changeJwtToken(data["data"]);
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("jwtToken", data["data"]);
-      prefs.setString("email", signInData.email);
-      prefs.setString("password", signInData.pass);
-      ref.read(errorProvider).changeError(data["message"]);
-      getProfile(ref).then((value) {
-        ActivityServices().getActivity(ref).then((value) {
-          GroupServices().userGroupList(ref).then((value) {
-            FriendServices().userFriendList(ref).then((value) {
-              FriendServices().friendRequestReceivedList(ref).then((value) {
-                FriendServices().friendRequestSentList(ref).then((value) {
-                  getGroupOwedLent(ref).then((data) {
-                    EasyLoading.dismiss();
-                    ref.read(routeProvider).changePage(context, "/home");
+    await post(Uri.parse("$endpoint/login"),
+      headers: <String, String>{'Content-Type': 'application/json'},
+      body: jsonEncode(<String, String>{
+        "email": signInData.email,
+        "password": signInData.pass
+      })
+    ).then((Response resp) async {
+      var data = jsonDecode(resp.body);
+      if (data["message"] == "SUCCESS") {
+        ref.read(authProvider).changeJwtToken(data["data"]);
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString("jwtToken", data["data"]);
+        prefs.setString("email", signInData.email);
+        prefs.setString("password", signInData.pass);
+        ref.read(errorProvider).changeError(data["message"]);
+        getProfile(ref).then((value) {
+          ActivityServices().getActivity(ref).then((value) {
+            GroupServices().userGroupList(ref).then((value) {
+              FriendServices().userFriendList(ref).then((value) {
+                FriendServices().friendRequestReceivedList(ref).then((value) {
+                  FriendServices().friendRequestSentList(ref).then((value) {
+                    getGroupOwedLent(ref).then((data) {
+                      EasyLoading.dismiss();
+                      ref.read(routeProvider).changePage(context, "/home");
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Container(
+                          padding: const EdgeInsets.all(16),
+                          height: 70,
+                          decoration: const BoxDecoration(
+                              color: Color(0xFF6DC7BD),
+                              borderRadius: BorderRadius.all(Radius.circular(15))),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text("Logged in successfully!",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                      ));
+                    });
                   });
                 });
               });
             });
           });
         });
-      });
-    } else {
-      EasyLoading.dismiss();
-      ref.read(errorProvider).changeError(data["message"]);
-    }
+      } else {
+        EasyLoading.dismiss();
+        ref.read(errorProvider).changeError(data["message"]);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+            padding: const EdgeInsets.all(16),
+            height: 70,
+            decoration: const BoxDecoration(
+              color: Color(0xFFF44336),
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  "Login failed, email or password are wrong!",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ));
+      }
+    });
   }
 
   Future<void> addPaymentInfo(

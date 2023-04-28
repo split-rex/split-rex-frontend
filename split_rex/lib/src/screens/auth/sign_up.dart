@@ -16,7 +16,7 @@ class SignUpScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
@@ -53,14 +53,13 @@ class SignUpScreen extends ConsumerWidget {
             // log("Error");
             return const Text("Error");
           } else {
-            logger.d(ref.watch(authProvider).jwtToken);
             // log("Not signed in");
             return SingleChildScrollView(
                 child: Column(
               children: [
                 const SignUpForm(),
                 Container(
-                  margin: const EdgeInsets.only(top: 10, bottom: 10),
+                  margin: const EdgeInsets.only(top: 10, bottom: 40),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

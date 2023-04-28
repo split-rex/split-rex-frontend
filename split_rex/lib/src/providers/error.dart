@@ -6,6 +6,10 @@ class ErrorProvider extends ChangeNotifier {
   String errorMsg = "";
 
   Map<String, String> errorMap = {
+    "ERROR_EMPTY_NAME": "Please fill in name",
+    "ERROR_EMPTY_USERNAME": "Please fill in username",
+    "ERROR_EMPTY_EMAIL": "Please fill in email",
+    "ERROR_EMPTY_PASS": "Please fill in password",
     "ERROR_INTERNAL_SERVER": "Server Error",
     "ERROR_BAD_REQUEST": "Please Retry",
     "ERROR_FAILED_REGISTER": "Register Failed",

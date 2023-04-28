@@ -100,9 +100,23 @@ class ApiServices {
   Future<void> postRegister(WidgetRef ref, BuildContext context) async {
     log("postRegister");
     SignUpModel signUpData = ref.watch(authProvider).signUpData;
-    if (!isEmailValid(signUpData.email)) {
+    if (signUpData.name == "") {
+      EasyLoading.dismiss();
+      ref.read(errorProvider).changeError("ERROR_EMPTY_NAME");
+    }  else if (signUpData.email == "") {
+      EasyLoading.dismiss();
+      ref.read(errorProvider).changeError("ERROR_EMPTY_EMAIL");
+    }  else if (signUpData.username == "") {
+      EasyLoading.dismiss();
+      ref.read(errorProvider).changeError("ERROR_EMPTY_USERNAME");
+    }  else if (signUpData.pass == "") {
+      EasyLoading.dismiss();
+      ref.read(errorProvider).changeError("ERROR_EMPTY_PASS");
+    } else if (!isEmailValid(signUpData.email)) {
+      EasyLoading.dismiss();
       ref.read(errorProvider).changeError("ERROR_INVALID_EMAIL");
     } else if (signUpData.confPass != signUpData.pass) {
+      EasyLoading.dismiss();
       ref
           .read(errorProvider)
           .changeError("ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH");

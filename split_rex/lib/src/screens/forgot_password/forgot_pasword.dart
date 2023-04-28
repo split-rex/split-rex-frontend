@@ -1,75 +1,96 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:split_rex/src/providers/password.dart';
-import 'package:split_rex/src/providers/routes.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/header.dart';
 import '../../services/password.dart';
 
-class ForgotPassword extends ConsumerWidget {
+class ForgotPassword extends ConsumerStatefulWidget {
   const ForgotPassword({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    TextEditingController emailController = TextEditingController();
-    ref.watch(forgotPasswordProvider).timerStopped = false;
+  ConsumerState<ForgotPassword> createState() => _ForgotPasswordState();
+}
 
-    return header(
-      context,
-      ref,
-      "Forgot Password",
-      "sign_in",
-      Container(
-          margin: const EdgeInsets.symmetric(horizontal: 25),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 150),
-              Container(
-                  padding: const EdgeInsets.all(25),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    color: const Color(0xFFf4f4f4),
-                  ),
-                  child: const Icon(
-                    Icons.lock,
-                    color: Color(0xFFb4b4b4),
-                    size: 40,
+class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
+  final emailController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      ref.watch(forgotPasswordProvider).timerStopped = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: header(
+            context,
+            ref,
+            "Forgot Password",
+            "/sign_in",
+            Center(
+                child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 25),
+              child: SingleChildScrollView(
+                  reverse: true,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.all(25),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18),
+                            color: const Color(0xFFf4f4f4),
+                          ),
+                          child: const Icon(
+                            Icons.lock,
+                            color: Color(0xFFb4b4b4),
+                            size: 40,
+                          )),
+                      const SizedBox(height: 30),
+                      const Text(
+                        "Please input your registered e-mail",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      const Text(
+                        "to reset your password.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      FormFill(
+                        controller: emailController,
+                        key: const Key("ForgotPassword"),
+                        icon: Icons.email,
+                        placeholderText: "E-mail",
+                      ),
+                      const SizedBox(height: 10),
+                      ResetButton(
+                        emailController: emailController,
+                        key: UniqueKey(),
+                      ),
+                    ],
                   )),
-              const SizedBox(height: 30),
-              const Text(
-                "Please input your registered e-mail",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              const Text(
-                "to reset your password.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              FormFill(
-                controller: emailController,
-                key: UniqueKey(),
-                icon: Icons.email,
-                placeholderText: "E-mail",
-              ),
-              const SizedBox(height: 10),
-              ResetButton(
-                emailController: emailController,
-                key: UniqueKey(),
-              ),
-            ],
-          )),
-    );
+            ))));
   }
 }
 
@@ -149,9 +170,8 @@ class ResetButton extends ConsumerWidget {
           ..maskColor = const Color.fromARGB(155, 255, 255, 255);
         EasyLoading.show(
             status: 'Loading...', maskType: EasyLoadingMaskType.custom);
-        await ForgotPassServices().generatePassToken(ref, emailController.text);
-        ref.watch(forgotPasswordProvider).changeEmail(emailController.text);
-        ref.read(routeProvider).changePage("verify_token");
+        await ForgotPassServices()
+            .generatePassToken(ref, emailController.text, context);
       },
       child: Container(
           padding: const EdgeInsets.all(16.0),

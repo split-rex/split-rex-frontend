@@ -1,14 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/screens/auth/username_fill.dart';
-import 'package:split_rex/src/screens/home.dart';
-import 'package:split_rex/src/services/auth.dart';
 import 'package:split_rex/src/widgets/auth.dart';
+
+import '../../services/auth.dart';
 
 class SignUpScreen extends ConsumerWidget {
   const SignUpScreen({super.key});
@@ -16,19 +15,20 @@ class SignUpScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           // add async here
           if (snapshot.hasData) {
-            // ref.read(routeProvider).changePage("fill_username");
+            // ref.read(routeProvider).changePage(context, "/fill_username");
 
              () async {
             final user = FirebaseAuth.instance.currentUser;
               ref
                     .read(authProvider)
                     .changeSignInData(user?.email, user?.uid);
-              await ApiServices().postLogin(ref);
+              await ApiServices().postLogin(ref, context);
               
               }();
               
@@ -52,28 +52,27 @@ class SignUpScreen extends ConsumerWidget {
             // log("Error");
             return const Text("Error");
           } else {
-            logger.d(ref.watch(authProvider).jwtToken);
             // log("Not signed in");
             return SingleChildScrollView(
                 child: Column(
               children: [
                 const SignUpForm(),
                 Container(
-                  margin: const EdgeInsets.only(top: 10, bottom: 10),
+                  margin: const EdgeInsets.only(top: 10, bottom: 40),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text("Have an account?  "),
                       GestureDetector(
-                        child: const Text(
-                          key: Key("SignInPage"),
+                        child: Text(
+                          key: UniqueKey(),
                           "Sign in",
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w800,
                           ),
                         ),
                         onTap: () {
-                          ref.read(routeProvider).changePage("sign_in");
+                          ref.read(routeProvider).changePage(context, "/sign_in");
                         },
                       )
                     ],
@@ -86,4 +85,6 @@ class SignUpScreen extends ConsumerWidget {
       ),
     );
   }
+
+
 }

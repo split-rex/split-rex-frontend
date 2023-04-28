@@ -9,15 +9,18 @@ class SettleUp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return header(
-      context,
-      ref,
-      "Settle Up",
-      "unsettled_payments",
-      Column(
-        children: const [
-          SettleUpBody()
-        ],
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: header(
+        context,
+        ref,
+        "Settle Up",
+        "/unsettled_payments",
+        Column(
+          children: const [
+            SettleUpBody()
+          ],
+        ),
       ),
     );
   }

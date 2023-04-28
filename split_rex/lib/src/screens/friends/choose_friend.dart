@@ -9,11 +9,13 @@ class ChooseFriend extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return header(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: header(
         context,
         ref,
         "Choose Friends",
-        "group_detail",
+        "/group_detail",
         Container(
           padding: const EdgeInsets.only(top: 8.0),
           child: Column(
@@ -22,7 +24,9 @@ class ChooseFriend extends ConsumerWidget {
               Expanded(flex: 7, child: addFriendToGroup(context, ref)),
             ],
           ),
-        ));
+        )
+      ),
+    );
   }
 }
 
@@ -31,11 +35,13 @@ class ChooseFriendInGroupSetting extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return header(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: header(
         context,
         ref,
         "Choose Friends",
-        "group_settings",
+        "/group_settings",
         Container(
           padding: const EdgeInsets.only(top: 8.0),
           child: Column(
@@ -45,7 +51,9 @@ class ChooseFriendInGroupSetting extends ConsumerWidget {
               const AddFriendToGroupButton(),
             ],
           ),
-        ));
+        )
+      ),
+    );
   }
 }
 

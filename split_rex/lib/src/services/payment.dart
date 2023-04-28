@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/model/payment.dart';
@@ -36,7 +37,7 @@ class PaymentServices {
           tempPayment.userId = data["user_id"];
           tempPayment.name = data["fullname"];
           tempPayment.color = data["color"];
-          tempPayment.totalUnpaid = data["total_unpaid"];
+          tempPayment.totalUnpaid = (data["total_unpaid"]).round();
           ref.read(paymentProvider).addUnsettledPayment(tempPayment);
         }
       } catch (error) {
@@ -77,7 +78,7 @@ class PaymentServices {
   }
 
   Future<void> settlePaymentOwed(
-      WidgetRef ref, String paymentId, int totalPaid) async {
+      WidgetRef ref, String paymentId, int totalPaid, BuildContext context) async {
     Response resp = await post(Uri.parse("$endpoint/settlePaymentOwed"),
         headers: <String, String>{
           'Content-Type': 'application/json',
@@ -90,14 +91,16 @@ class PaymentServices {
     var data = jsonDecode(resp.body);
     logger.d(data);
     if (data["message"] == "SUCCESS") {
-      ref.read(routeProvider).changePage("group_detail");
+      if (context.mounted) {
+        ref.read(routeProvider).changePage(context, "/group_detail");
+      }
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }
   }
 
   Future<void> settlePaymentLent(
-      WidgetRef ref, String paymentId, int totalPaid) async {
+      WidgetRef ref, String paymentId, int totalPaid, BuildContext context) async {
     Response resp = await post(Uri.parse("$endpoint/settlePaymentLent"),
         headers: <String, String>{
           'Content-Type': 'application/json',
@@ -110,7 +113,9 @@ class PaymentServices {
     var data = jsonDecode(resp.body);
     logger.d(data);
     if (data["message"] == "SUCCESS") {
-      ref.read(routeProvider).changePage("group_detail");
+      if (context.mounted) {
+        ref.read(routeProvider).changePage(context, "/group_detail");
+      }
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

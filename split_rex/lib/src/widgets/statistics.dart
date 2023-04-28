@@ -1,11 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/providers/statisticsprovider.dart';
-import 'package:split_rex/src/services/statistics.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StatisticsHeader extends ConsumerWidget {
@@ -346,98 +344,71 @@ class TopSpendingBuddies extends ConsumerWidget {
                                 color: Color(0XFF4f4f4f),
                                 fontWeight: FontWeight.bold,
                               ),
-                              children: [
-                                TextSpan(
-                                  text: rod.toY.round().toString() == "10"
-                                      ? "\n${ref.watch(statisticsProvider).spendingBuddies[2].count} groups"
-                                      : rod.toY.round().toString() == "30"
-                                          ? "\n${ref.watch(statisticsProvider).spendingBuddies[0].count} groups"
-                                          : rod.toY.round().toString() == "20"
-                                              ? "\n${ref.watch(statisticsProvider).spendingBuddies[1].count} groups"
-                                              : "",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 10,
-                                  ),
-                                )
-                              ]);
-                        },
-                      )),
-                  maxY: 37,
-                  minY: 0,
-                  titlesData: FlTitlesData(
-                    show: true,
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 30,
-                        getTitlesWidget: getTitles,
+                            );
+                          },
+
+                        )
                       ),
-                    ),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    topTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    rightTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
+                      maxY: 37,
+                      minY: 0,
+                      titlesData: FlTitlesData(
+                        show: true,
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 30,
+                            getTitlesWidget: getTitles,
+                          ),
+                        ),
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        topTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        rightTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                      ),
+                      gridData: FlGridData(show: false),
+                      borderData: FlBorderData(show: false,),
+                      barGroups: [
+                        BarChartGroupData(
+                            x: 0,
+                            barRods: [
+                              BarChartRodData(
+                                toY: 10,
+                                color: Color(0xff60D5C0),
+                              )
+                            ],
+                            showingTooltipIndicators: [0],
+                          ),
+                          BarChartGroupData(
+                            x: 1,
+                            barRods: [
+                              BarChartRodData(
+                                toY: 30,
+                                color: Color(0xff44A4B2),
+                              )
+                            ],
+                            showingTooltipIndicators: [0],
+                          ),
+                          BarChartGroupData(
+                            x: 2,
+                            barRods: [
+                              BarChartRodData(
+                                toY: 20,
+                                color: Color(0xff45B5AF)
+                              )
+                            ],
+                            showingTooltipIndicators: [0],
+                          ),
+                      ]
+
+                    )
                   ),
-                  gridData: FlGridData(show: false),
-                  borderData: FlBorderData(
-                    show: false,
-                  ),
-                  barGroups: [
-                    BarChartGroupData(
-                      x: 0,
-                      barRods: [
-                        BarChartRodData(
-                          toY: ref
-                                      .watch(statisticsProvider)
-                                      .spendingBuddies[2]
-                                      .name !=
-                                  ""
-                              ? 10
-                              : 0,
-                          color: const Color(0xff60D5C0),
-                        )
-                      ],
-                      showingTooltipIndicators: [0],
-                    ),
-                    BarChartGroupData(
-                      x: 1,
-                      barRods: [
-                        BarChartRodData(
-                          toY: ref
-                                      .watch(statisticsProvider)
-                                      .spendingBuddies[0]
-                                      .name !=
-                                  ""
-                              ? 30
-                              : 0,
-                          color: const Color(0xff44A4B2),
-                        )
-                      ],
-                      showingTooltipIndicators: [0],
-                    ),
-                    BarChartGroupData(
-                      x: 2,
-                      barRods: [
-                        BarChartRodData(
-                            toY: ref
-                                        .watch(statisticsProvider)
-                                        .spendingBuddies[1]
-                                        .name !=
-                                    ""
-                                ? 20
-                                : 0,
-                            color: const Color(0xff45B5AF))
-                      ],
-                      showingTooltipIndicators: [0],
-                    ),
-                  ])),
-            )
+                  
+              )
             // TODO: update chart here
           ],
         ));
@@ -445,32 +416,33 @@ class TopSpendingBuddies extends ConsumerWidget {
 }
 
 Widget getTitles(double value, TitleMeta meta) {
-  final style = const TextStyle(
-    color: Color(0XFF4f4f4f),
-    fontWeight: FontWeight.bold,
-    fontSize: 14,
-  );
-  String text;
-  switch (value.toInt()) {
-    case 0:
-      text = '3';
-      break;
-    case 1:
-      text = '1';
-      break;
-    case 2:
-      text = '2';
-      break;
-    default:
-      text = '';
-      break;
+    final style = const TextStyle(
+      color: Color(0XFF4f4f4f),
+      fontWeight: FontWeight.bold,
+      fontSize: 14,
+    );
+    String text;
+    switch (value.toInt()) {
+      case 0:
+        text = '3';
+        break;
+      case 1:
+        text = '1';
+        break;
+      case 2:
+        text = '2';
+        break;
+      default:
+        text = '';
+        break;
+    }
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 0,
+      child: Text(text, style: style),
+    );
   }
-  return SideTitleWidget(
-    axisSide: meta.axisSide,
-    space: 0,
-    child: Text(text, style: style),
-  );
-}
+
 
 Widget bottomTitleWidgets(double value, TitleMeta meta) {
   const style = TextStyle(
@@ -652,45 +624,46 @@ class MutationUnsettled extends ConsumerWidget {
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text("Total Paid ",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Color(0XFF4F4F4F),
-                        )),
-                    SizedBox(width: 10),
-                    Text("Rp. 300.000.000 ",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: Color(0xffFF0000),
-                        ))
-                  ]),
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text("Total Received ",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Color(0XFF4F4F4F),
-                        )),
-                    SizedBox(width: 10),
-                    Text("Rp. 150.500.000 ",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: Color(0xFF4F9A99),
-                        ))
-                  ])
-            ],
-          ),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+              Text("Total Paid ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Color(0XFF4F4F4F),
+                )),
+              SizedBox(width: 10),
+              Text("Rp. 300.000.000 ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    color: Color(0xffFF0000),
+                  ))
+            ]),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+              Text("Total Received ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Color(0XFF4F4F4F),
+                )),
+              SizedBox(width: 10),
+              Text("Rp. 150.500.000 ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    color: Color(0xFF4F9A99),
+                  ))
+            ])
+          ],
+        ),
+        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
@@ -699,35 +672,36 @@ class MutationUnsettled extends ConsumerWidget {
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(children: [
-                Initicon(
-                  text: "Ubaidillah Ariq",
-                  size: 40,
-                  backgroundColor: getProfileBgColor(1),
-                  style: TextStyle(color: getProfileTextColor(1)),
-                ),
-                const SizedBox(width: 10),
-                const Text("Ubaidillah ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Color(0XFF4F4F4F),
-                    ))
-              ]),
-              RichText(
-                text: const TextSpan(
-                  text: "Rp 60.000",
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(children: [
+              Initicon(
+                text: "Ubaidillah Ariq",
+                size: 40,
+                backgroundColor: getProfileBgColor(1),
+                style: TextStyle(color: getProfileTextColor(1)),
+              ),
+              const SizedBox(width: 10),
+              const Text("Ubaidillah ",
                   style: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF4F9A99),
                     fontWeight: FontWeight.w500,
-                  ),
+                    fontSize: 14,
+                    color: Color(0XFF4F4F4F),
+                  ))
+            ]),
+            RichText(
+              text: const TextSpan(
+                text: "Rp 60.000",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF4F9A99),
+                  fontWeight: FontWeight.w500,
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
+        ),
+        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
@@ -736,35 +710,36 @@ class MutationUnsettled extends ConsumerWidget {
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(children: [
-                Initicon(
-                  text: "Ubaidillah Ariq",
-                  size: 40,
-                  backgroundColor: getProfileBgColor(1),
-                  style: TextStyle(color: getProfileTextColor(1)),
-                ),
-                const SizedBox(width: 10),
-                const Text("Ubaidillah ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Color(0XFF4F4F4F),
-                    ))
-              ]),
-              RichText(
-                text: const TextSpan(
-                  text: "Rp 60.000",
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(children: [
+              Initicon(
+                text: "Ubaidillah Ariq",
+                size: 40,
+                backgroundColor: getProfileBgColor(1),
+                style: TextStyle(color: getProfileTextColor(1)),
+              ),
+              const SizedBox(width: 10),
+              const Text("Ubaidillah ",
                   style: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF4F9A99),
                     fontWeight: FontWeight.w500,
-                  ),
+                    fontSize: 14,
+                    color: Color(0XFF4F4F4F),
+                  ))
+            ]),
+            RichText(
+              text: const TextSpan(
+                text: "Rp 60.000",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF4F9A99),
+                  fontWeight: FontWeight.w500,
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
+        ),
+        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
@@ -773,35 +748,36 @@ class MutationUnsettled extends ConsumerWidget {
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(children: [
-                Initicon(
-                  text: "Ubaidillah Ariq",
-                  size: 40,
-                  backgroundColor: getProfileBgColor(1),
-                  style: TextStyle(color: getProfileTextColor(1)),
-                ),
-                const SizedBox(width: 10),
-                const Text("Ubaidillah ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Color(0XFF4F4F4F),
-                    ))
-              ]),
-              RichText(
-                text: const TextSpan(
-                  text: "Rp 60.000",
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(children: [
+              Initicon(
+                text: "Ubaidillah Ariq",
+                size: 40,
+                backgroundColor: getProfileBgColor(1),
+                style: TextStyle(color: getProfileTextColor(1)),
+              ),
+              const SizedBox(width: 10),
+              const Text("Ubaidillah ",
                   style: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF4F9A99),
                     fontWeight: FontWeight.w500,
-                  ),
+                    fontSize: 14,
+                    color: Color(0XFF4F4F4F),
+                  ))
+            ]),
+            RichText(
+              text: const TextSpan(
+                text: "Rp 60.000",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF4F9A99),
+                  fontWeight: FontWeight.w500,
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
+        ),
+        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
       ]),
     );
@@ -938,120 +914,163 @@ class MutationSettled extends ConsumerWidget {
         Visibility(
           visible: ref.watch(statisticsProvider).showSettled,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text("Total Paid ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Color(0XFF4F4F4F),
-                    )),
-                const SizedBox(width: 10),
-                Text(
-                    "Rp.${formatDouble(ref.watch(statisticsProvider).paymentMutation.totalPaid)}",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                      color: Color(0xffFF0000),
-                    ))
-              ]),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text("Total Received ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Color(0XFF4F4F4F),
-                    )),
-                const SizedBox(width: 10),
-                Text(
-                    "Rp.${formatDouble(ref.watch(statisticsProvider).paymentMutation.totalReceived)}",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                      color: Color(0xFF4F9A99),
-                    ))
-              ])
-            ],
-          ),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+              Text("Total Paid ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Color(0XFF4F4F4F),
+                )),
+              SizedBox(width: 10),
+              Text("Rp. 300.000.000 ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    color: Color(0xffFF0000),
+                  ))
+            ]),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+              Text("Total Received ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Color(0XFF4F4F4F),
+                )),
+              SizedBox(width: 10),
+              Text("Rp. 150.500.000 ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    color: Color(0xFF4F9A99),
+                  ))
+            ])
+          ],
         ),
-        
-        Visibility(
+        visible: ref.watch(statisticsProvider).showSettled,
+        ),
+
+         Visibility(
+          child: const SizedBox(height: 30),
           visible: ref.watch(statisticsProvider).showSettled,
-          child: ListView.builder(
-            key: UniqueKey(),
-            shrinkWrap: true,
-            itemCount: ref
-                .watch(statisticsProvider)
-                .paymentMutation
-                .listMutation
-                .length, // specify the number of items in the list
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(children: [
-                        Initicon(
-                          text: ref
-                              .watch(statisticsProvider)
-                              .paymentMutation
-                              .listMutation[index]
-                              .name,
-                          size: 40,
-                          backgroundColor: getProfileBgColor(ref
-                              .watch(statisticsProvider)
-                              .paymentMutation
-                              .listMutation[index]
-                              .color),
-                          style: TextStyle(
-                              color: getProfileTextColor(ref
-                                  .watch(statisticsProvider)
-                                  .paymentMutation
-                                  .listMutation[index]
-                                  .color)),
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                            ref
-                                .watch(statisticsProvider)
-                                .paymentMutation
-                                .listMutation[index]
-                                .name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: Color(0XFF4F4F4F),
-                            ))
-                      ]),
-                      RichText(
-                        text: TextSpan(
-                          text:
-                              "Rp.${formatDouble(ref.watch(statisticsProvider).paymentMutation.listMutation[index].amount)}",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: ref
-                                        .watch(statisticsProvider)
-                                        .paymentMutation
-                                        .listMutation[index]
-                                        .mutationType ==
-                                    "RECEIVED"
-                                ? const Color(0xFF4F9A99)
-                                : const Color(0xffFF0000),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                ],
-              );
-            },
-          ),
+        ),
+
+        Visibility(
+          child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(children: [
+              Initicon(
+                text: "Ubaidillah Ariq",
+                size: 40,
+                backgroundColor: getProfileBgColor(1),
+                style: TextStyle(color: getProfileTextColor(1)),
+              ),
+              const SizedBox(width: 10),
+              const Text("Ubaidillah ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Color(0XFF4F4F4F),
+                  ))
+            ]),
+            RichText(
+              text: const TextSpan(
+                text: "Rp 60.000",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF4F9A99),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            )
+          ],
+        ),
+        visible: ref.watch(statisticsProvider).showSettled,
+        ),
+
+        Visibility(
+          child: const SizedBox(height: 10),
+          visible: ref.watch(statisticsProvider).showSettled,
+        ),
+
+        Visibility(
+          child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(children: [
+              Initicon(
+                text: "Ubaidillah Ariq",
+                size: 40,
+                backgroundColor: getProfileBgColor(1),
+                style: TextStyle(color: getProfileTextColor(1)),
+              ),
+              const SizedBox(width: 10),
+              const Text("Ubaidillah ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Color(0XFF4F4F4F),
+                  ))
+            ]),
+            RichText(
+              text: const TextSpan(
+                text: "Rp 60.000",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF4F9A99),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            )
+          ],
+        ),
+        visible: ref.watch(statisticsProvider).showSettled,
+        ),
+
+        Visibility(
+          child: const SizedBox(height: 10),
+          visible: ref.watch(statisticsProvider).showSettled,
+        ),
+
+        Visibility(
+          child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(children: [
+              Initicon(
+                text: "Ubaidillah Ariq",
+                size: 40,
+                backgroundColor: getProfileBgColor(1),
+                style: TextStyle(color: getProfileTextColor(1)),
+              ),
+              const SizedBox(width: 10),
+              const Text("Ubaidillah ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Color(0XFF4F4F4F),
+                  ))
+            ]),
+            RichText(
+              text: const TextSpan(
+                text: "Rp 60.000",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF4F9A99),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            )
+          ],
+        ),
+        visible: ref.watch(statisticsProvider).showSettled,
         ),
       ]),
     );

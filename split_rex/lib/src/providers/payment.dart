@@ -8,6 +8,13 @@ class PaymentProvider extends ChangeNotifier {
   List<UnsettledPayment> unsettledPayments = [];
   UnsettledPayment currUnsettledPayment = UnsettledPayment();
 
+  void resetAll() {
+    unconfirmedPayments = [];
+    currUnconfirmedPayments = ConfirmationPayment();
+    unsettledPayments = [];
+    currUnsettledPayment = UnsettledPayment();
+  }
+
  void addUnsettledPayment(UnsettledPayment payment) {
     unsettledPayments.add(payment);
     notifyListeners();

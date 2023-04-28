@@ -11,23 +11,25 @@ class AddFriends extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(errorProvider).changeError("");
-    return header(
-      context,
-      ref,
-      "Add Friend",
-      "friends",
-      Column(
-        children: [
-          const AddFriendSearchSection(),
-          (ref.watch(friendProvider).addFriend.name.isEmpty)
-              ? (ref.watch(errorProvider).errorMsg != "null")
-                  ? Text(ref.watch(errorProvider).errorMsg)
-                  : const SizedBox(
-                      height: 0,
-                    )
-              : const Center(heightFactor: 2, child: FriendsSearched()),         
-        ],
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: header(
+        context,
+        ref,
+        "Add Friend",
+        "/friends",
+        Column(
+          children: [
+            const AddFriendSearchSection(),
+            (ref.watch(friendProvider).addFriend.name.isEmpty)
+                ? (ref.watch(errorProvider).errorMsg != "null")
+                    ? Center(child: Text(ref.watch(errorProvider).errorMsg))
+                    : const SizedBox(
+                        height: 0,
+                      )
+                : const Center(heightFactor: 2, child: FriendsSearched()),         
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/model/add_expense.dart';
@@ -45,7 +46,7 @@ class AddExpenseServices {
     }
   }
 
-  Future<void> createTransaction(WidgetRef ref) async {
+  Future<void> createTransaction(WidgetRef ref, BuildContext context) async {
     Transaction newBill = ref.watch(addExpenseProvider).newBill;
     newBill.billOwner = ref.watch(authProvider).userData.userId;
     newBill.groupId = ref.watch(groupListProvider).currGroup.groupId;
@@ -62,33 +63,35 @@ class AddExpenseServices {
       });
     }
 
-    Response resp = await post(Uri.parse("$endpoint/userCreateTransaction"),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
-        },
-        body: jsonEncode(<String, dynamic>{
-          "name": newBill.name,
-          "description": newBill.desc,
-          "group_id": newBill.groupId,
-          "date": DateTime.parse(newBill.date).toUtc().toIso8601String(),
-          "subtotal": newBill.subtotal,
-          "tax": newBill.tax,
-          "service": newBill.service,
-          "total": newBill.total,
-          "bill_owner": newBill.billOwner,
-          "items": itemsObj
-        }));
-    var data = jsonDecode(resp.body);
-    logger.d(data);
-    if (data["message"] == "SUCCESS") {
-      await updatePayment(ref);
-    } else {
-      ref.read(errorProvider).changeError(data["message"]);
-    }
+    await post(Uri.parse("$endpoint/userCreateTransaction"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "name": newBill.name,
+        "description": newBill.desc,
+        "group_id": newBill.groupId,
+        "date": DateTime.parse(newBill.date).toUtc().toIso8601String(),
+        "subtotal": newBill.subtotal,
+        "tax": newBill.tax,
+        "service": newBill.service,
+        "total": newBill.total,
+        "bill_owner": newBill.billOwner,
+        "items": itemsObj
+      })
+    ).then((Response resp) {
+      var data = jsonDecode(resp.body);
+      logger.d(data);
+      if (data["message"] == "SUCCESS") {
+        updatePayment(ref, context);
+      } else {
+        ref.read(errorProvider).changeError(data["message"]);
+      }
+    });
   }
 
-  Future<void> updatePayment(WidgetRef ref) async {
+  Future<void> updatePayment(WidgetRef ref, BuildContext context) async {
     List<Items> items = ref.watch(addExpenseProvider).items;
     String currGroupId = ref.watch(groupListProvider).currGroup.groupId;
 
@@ -124,48 +127,53 @@ class AddExpenseServices {
 
     logger.d(listPayment);
 
-    Response resp = await post(Uri.parse("$endpoint/updatePayment"),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
-        },
-        body: jsonEncode(<String, dynamic>{
-          "group_id": currGroupId,
-          "list_payment": listPayment
-        }));
-    var data = jsonDecode(resp.body);
-    logger.d(data);
-    if (data["message"] == "SUCCESS") {
-      await resolveTransaction(ref);
-    } else {
-      ref.read(errorProvider).changeError(data["message"]);
-    }
+    await post(Uri.parse("$endpoint/updatePayment"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "group_id": currGroupId,
+        "list_payment": listPayment
+      })
+    ).then((Response resp) {
+      var data = jsonDecode(resp.body);
+      logger.d(data);
+      if (data["message"] == "SUCCESS") {
+        resolveTransaction(ref, context);
+      } else {
+        ref.read(errorProvider).changeError(data["message"]);
+      } 
+    });
   }
 
-  Future<void> resolveTransaction(WidgetRef ref) async {
+  Future<void> resolveTransaction(WidgetRef ref, BuildContext context) async {
     String currGroupId = ref.watch(groupListProvider).currGroup.groupId;
 
-    Response resp = await post(Uri.parse("$endpoint/resolveTransaction"),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
-        },
-        body: jsonEncode(<String, dynamic>{
-          "group_id": currGroupId,
-        }));
-    var data = jsonDecode(resp.body);
-    logger.d(data);
-    if (data["message"] == "SUCCESS") {
-      ref.watch(addExpenseProvider).resetAll();      
-      ref.read(routeProvider).changeNavbarIdx(1);
-      await GroupServices().getGroupTransactions(ref);
-      ref.read(routeProvider).changePage("group_detail");
-    } else {
-      ref.read(errorProvider).changeError(data["message"]);
-    }
+    await post(Uri.parse("$endpoint/resolveTransaction"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer ${ref.watch(authProvider).jwtToken}"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "group_id": currGroupId,
+      })
+    ).then((Response resp) {
+      var data = jsonDecode(resp.body);
+      logger.d(data);
+      if (data["message"] == "SUCCESS") {
+        ref.watch(addExpenseProvider).resetAll();      
+        GroupServices().getGroupTransactions(ref).then((value) {
+          ref.read(routeProvider).changeNavbarIdx(context, 1);
+          ref.read(routeProvider).changePage(context, "/group_detail");
+        });
+      } else {
+        ref.read(errorProvider).changeError(data["message"]);
+      }
+    });
   }
 
-  Future<void> getTransactionDetail(WidgetRef ref, String transactionId) async {
+  Future<void> getTransactionDetail(WidgetRef ref, String transactionId, BuildContext context) async {
     Response resp = await get(Uri.parse("$endpoint/getTransactionDetail?transaction_id=$transactionId"),
         headers: <String, String>{
           'Content-Type': 'application/json',
@@ -203,7 +211,6 @@ class AddExpenseServices {
         newTrans.items.add(tempItem);
       }
       ref.read(transactionProvider).changeTrans(newTrans);
-      ref.read(routeProvider).changePage("transaction_detail");
     } else {
       ref.read(errorProvider).changeError(data["message"]);
     }

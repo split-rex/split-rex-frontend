@@ -189,15 +189,18 @@ Widget summarySplit(WidgetRef ref, String title) => Column(children: [
   const SizedBox(height: 12.0)
 ],); 
 
-Widget splitButton(WidgetRef ref) => GestureDetector(
-  onTap: () async {
+Widget splitButton(WidgetRef ref, BuildContext context) => GestureDetector(
+  onTap: () {
     if (ref.watch(addExpenseProvider).newGroup.name == "" && ref.watch(addExpenseProvider).isNewGroup) {
       null;
     } else {
       if (ref.watch(addExpenseProvider).isNewGroup) {
-        await AddExpenseServices().createGroup(ref);
+        AddExpenseServices().createGroup(ref).then((value) {
+          AddExpenseServices().createTransaction(ref, context);
+        });
+      } else {
+        AddExpenseServices().createTransaction(ref, context);
       }
-      await AddExpenseServices().createTransaction(ref);
     }
   },
   child: Container(

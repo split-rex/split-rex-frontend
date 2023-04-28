@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/providers/firebaseauth.dart';
 import 'package:split_rex/src/providers/routes.dart';
-import 'package:split_rex/src/screens/forgot_password/create_new_password.dart';
 import '../services/auth.dart';
 
 const String assetName = 'assets/LogoSVG.svg';
@@ -216,7 +214,7 @@ class ForgotPass extends ConsumerWidget {
             ),
             onTap: () {
               // Write Tap Code Here.
-              ref.read(routeProvider).changePage("forgot_password");
+              ref.read(routeProvider).changePage(context, "/forgot_password");
             },
           ),
         ]));
@@ -263,38 +261,7 @@ class SubmitBtn extends ConsumerWidget {
           ref
               .read(authProvider)
               .changeSignInData(emailController.text, passController.text);
-          await ApiServices().postLogin(ref);
-          // ignore: use_build_context_synchronously
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Container(
-              padding: const EdgeInsets.all(16),
-              height: 70,
-              decoration: BoxDecoration(
-                  color: Color(
-                      ref.watch(errorProvider).errorMsg == "Login Failed"
-                          ? 0xFFF44336
-                          : 0xFF6DC7BD),
-                  borderRadius: const BorderRadius.all(Radius.circular(15))),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    ref.watch(errorProvider).errorMsg == "Login Failed"
-                        ? "Login failed, email or password are wrong!"
-                        : "Logged in successfully!",
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-          ));
+          await ApiServices().postLogin(ref, context);
         } else {
           ref.read(authProvider).changeSignUpData(
               nameController!.text,
@@ -302,9 +269,8 @@ class SubmitBtn extends ConsumerWidget {
               emailController.text,
               passController.text,
               confController!.text);
-          await ApiServices().postRegister(ref);
-          // ignore: use_build_context_synchronously
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          await ApiServices().postRegister(ref, context).then((value) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Container(
               padding: const EdgeInsets.all(16),
               height: 70,
@@ -320,7 +286,15 @@ class SubmitBtn extends ConsumerWidget {
                           ref.watch(errorProvider).errorType ==
                               "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" ||
                           ref.watch(errorProvider).errorType ==
-                              "ERROR_INVALID_EMAIL"
+                              "ERROR_INVALID_EMAIL" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_EMPTY_NAME" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_EMPTY_USERNAME" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_EMPTY_EMAIL" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_EMPTY_PASS"
                       ? 0xFFF44336
                       : 0xFF6DC7BD),
                   borderRadius: const BorderRadius.all(Radius.circular(15))),
@@ -340,7 +314,15 @@ class SubmitBtn extends ConsumerWidget {
                             ref.watch(errorProvider).errorType ==
                                 "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" ||
                             ref.watch(errorProvider).errorType ==
-                                "ERROR_INVALID_EMAIL"
+                                "ERROR_INVALID_EMAIL" ||
+                            ref.watch(errorProvider).errorType ==
+                                "ERROR_EMPTY_NAME" ||
+                            ref.watch(errorProvider).errorType ==
+                                "ERROR_EMPTY_USERNAME" ||
+                            ref.watch(errorProvider).errorType ==
+                                "ERROR_EMPTY_EMAIL" ||
+                            ref.watch(errorProvider).errorType ==
+                                "ERROR_EMPTY_PASS"
                         ? ref.watch(errorProvider).errorMsg
                         : "Registered successfully!",
                     style: const TextStyle(
@@ -355,6 +337,7 @@ class SubmitBtn extends ConsumerWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
           ));
+          });
         }
       },
       child: Container(

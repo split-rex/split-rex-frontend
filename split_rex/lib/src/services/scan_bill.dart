@@ -29,7 +29,7 @@ int strToInt(String input) {
 }
 
 class ScanBillServices {
-  String endpoint = getUrl();
+  String endpoint = getOcrUrl();
   // String endpoint = "http://localhost:8080";
 
   Future<void> postBill(WidgetRef ref, File file) async {

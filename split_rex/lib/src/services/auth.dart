@@ -15,8 +15,10 @@ import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/model/user.dart';
+import 'package:split_rex/src/screens/statistics.dart';
 import 'package:split_rex/src/providers/transaction.dart';
 import 'package:split_rex/src/services/group.dart';
+import 'package:split_rex/src/services/statistics.dart';
 
 import '../common/const.dart';
 import '../providers/activity.dart';
@@ -100,14 +102,27 @@ class ApiServices {
   Future<void> postRegister(WidgetRef ref, BuildContext context) async {
     log("postRegister");
     SignUpModel signUpData = ref.watch(authProvider).signUpData;
-    if (!isEmailValid(signUpData.email)) {
+    if (signUpData.name == "") {
+      EasyLoading.dismiss();
+      ref.read(errorProvider).changeError("ERROR_EMPTY_NAME");
+    }  else if (signUpData.email == "") {
+      EasyLoading.dismiss();
+      ref.read(errorProvider).changeError("ERROR_EMPTY_EMAIL");
+    }  else if (signUpData.username == "") {
+      EasyLoading.dismiss();
+      ref.read(errorProvider).changeError("ERROR_EMPTY_USERNAME");
+    }  else if (signUpData.pass == "") {
+      EasyLoading.dismiss();
+      ref.read(errorProvider).changeError("ERROR_EMPTY_PASS");
+    } else if (!isEmailValid(signUpData.email)) {
+      EasyLoading.dismiss();
       ref.read(errorProvider).changeError("ERROR_INVALID_EMAIL");
     } else if (signUpData.confPass != signUpData.pass) {
+      EasyLoading.dismiss();
       ref
           .read(errorProvider)
           .changeError("ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH");
     } else {
-      
       Response resp = await post(Uri.parse("$endpoint/register"),
           headers: <String, String>{'Content-Type': 'application/json'},
           body: jsonEncode(<String, String>{
@@ -166,34 +181,42 @@ class ApiServices {
               FriendServices().userFriendList(ref).then((value) {
                 FriendServices().friendRequestReceivedList(ref).then((value) {
                   FriendServices().friendRequestSentList(ref).then((value) {
-                    getGroupOwedLent(ref).then((data) {
-                      EasyLoading.dismiss();
-                      ref.read(routeProvider).changePage(context, "/home");
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Container(
-                          padding: const EdgeInsets.all(16),
-                          height: 70,
-                          decoration: const BoxDecoration(
-                              color: Color(0xFF6DC7BD),
-                              borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text("Logged in successfully!",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
+                    StatisticsServices().expenseChart(ref).then((value) {
+                      StatisticsServices().owedLentPercentage(ref).then((value) {
+                        StatisticsServices().spendingBuddies(ref).then((value) {
+                          getGroupOwedLent(ref).then((data) {
+                            EasyLoading.dismiss();
+                            ref.read(routeProvider).changePage(context, "/home");
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Container(
+                                padding: const EdgeInsets.all(16),
+                                height: 70,
+                                decoration: const BoxDecoration(
+                                    color: Color(0xFF6DC7BD),
+                                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text("Logged in successfully!",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        behavior: SnackBarBehavior.floating,
-                        backgroundColor: Colors.transparent,
-                        elevation: 0,
-                      ));
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Colors.transparent,
+                              elevation: 0,
+                            ));
+                          });
+                          
+                        });
+                      });
                     });
+                    
                   });
                 });
               });
@@ -262,12 +285,8 @@ class ApiServices {
     }
   }
 
-  Future<void> editPaymentInfo(
-      WidgetRef ref,
-      BuildContext context,
-      int accountNumber,
-      String accountName,
-      int index) async {
+  Future<void> editPaymentInfo(WidgetRef ref, BuildContext context,
+      int accountNumber, String accountName, int index) async {
     var curPinfo = ref.watch(authProvider).userData.flattenPaymentInfo[index];
 
     Response resp = await post(Uri.parse("$endpoint/editPaymentInfo"),

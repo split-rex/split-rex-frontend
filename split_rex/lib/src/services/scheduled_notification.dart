@@ -40,7 +40,7 @@ class ScheduledNotificationServices {
           }
 
           await flutterLocalNotificationsPlugin.zonedSchedule(
-            currNotif["notification_id"],
+            currNotif["amount"].round(),
             "Let's settle up!",
             "Don't forget to pay Rp.${currNotif["amount"].toString()} to ${currNotif["name"]} in group '${currNotif["group_name"]}'",
             tz.TZDateTime.now(tz.local).add(Duration(seconds: intervalSeconds)),
@@ -54,6 +54,7 @@ class ScheduledNotificationServices {
             uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
           );
         }
+        await resolveScheduledNotification(token);
       } catch (error) {
         logger.d(error);
       }
@@ -61,31 +62,57 @@ class ScheduledNotificationServices {
     }
   }
 
+  Future<void> resolveScheduledNotification(String token) async {
+    await post(Uri.parse("$endpoint/deleteNotif"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    ).then((Response resp) {
+      var data = jsonDecode(resp.body);
+      logger.d(data);
+    });
+  }
+
   Future<void> insertScheduledNotifation(
     BuildContext context,
     WidgetRef ref,
     String userId,
-    String amount,
-    String name,
+    int amount,
     DateTime date,
   ) async {
     String groupId = ref.watch(groupListProvider).currGroup.groupId;
     String groupName = ref.watch(groupListProvider).currGroup.name;
+    String name = ref.watch(authProvider).userData.name;
+
+    Duration offset = date.timeZoneOffset;
+    String dateTime = "${date.toIso8601String()}000";
+    String utcHourOffset = (offset.isNegative ? '-' : '+') +
+      offset.inHours.abs().toString().padLeft(2, '0');
+    String utcMinuteOffset = (offset.inMinutes - offset.inHours * 60)
+      .toString().padLeft(2, '0');
+    String dateTimeWithOffset = '$dateTime$utcHourOffset:$utcMinuteOffset';
+    
+    logger.d(dateTimeWithOffset);
+
+    var payload = {
+      "user_id": userId,
+      "group_id": groupId,
+      "group_name": groupName,
+      "amount": amount,
+      "name": name,
+      "date": dateTimeWithOffset
+    };
+
     await post(Uri.parse("$endpoint/insertNotif"),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${ref.watch(authProvider).jwtToken}'
       },
-      body: jsonEncode({
-        "user_id": userId,
-        "group_id": groupId,
-        "group_name": groupName,
-        "amount": amount,
-        "name": name,
-        "date": date
-      })
+      body: jsonEncode(payload)
     ).then((Response resp) {
       var data = jsonDecode(resp.body);
+      logger.d(data);
       if (data["message"] == "SUCCESS") {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Container(

@@ -321,7 +321,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
       }
     } else {
       ScheduledNotificationServices().insertScheduledNotifation(
-        context, ref, userId, (-1 * oweOrLent).toString(), name, destinedTime
+        context, ref, userId, (-1 * oweOrLent), destinedTime
       );
     }
   }

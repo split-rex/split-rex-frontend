@@ -147,15 +147,6 @@ class _SignUpFormState extends State<SignUpForm> {
             icon: Icons.email,
             placeholderText: "E-mail",
           ),
-          const SizedBox(
-            height: 6
-          ),
-          const Text(
-            "*forgot password is only supported for gmail accounts",
-            style: TextStyle(
-              fontSize: 12,
-            ),
-          ),
           PasswordField(
             controller: passController,
             key: UniqueKey(),
@@ -278,9 +269,8 @@ class SubmitBtn extends ConsumerWidget {
               emailController.text,
               passController.text,
               confController!.text);
-          await ApiServices().postRegister(ref, context);
-          // ignore: use_build_context_synchronously
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          await ApiServices().postRegister(ref, context).then((value) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Container(
               padding: const EdgeInsets.all(16),
               height: 70,
@@ -296,7 +286,15 @@ class SubmitBtn extends ConsumerWidget {
                           ref.watch(errorProvider).errorType ==
                               "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" ||
                           ref.watch(errorProvider).errorType ==
-                              "ERROR_INVALID_EMAIL"
+                              "ERROR_INVALID_EMAIL" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_EMPTY_NAME" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_EMPTY_USERNAME" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_EMPTY_EMAIL" ||
+                          ref.watch(errorProvider).errorType ==
+                              "ERROR_EMPTY_PASS"
                       ? 0xFFF44336
                       : 0xFF6DC7BD),
                   borderRadius: const BorderRadius.all(Radius.circular(15))),
@@ -316,7 +314,15 @@ class SubmitBtn extends ConsumerWidget {
                             ref.watch(errorProvider).errorType ==
                                 "ERROR_PASSWORD_AND_CONFIRMATION_NOT_MATCH" ||
                             ref.watch(errorProvider).errorType ==
-                                "ERROR_INVALID_EMAIL"
+                                "ERROR_INVALID_EMAIL" ||
+                            ref.watch(errorProvider).errorType ==
+                                "ERROR_EMPTY_NAME" ||
+                            ref.watch(errorProvider).errorType ==
+                                "ERROR_EMPTY_USERNAME" ||
+                            ref.watch(errorProvider).errorType ==
+                                "ERROR_EMPTY_EMAIL" ||
+                            ref.watch(errorProvider).errorType ==
+                                "ERROR_EMPTY_PASS"
                         ? ref.watch(errorProvider).errorMsg
                         : "Registered successfully!",
                     style: const TextStyle(
@@ -331,6 +337,7 @@ class SubmitBtn extends ConsumerWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
           ));
+          });
         }
       },
       child: Container(

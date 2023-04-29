@@ -37,8 +37,7 @@ class _HomeState extends ConsumerState<Home> {
       super.initState();
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         _timer = makePeriodicTimer(
-          // TODO: benerin durasinya jadi satu jam
-          const Duration(seconds: 10), 
+          const Duration(minutes: 30), 
           (Timer t) {
             ScheduledNotificationServices().getScheduledNotification(ref.watch(authProvider).jwtToken);
             logger.d("init Home lgi");

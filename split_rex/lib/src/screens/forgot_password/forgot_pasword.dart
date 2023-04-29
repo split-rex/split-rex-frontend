@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:split_rex/src/providers/password.dart';
-import 'package:split_rex/src/providers/routes.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/header.dart';
+import '../../providers/error.dart';
 import '../../services/password.dart';
 
 class ForgotPassword extends ConsumerStatefulWidget {
@@ -173,6 +173,37 @@ class ResetButton extends ConsumerWidget {
             status: 'Loading...', maskType: EasyLoadingMaskType.custom);
         await ForgotPassServices()
             .generatePassToken(ref, emailController.text, context);
+
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+            padding: const EdgeInsets.all(16),
+            height: 70,
+            decoration: BoxDecoration(
+                color: Color(ref.watch(errorProvider).errorType == "ERROR_INVALID_EMAIL"
+                    ? 0xFFF44336
+                    : 0xFF6DC7BD),
+                borderRadius: const BorderRadius.all(Radius.circular(15))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  ref.watch(errorProvider).errorType == "ERROR_INVALID_EMAIL"
+                      ? ref.watch(errorProvider).errorMsg
+                      : "Code sent successfully",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ));
       },
       child: Container(
           padding: const EdgeInsets.all(16.0),

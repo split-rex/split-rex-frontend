@@ -7,7 +7,7 @@ class NewGroup {
   String endDate;
   
   NewGroup({
-    this.name = "",
+    this.name = "Group",
     this.startDate = "",
     this.endDate = "",
   });
@@ -22,7 +22,7 @@ class Items {
   List<Friend> consumerDetails = [];
 
   Items({
-    this.name = "",
+    this.name = "Item",
     this.qty = 0,
     this.price = 0,
     this.total = 0,
@@ -45,7 +45,7 @@ class Transaction {
 
   Transaction({
     this.transactionId = "",
-    this.name = "",
+    this.name = "Transaction",
     this.desc = "",
     this.groupId = "",
     this.groupName = "",

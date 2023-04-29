@@ -42,7 +42,7 @@ class ScheduledNotificationServices {
           await flutterLocalNotificationsPlugin.zonedSchedule(
             currNotif["notification_id"],
             "Let's settle up!",
-            "Don't forget to pay Rp.${currNotif["amount"]} to ${currNotif["name"]} in group '${currNotif["group_name"]}'",
+            "Don't forget to pay Rp.${currNotif["amount"].toString()} to ${currNotif["name"]} in group '${currNotif["group_name"]}'",
             tz.TZDateTime.now(tz.local).add(Duration(seconds: intervalSeconds)),
             NotificationDetails(
               android: AndroidNotificationDetails(

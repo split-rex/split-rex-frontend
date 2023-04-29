@@ -196,7 +196,7 @@ Widget itemCard(WidgetRef ref, int index) => Row(
                 padding: const EdgeInsets.all(8.0), 
                 alignment: Alignment.centerRight, 
                 child: Text(
-                  "Total: Rp ${ref.watch(addExpenseProvider).items[index].total.toString()}", 
+                  "Total: Rp. ${ref.watch(addExpenseProvider).items[index].total.toString()}", 
                   textAlign: TextAlign.right,
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,

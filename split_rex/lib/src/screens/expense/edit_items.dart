@@ -47,19 +47,22 @@ class EditItems extends ConsumerWidget {
                             children: [
                               const DateTimeField(),
                               const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(30, 79, 79, 79)),
-                              listItem(ref),
-                              const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(30, 79, 79, 79)),
-                              addItem(ref),
+                              ref.watch(addExpenseProvider).items.isNotEmpty 
+                              ?
+                              const ListItem()
+                              :
+                              const SizedBox(),
+                              const AddItem(),
                               const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(30, 79, 79, 79)),
                               const Text("Summary", textAlign: TextAlign.left, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
                               const Divider(thickness: 1, height: 28.0, color: Color.fromARGB(30, 79, 79, 79)),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  summaryField(ref, "Subtotal"),
-                                  summaryField(ref, "Tax"),
-                                  summaryField(ref, "Service charge"),
-                                  const SizedBox(height: 14.0),
+                                children: const [
+                                  SummaryField(title: "Subtotal"),
+                                  SummaryField(title: "Tax"),
+                                  SummaryField(title: "Service charge"),
+                                  SizedBox(height: 14.0),
                               ]),
                               Container(
                                 margin: const EdgeInsets.only(right: 8.0),    
@@ -72,7 +75,7 @@ class EditItems extends ConsumerWidget {
                                 ),
                               ),
                               const SizedBox(height: 24.0),
-                              confirmButton(ref, context)
+                              const ConfirmButton()
                             ],
                           ),
                         ),

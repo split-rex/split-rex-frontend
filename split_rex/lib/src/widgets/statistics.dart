@@ -6,6 +6,8 @@ import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/providers/statisticsprovider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../services/statistics.dart';
+
 class StatisticsHeader extends ConsumerWidget {
   const StatisticsHeader({super.key});
 
@@ -663,7 +665,6 @@ class MutationUnsettled extends ConsumerWidget {
             ])
           ],
         ),
-        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
@@ -701,7 +702,6 @@ class MutationUnsettled extends ConsumerWidget {
             )
           ],
         ),
-        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
@@ -739,7 +739,6 @@ class MutationUnsettled extends ConsumerWidget {
             )
           ],
         ),
-        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
         Visibility(
           visible: ref.watch(statisticsProvider).showUnsettled,
@@ -777,7 +776,6 @@ class MutationUnsettled extends ConsumerWidget {
             )
           ],
         ),
-        visible: ref.watch(statisticsProvider).showUnsettled,
         ),
       ]),
     );
@@ -953,7 +951,6 @@ class MutationSettled extends ConsumerWidget {
             ])
           ],
         ),
-        visible: ref.watch(statisticsProvider).showSettled,
         ),
 
          Visibility(

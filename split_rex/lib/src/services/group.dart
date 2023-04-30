@@ -67,21 +67,23 @@ class GroupServices {
     if (data["message"] == "SUCCESS") {
       var activities = data["data"];
       List<GroupActivity> newActivityList = [];
-      try {
-        for (var i = 0; i < activities.length; i++) {
-          var currActivity = activities[i];
-          var tempActivity = GroupActivity(
-            currActivity["activity_id"],
-            currActivity["date"],
-            currActivity["name1"],
-            currActivity["name2"],
-            currActivity["amount"],
-          );
-          newActivityList.add(tempActivity);
+      if (activities != null) {
+        try {
+          for (var i = 0; i < activities.length; i++) {
+            var currActivity = activities[i];
+            var tempActivity = GroupActivity(
+              currActivity["activity_id"],
+              currActivity["date"],
+              currActivity["name1"],
+              currActivity["name2"],
+              currActivity["amount"],
+            );
+            newActivityList.add(tempActivity);
+          }
+          ref.watch(groupListProvider).changeCurrGroupActivity(newActivityList);
+        } catch (error) {
+          logger.d(error);
         }
-        ref.watch(groupListProvider).changeCurrGroupActivity(newActivityList);
-      } catch (error) {
-        logger.d(error);
       }
     } else {
       ref.read(errorProvider).changeError(data["message"]);
@@ -104,20 +106,22 @@ class GroupServices {
     if (data["message"] == "SUCCESS") {
       var transactions = data["data"];
       List<Transaction> newTransList = [];
-      try {
-        for (var i = 0; i < transactions.length; i++) {
-          var currTrans = transactions[i];
-          var tempTrans = Transaction();
-          tempTrans.groupId = groupId;
-          tempTrans.transactionId = currTrans["transaction_id"];
-          tempTrans.billOwner = currTrans["bill_owner"];
-          tempTrans.name = currTrans["name"];
-          tempTrans.date = currTrans["date"];
-          newTransList.add(tempTrans);
+      if (transactions != null) {
+        try {
+          for (var i = 0; i < transactions.length; i++) {
+            var currTrans = transactions[i];
+            var tempTrans = Transaction();
+            tempTrans.groupId = groupId;
+            tempTrans.transactionId = currTrans["transaction_id"];
+            tempTrans.billOwner = currTrans["bill_owner"];
+            tempTrans.name = currTrans["name"];
+            tempTrans.date = currTrans["date"];
+            newTransList.add(tempTrans);
+          }
+          ref.watch(groupListProvider).changeCurrGroupTransactions(newTransList);
+        } catch (error) {
+          logger.d(error);
         }
-        ref.watch(groupListProvider).changeCurrGroupTransactions(newTransList);
-      } catch (error) {
-        logger.d(error);
       }
     } else {
       ref.read(errorProvider).changeError(data["message"]);
@@ -138,20 +142,22 @@ class GroupServices {
     if (data["message"] == "SUCCESS") {
       var transactions = data["data"];
       List<Transaction> newTransList = [];
-      try {
-        for (var i = 0; i < transactions.length; i++) {
-          var currTrans = transactions[i];
-          var tempTrans = Transaction();
-          tempTrans.groupId = groupId;
-          tempTrans.transactionId = currTrans["transaction_id"];
-          tempTrans.billOwner = currTrans["bill_owner"];
-          tempTrans.name = currTrans["name"];
-          tempTrans.date = currTrans["date"];
-          newTransList.add(tempTrans);
+      if (transactions != null) {
+        try {
+          for (var i = 0; i < transactions.length; i++) {
+            var currTrans = transactions[i];
+            var tempTrans = Transaction();
+            tempTrans.groupId = groupId;
+            tempTrans.transactionId = currTrans["transaction_id"];
+            tempTrans.billOwner = currTrans["bill_owner"];
+            tempTrans.name = currTrans["name"];
+            tempTrans.date = currTrans["date"];
+            newTransList.add(tempTrans);
+          }
+          ref.watch(groupListProvider).changeCurrGroupTransactions(newTransList);
+        } catch (error) {
+          logger.d(error);
         }
-        ref.watch(groupListProvider).changeCurrGroupTransactions(newTransList);
-      } catch (error) {
-        logger.d(error);
       }
     } else {
       ref.read(errorProvider).changeError(data["message"]);

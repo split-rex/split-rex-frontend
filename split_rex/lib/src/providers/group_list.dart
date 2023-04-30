@@ -73,39 +73,38 @@ class GroupListProvider extends ChangeNotifier {
     var dataMemberList = groupDetail["list_memberr"];
 
     List<Friend> memberList = <Friend>[];
-    for (int i = 0; i < dataMemberList.length; i++) {
-      var currMember = dataMemberList[i];
-
-      var friendObj = Friend(
+    if (dataMemberList != null) {
+      for (int i = 0; i < dataMemberList.length; i++) {
+        var currMember = dataMemberList[i];
+        var friendObj = Friend(
           userId: currMember["member_id"],
           name: currMember["name"],
           username: currMember["username"],
           color: currMember["color"],
           email: currMember["email"]);
-      friendObj.paymentInfo = {};
-      friendObj.flattenPaymentInfo = [];
-      var paymentInfo = currMember["payment_info"];
-
-      if (paymentInfo != null) {
-        for (var paymentMethod in paymentInfo.keys) {
-          Map<int, String> listOfAcc = <int, String>{};
-          for (var accountNumber in paymentInfo[paymentMethod].keys) {
-            var accountName = paymentInfo[paymentMethod][accountNumber];
-            listOfAcc[int.parse(accountNumber)] = accountName;
-
-            friendObj.flattenPaymentInfo.add([
-              paymentMethod,
-              accountNumber,
-              accountName,
-            ]);
+        friendObj.paymentInfo = {};
+        friendObj.flattenPaymentInfo = [];
+        var paymentInfo = currMember["payment_info"];
+        if (paymentInfo != null) {
+          for (var paymentMethod in paymentInfo.keys) {
+            Map<int, String> listOfAcc = <int, String>{};
+            for (var accountNumber in paymentInfo[paymentMethod].keys) {
+              var accountName = paymentInfo[paymentMethod][accountNumber];
+              listOfAcc[int.parse(accountNumber)] = accountName;
+              friendObj.flattenPaymentInfo.add([
+                paymentMethod,
+                accountNumber,
+                accountName,
+              ]);
+            }
+            friendObj.paymentInfo[paymentMethod] = listOfAcc;
           }
-          friendObj.paymentInfo[paymentMethod] = listOfAcc;
         }
+        memberList.add(friendObj);
       }
-
-      memberList.add(friendObj);
+      currGroup.members = memberList;
+      notifyListeners();
     }
-    currGroup.members = memberList;
   }
 
   void loadGroupData(dynamic modelList) {

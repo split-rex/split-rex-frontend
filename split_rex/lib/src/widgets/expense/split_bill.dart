@@ -102,10 +102,10 @@ Widget membersScrollView(WidgetRef ref) => SingleChildScrollView(
                   },
                   child: memberIcon(
                     ref, 
-                    (ref.watch(friendProvider).getFriend(members.userId))
+                    members
                   ),
                 ),
-                Text((ref.watch(friendProvider).getFriend(members.userId)).name, style: const TextStyle(fontSize: 12)),
+                Text(members.name, style: const TextStyle(fontSize: 12)),
             ]), 
             const SizedBox(width: 12.0)
           ])

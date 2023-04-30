@@ -10,13 +10,6 @@ import '../services/group.dart';
 import '../services/scheduled_notification.dart';
 import '../widgets/home.dart';
 
-class Home extends ConsumerStatefulWidget {
-  const Home({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<Home> createState() => _HomeState();
-}
-
 Timer makePeriodicTimer(
   Duration duration,
   void Function(Timer timer) callback, {
@@ -27,6 +20,13 @@ Timer makePeriodicTimer(
     callback(timer);
   }
   return timer;
+}
+
+class Home extends ConsumerStatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<Home> createState() => _HomeState();
 }
 
 class _HomeState extends ConsumerState<Home> {

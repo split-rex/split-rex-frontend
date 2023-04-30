@@ -9,6 +9,8 @@ import 'package:split_rex/src/services/statistics.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:split_rex/src/common/globals.dart' as globals;
 
+import '../services/statistics.dart';
+
 class StatisticsHeader extends ConsumerWidget {
   const StatisticsHeader({super.key});
 

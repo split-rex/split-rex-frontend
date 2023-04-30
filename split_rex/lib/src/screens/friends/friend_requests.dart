@@ -14,19 +14,19 @@ class FriendRequests extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: RefreshIndicator(
+      body: header(
+        context,
+        ref,
+        "Friend Requests",
+        "/friends",
+        RefreshIndicator(
         onRefresh: () => _pullRefresh(context, ref),
         child: (
           SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: header(
-                context,
-                ref,
-                "Friend Requests",
-                "/friends",
-                SingleChildScrollView(
+              height: MediaQuery.of(context).size.height - 120,
+              child: SingleChildScrollView(
                   child: Column(
                     children: const [
                       FriendRequestSectionPicker(), // change to appbar

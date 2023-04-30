@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/model/add_expense.dart';
 
 import '../model/friends.dart';
@@ -97,13 +98,18 @@ class AddExpenseProvider extends ChangeNotifier {
   }
 
   deleteItem(index) {
+    logger.d(index);
+    logger.d(items.length);
     newBill.subtotal -= items[index].total;
     newBill.total -= items[index].total;
     items.removeAt(index);
+    logger.d(items.length);
     notifyListeners();
   }
 
   changeItemName(index, String val) {
+    logger.d(index);
+    logger.d(items[index].name);
     items[index].name = val;
   }
 

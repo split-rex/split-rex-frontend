@@ -15,28 +15,29 @@ class Activity extends ConsumerWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: const Navbar(),
-      body: RefreshIndicator(
-        onRefresh: () => _pullRefresh(context, ref),
-        child: (
-          SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height -
-                MediaQuery.of(context).padding.top -
-                kBottomNavigationBarHeight + 10,
-              child: header(
-                context,
-                ref,
-                "Activity", 
-                "/home",
-                Container(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Column(children: [Expanded(flex: 5, child: activityListWidget(context, ref)),],)
+      body: header(
+        context,
+        ref,
+        "Activity", 
+        "/home",
+        RefreshIndicator(
+          onRefresh: () => _pullRefresh(context, ref),
+          child: (
+            SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height - 120,
+                child: Container(
+                  width: double.infinity,
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [Expanded(flex: 5, child: activityListWidget(context, ref)),],)
+                  ),
                 ),
-              ),
+              )
             )
           )
-        )
       )
     );
   }

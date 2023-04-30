@@ -26,37 +26,39 @@ class ScheduledNotificationServices {
     logger.d(data["data"]);
     if (data["message"] == "SUCCESS") {
       var notifications = data["data"]["notifications"];
-      try {
-        for (var i = 0; i < notifications.length; i++) {
-          var currNotif = notifications[i];
-          var intervalSeconds = 0;
-          var curTime = DateTime.now();
-          var destinedTime = DateTime.parse(currNotif["date"]);
+      if (notifications != null) {
+        try {
+          for (var i = 0; i < notifications.length; i++) {
+            var currNotif = notifications[i];
+            var intervalSeconds = 0;
+            var curTime = DateTime.now();
+            var destinedTime = DateTime.parse(currNotif["date"]);
 
-          if (curTime.isAfter(destinedTime)) {
-            intervalSeconds = 1;
-          } else {
-            intervalSeconds = destinedTime.difference(curTime).inSeconds;
+            if (curTime.isAfter(destinedTime)) {
+              intervalSeconds = 1;
+            } else {
+              intervalSeconds = destinedTime.difference(curTime).inSeconds;
+            }
+
+            await flutterLocalNotificationsPlugin.zonedSchedule(
+              currNotif["amount"].round(),
+              "Let's settle up!",
+              "Don't forget to pay Rp.${currNotif["amount"].toString()} to ${currNotif["name"]} in group '${currNotif["group_name"]}'",
+              tz.TZDateTime.now(tz.local).add(Duration(seconds: intervalSeconds)),
+              NotificationDetails(
+                android: AndroidNotificationDetails(
+                  "${currNotif["notif_id"]}", 
+                  "Friend-ly Reminder",
+                  color: const Color(0xFF5CC6BF),
+                )
+              ),
+              uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+            );
           }
-
-          await flutterLocalNotificationsPlugin.zonedSchedule(
-            currNotif["amount"].round(),
-            "Let's settle up!",
-            "Don't forget to pay Rp.${currNotif["amount"].toString()} to ${currNotif["name"]} in group '${currNotif["group_name"]}'",
-            tz.TZDateTime.now(tz.local).add(Duration(seconds: intervalSeconds)),
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                "${currNotif["notif_id"]}", 
-                "Friend-ly Reminder",
-                color: const Color(0xFF5CC6BF),
-              )
-            ),
-            uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-          );
+          await resolveScheduledNotification(token);
+        } catch (error) {
+          logger.d(error);
         }
-        await resolveScheduledNotification(token);
-      } catch (error) {
-        logger.d(error);
       }
     } else {
     }

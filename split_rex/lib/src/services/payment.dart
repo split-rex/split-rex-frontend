@@ -30,18 +30,20 @@ class PaymentServices {
     logger.d(data["data"]);
     if (data["message"] == "SUCCESS") {
       ref.read(paymentProvider).clearUnsettledPayments();
-      try {
-        for (var data in data["data"]) {
-          UnsettledPayment tempPayment = UnsettledPayment();
-          tempPayment.paymentId = data["payment_id"];
-          tempPayment.userId = data["user_id"];
-          tempPayment.name = data["fullname"];
-          tempPayment.color = data["color"];
-          tempPayment.totalUnpaid = (data["total_unpaid"]).round();
-          ref.read(paymentProvider).addUnsettledPayment(tempPayment);
+      if (data["data"] != null) {
+        try {
+          for (var payment in data["data"]) {
+            UnsettledPayment tempPayment = UnsettledPayment();
+            tempPayment.paymentId = payment["payment_id"];
+            tempPayment.userId = payment["user_id"];
+            tempPayment.name = payment["fullname"];
+            tempPayment.color = payment["color"];
+            tempPayment.totalUnpaid = (payment["total_unpaid"]).round();
+            ref.read(paymentProvider).addUnsettledPayment(tempPayment);
+          }
+        } catch (error) {
+          logger.d(error);
         }
-      } catch (error) {
-        logger.d(error);
       }
     } else {
       ref.read(errorProvider).changeError(data["message"]);
@@ -59,18 +61,20 @@ class PaymentServices {
     logger.d(data);
     if (data["message"] == "SUCCESS") {
       ref.read(paymentProvider).clearUnconfirmedPayments();
-      try {
-        for (var data in data["data"]) {
-          ConfirmationPayment tempPayment = ConfirmationPayment();
-          tempPayment.paymentId = data["payment_id"];
-          tempPayment.userId = data["user_id"];
-          tempPayment.name = data["fullname"];
-          tempPayment.color = data["color"];
-          tempPayment.totalPaid = data["total_paid"];
-          ref.read(paymentProvider).addUnconfirmedPayment(tempPayment);
+      if (data["data"] != null) {
+        try {
+          for (var payment in data["data"]) {
+            ConfirmationPayment tempPayment = ConfirmationPayment();
+            tempPayment.paymentId = payment["payment_id"];
+            tempPayment.userId = payment["user_id"];
+            tempPayment.name = payment["fullname"];
+            tempPayment.color = payment["color"];
+            tempPayment.totalPaid = payment["total_paid"];
+            ref.read(paymentProvider).addUnconfirmedPayment(tempPayment);
+          }
+        } catch (error) {
+          logger.d(error);
         }
-      } catch (error) {
-        logger.d(error);
       }
     } else {
       ref.read(errorProvider).changeError(data["message"]);

@@ -13,19 +13,19 @@ class Friends extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: RefreshIndicator(
+      body: header(
+        context,
+        ref,
+        "Friends",
+        "/group_list",
+        RefreshIndicator(
         onRefresh: () => _pullRefresh(context, ref),
         child: (
           SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: header(
-                context,
-                ref,
-                "Friends",
-                "/group_list",
-                Container(
+              height: MediaQuery.of(context).size.height - 120,
+              child: Container(
                   padding: const EdgeInsets.only(top: 8.0),
                   child:Column(
                     children: [

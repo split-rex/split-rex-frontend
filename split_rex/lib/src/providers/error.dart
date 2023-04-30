@@ -29,6 +29,7 @@ class ErrorProvider extends ChangeNotifier {
         "This user has sent friend request to you",
     "INVALID_PAYMENT_METHOD": "Change payment method",
     "ERROR_FAILED_PASS_CHANGE": "Failed to change password",
+    "ERROR_TOKEN": "Token is wrong"    
   };
 
   void changeError(String value) {

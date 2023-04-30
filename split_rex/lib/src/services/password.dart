@@ -13,9 +13,19 @@ import '../providers/routes.dart';
 class ForgotPassServices {
   String endpoint = getUrl();
 
+  bool isEmailValid(email) {
+    return RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
+  }
+
   Future<void> generatePassToken(
       WidgetRef ref, String email, BuildContext context) async {
-    ref.watch(forgotPasswordProvider).changeEmail(email);
+    if (!isEmailValid(email)) {
+      ref.read(errorProvider).changeError("ERROR_INVALID_EMAIL");
+      EasyLoading.dismiss();
+      return;
+    }
     await post(Uri.parse("$endpoint/generateResetPassToken"),
         headers: <String, String>{
           'Content-Type': 'application/json',
@@ -26,6 +36,7 @@ class ForgotPassServices {
       var data = jsonDecode(resp.body);
       if (data["message"] == "SUCCESS") {
         ref.read(routeProvider).changePage(context, "/verify_token");
+        ref.read(forgotPasswordProvider).changeEmail(email);
         EasyLoading.dismiss();
       } else {
         ref.read(errorProvider).changeError(data["message"]);
@@ -49,9 +60,10 @@ class ForgotPassServices {
             .changeToken(data["data"]["encrypted_token"]);
         ref.read(forgotPasswordProvider).changeCode(code);
         ref.read(routeProvider).changePage(context, "/create_password");
+        ref.read(errorProvider).changeError("");
         EasyLoading.dismiss();
       } else {
-        ref.read(errorProvider).changeError(data["message"]);
+        ref.read(errorProvider).changeError("ERROR_TOKEN");
         EasyLoading.dismiss();
       }
     });

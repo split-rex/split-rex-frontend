@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/header.dart';
 import '../../providers/auth.dart';
+import '../../providers/error.dart';
 import '../../providers/password.dart';
 import '../../providers/routes.dart';
 import '../../services/password.dart';
@@ -87,11 +88,34 @@ class _VerifyTokenState extends ConsumerState<VerifyToken> {
                             style: TextStyle(fontSize: 11),
                           ),
                           GestureDetector(
+                              onTap: () async {
+                                EasyLoading.instance
+                                  ..displayDuration = const Duration(seconds: 3)
+                                  ..indicatorType =
+                                      EasyLoadingIndicatorType.fadingCircle
+                                  ..loadingStyle = EasyLoadingStyle.custom
+                                  ..indicatorSize = 45.0
+                                  ..radius = 16.0
+                                  ..textColor = Colors.white
+                                  ..progressColor = const Color(0xFF4F9A99)
+                                  ..backgroundColor = const Color(0xFF4F9A99)
+                                  ..indicatorColor = Colors.white
+                                  ..maskType = EasyLoadingMaskType.custom
+                                  ..maskColor =
+                                      const Color.fromARGB(155, 255, 255, 255);
+                                EasyLoading.show(
+                                    status: 'Resending Code...',
+                                    maskType: EasyLoadingMaskType.custom);
+                                await ForgotPassServices().generatePassToken(
+                                    ref,
+                                    ref.watch(forgotPasswordProvider).email,
+                                    context);
+                              },
                               child: const Text(
-                            "Resend code",
-                            style: TextStyle(
-                                fontSize: 11, fontWeight: FontWeight.bold),
-                          )),
+                                "Resend code",
+                                style: TextStyle(
+                                    fontSize: 11, fontWeight: FontWeight.bold),
+                              )),
                           const Text(
                             " or ",
                             style: TextStyle(fontSize: 11),
@@ -280,6 +304,37 @@ class VerifyTokenButton extends ConsumerWidget {
             status: 'Loading...', maskType: EasyLoadingMaskType.custom);
         ForgotPassServices()
             .verifyResetPassToken(ref, codeController.text, context);
+
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+            padding: const EdgeInsets.all(16),
+            height: 70,
+            decoration: BoxDecoration(
+                color: Color(ref.watch(errorProvider).errorType == "ERROR_TOKEN"
+                    ? 0xFFF44336
+                    : 0xFF6DC7BD),
+                borderRadius: const BorderRadius.all(Radius.circular(15))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  ref.watch(errorProvider).errorType == "ERROR_TOKEN"
+                      ? ref.watch(errorProvider).errorMsg
+                      : "Code verified",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ));
       },
       child: Container(
           padding: const EdgeInsets.all(16.0),

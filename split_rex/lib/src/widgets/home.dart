@@ -18,41 +18,50 @@ class UserDetail extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
+  children: [
+    Initicon(
+      text: ref.watch(authProvider).userData.name,
+      size: 55,
+      backgroundColor:
+          getProfileBgColor(ref.watch(authProvider).userData.color),
+      style: TextStyle(
+          color:
+              getProfileTextColor(ref.watch(authProvider).userData.color)),
+    ),
+    const SizedBox(width: 12),
+    Expanded(
+      child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Initicon(
-          text: ref.watch(authProvider).userData.name,
-          size: 55,
-          backgroundColor:
-              getProfileBgColor(ref.watch(authProvider).userData.color),
+        const Text(
+          "Welcome back,",
           style: TextStyle(
-              color:
-                  getProfileTextColor(ref.watch(authProvider).userData.color)),
-        ),
-        const SizedBox(width: 12),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text(
-            "Welcome back,",
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-              fontSize: 12,
-            ),
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+            fontSize: 12,
           ),
-          Text(
-            ref.watch(authProvider).userData.name,
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: ref.watch(authProvider).userData.name.length > 15
-                  ? 12
-                  : ref.watch(authProvider).userData.name.length > 10
-                      ? 14
-                      : 20,
-              color: Colors.white,
-            ),
-          )
-        ]),
+        ),
+        Text(
+          ref.watch(authProvider).userData.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: ref.watch(authProvider).userData.name.length > 15
+                ? 12
+                : ref.watch(authProvider).userData.name.length > 10
+                    ? 14
+                    : 20,
+            color: Colors.white,
+          ),
+        ),
       ],
-    );
+    ),
+    ),
+    
+  ],
+);
+
   }
 }
 

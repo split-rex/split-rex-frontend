@@ -102,7 +102,7 @@ class AddExpenseProvider extends ChangeNotifier {
     logger.d(items.length);
     newBill.subtotal -= items[index].total;
     newBill.total -= items[index].total;
-    var item = items.removeAt(index);
+    items.removeAt(index);
     logger.d(items.length);
     notifyListeners();
   }

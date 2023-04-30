@@ -13,19 +13,20 @@ class ConfirmPayment extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: RefreshIndicator(
+      body: header(
+        context,
+        ref,
+        "Confirm Payment",
+        "/group_detail",
+        RefreshIndicator(
         onRefresh: () => _pullRefresh(ref),
         child: (
           SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: header(
-                context,
-                ref,
-                "Confirm Payment",
-                "/group_detail",
-                const UnconfirmedPayment()
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height - 120,
+              child: const UnconfirmedPayment()
               ),
             )
           )

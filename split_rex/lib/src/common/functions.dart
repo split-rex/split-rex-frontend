@@ -42,6 +42,43 @@ String formatNumber(int number) {
   return formatted;
 }
 
+double nearestTenMultiple(double number) {
+  double result = 10;
+
+  while (result < number) {
+    result *= 10;
+  }
+
+  return result;
+}
+
+String abbreviateNumber(double number) {
+  const Map<int, String> suffixes = {
+    3: 'K',
+    6: 'mil', // 10^6
+    9: 'bil', // 10^9
+    12: 'tril', // 10^12
+    15: 'quadril', // 10^15
+    18: 'quintil', // 10^18
+    21: 'sextil', // 10^21
+    24: 'septil', // 10^24
+    27: 'oktil', // 10^27
+    30: 'nonil', // 10^30
+    33: 'desil', // 10^33
+  };
+
+  int suffixIndex = 0;
+  while (number >= 1000 && suffixIndex < suffixes.length - 1) {
+    log('suffixIndex: $suffixIndex');
+    log('number: $number');
+    number /= 1000;
+    suffixIndex++;
+  }
+
+  final suffix = suffixes[suffixIndex * 3];
+  return '${number.toInt().toString()} $suffix';
+}
+
 String formatDouble(double number) {
   String str = number.toInt().toString();
   String formatted = '';
@@ -57,6 +94,18 @@ String formatDouble(double number) {
   }
 
   return formatted;
+}
+
+double findLargest(List<double> arr) {
+  double largest = arr[0]; // assume the first element is the largest
+
+  for (int i = 1; i < arr.length; i++) {
+    if (arr[i] > largest) {
+      largest = arr[i];
+    }
+  }
+
+  return largest;
 }
 
 List<ProfileColor> profileColors = [

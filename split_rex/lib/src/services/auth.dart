@@ -27,6 +27,8 @@ import '../providers/friend.dart';
 import 'activity.dart';
 import 'friend.dart';
 
+
+
 class ApiServices {
   String endpoint = getUrl();
   // String endpoint = "http:/p/localhost:8080";
@@ -105,13 +107,13 @@ class ApiServices {
     if (signUpData.name == "") {
       EasyLoading.dismiss();
       ref.read(errorProvider).changeError("ERROR_EMPTY_NAME");
-    }  else if (signUpData.email == "") {
+    } else if (signUpData.email == "") {
       EasyLoading.dismiss();
       ref.read(errorProvider).changeError("ERROR_EMPTY_EMAIL");
-    }  else if (signUpData.username == "") {
+    } else if (signUpData.username == "") {
       EasyLoading.dismiss();
       ref.read(errorProvider).changeError("ERROR_EMPTY_USERNAME");
-    }  else if (signUpData.pass == "") {
+    } else if (signUpData.pass == "") {
       EasyLoading.dismiss();
       ref.read(errorProvider).changeError("ERROR_EMPTY_PASS");
     } else if (!isEmailValid(signUpData.email)) {
@@ -161,12 +163,11 @@ class ApiServices {
   Future<void> postLogin(WidgetRef ref, BuildContext context) async {
     SignInModel signInData = ref.watch(authProvider).signInData;
     await post(Uri.parse("$endpoint/login"),
-      headers: <String, String>{'Content-Type': 'application/json'},
-      body: jsonEncode(<String, String>{
-        "email": signInData.email,
-        "password": signInData.pass
-      })
-    ).then((Response resp) async {
+        headers: <String, String>{'Content-Type': 'application/json'},
+        body: jsonEncode(<String, String>{
+          "email": signInData.email,
+          "password": signInData.pass
+        })).then((Response resp) async {
       var data = jsonDecode(resp.body);
       if (data["message"] == "SUCCESS") {
         ref.read(authProvider).changeJwtToken(data["data"]);
@@ -182,23 +183,29 @@ class ApiServices {
                 FriendServices().friendRequestReceivedList(ref).then((value) {
                   FriendServices().friendRequestSentList(ref).then((value) {
                     StatisticsServices().expenseChart(ref).then((value) {
-                      StatisticsServices().owedLentPercentage(ref).then((value) {
+                      StatisticsServices()
+                          .owedLentPercentage(ref)
+                          .then((value) {
                         StatisticsServices().spendingBuddies(ref).then((value) {
                           getGroupOwedLent(ref).then((data) {
                             EasyLoading.dismiss();
-                            ref.read(routeProvider).changePage(context, "/home");
+                            ref
+                                .read(routeProvider)
+                                .changePage(context, "/home");
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Container(
                                 padding: const EdgeInsets.all(16),
                                 height: 70,
                                 decoration: const BoxDecoration(
                                     color: Color(0xFF6DC7BD),
-                                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15))),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: const [
-                                    Text("Logged in successfully!",
+                                    Text(
+                                      "Logged in successfully!",
                                       style: TextStyle(
                                         fontSize: 16,
                                         color: Colors.white,
@@ -212,11 +219,9 @@ class ApiServices {
                               elevation: 0,
                             ));
                           });
-                          
                         });
                       });
                     });
-                    
                   });
                 });
               });
@@ -231,8 +236,8 @@ class ApiServices {
             padding: const EdgeInsets.all(16),
             height: 70,
             decoration: const BoxDecoration(
-              color: Color(0xFFF44336),
-              borderRadius: BorderRadius.all(Radius.circular(15))),
+                color: Color(0xFFF44336),
+                borderRadius: BorderRadius.all(Radius.circular(15))),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,

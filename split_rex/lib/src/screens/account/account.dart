@@ -52,12 +52,17 @@ class Account extends ConsumerWidget {
                                         ref.watch(authProvider).userData.color)),
                               ),
                               const SizedBox(width: 16.0),
-                              Text(ref.watch(authProvider).userData.name,
+                              Expanded(child: 
+                                Text(ref.watch(authProvider).userData.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF4F4F4F),
                                   )),
+                              ),
+                              
                             ],
                           ),
                           const Divider(

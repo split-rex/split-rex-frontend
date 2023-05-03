@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/group_list.dart';
@@ -92,7 +93,7 @@ class UnconfirmedPaymentDetail extends ConsumerWidget {
       required this.color});
 
   final String name;
-  final int totalPaid;
+  final double totalPaid;
   final String paymentId;
   final int color;
 
@@ -141,7 +142,7 @@ class UnconfirmedPaymentDetail extends ConsumerWidget {
                             )
                           ),
                           Text(
-                            mFormat(totalPaid.toDouble()),
+                            mFormat(totalPaid),
                             style: const TextStyle(
                               fontSize: 15.0,
                               color: Color(0XFF6DC7BD),
@@ -284,7 +285,7 @@ confirmationDialog(BuildContext context, WidgetRef ref, UnconfirmedPaymentDetail
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                   Text(
-                    mFormat(widget.totalPaid.toDouble()),
+                    mFormat(widget.totalPaid),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 16,
@@ -342,13 +343,81 @@ confirmationDialog(BuildContext context, WidgetRef ref, UnconfirmedPaymentDetail
                   const SizedBox(width: 12),
                   InkWell(
                     onTap: () async {
+                      EasyLoading.instance
+                        ..displayDuration = const Duration(seconds: 3)
+                        ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+                        ..loadingStyle = EasyLoadingStyle.custom
+                        ..indicatorSize = 45.0
+                        ..radius = 16.0
+                        ..textColor = Colors.white
+                        ..progressColor = const Color(0xFF4F9A99)
+                        ..backgroundColor = const Color(0xFF4F9A99)
+                        ..indicatorColor = Colors.white
+                        ..maskType = EasyLoadingMaskType.custom
+                        ..maskColor = const Color.fromARGB(155, 255, 255, 255);
+                      EasyLoading.show(
+                          status: 'Loading...', maskType: EasyLoadingMaskType.custom);
                       if (isConfirm) {
-                        await PaymentServices().confirmSettle(ref, widget.paymentId);
+                        await PaymentServices().confirmSettle(ref, widget.paymentId).then((value) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Container(
+                              padding: const EdgeInsets.all(16),
+                              height: 70,
+                              decoration: const BoxDecoration(
+                                  color: Color(0xFF6DC7BD),
+                                  borderRadius: BorderRadius.all(Radius.circular(15))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text(
+                                    "Payment confirmed!",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                          ));
+                        EasyLoading.dismiss();
+                        Navigator.pop(context);
+                      });
                       } else {
-                        await PaymentServices().denySettle(ref, widget.paymentId);
+                        await PaymentServices().denySettle(ref, widget.paymentId).then((value) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Container(
+                              padding: const EdgeInsets.all(16),
+                              height: 70,
+                              decoration: const BoxDecoration(
+                                  color: Color(0xFF6DC7BD),
+                                  borderRadius: BorderRadius.all(Radius.circular(15))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text(
+                                    "Payment denied!",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                          ));
+                          EasyLoading.dismiss();
+                          Navigator.pop(context);
+                        });
                       }
-                      // ignore: use_build_context_synchronously
-                      Navigator.pop(context);
                     },
                     child: Container(
                       alignment: Alignment.center,

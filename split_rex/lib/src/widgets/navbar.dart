@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:split_rex/src/providers/add_expense.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/group.dart';
 import 'package:camera/camera.dart';
@@ -86,6 +87,7 @@ class _PopupExpense extends ConsumerWidget {
                           onTap: () {
                             GroupServices().userGroupList(ref).then((value) {
                               Navigator.pop(context);
+                              ref.read(addExpenseProvider).resetAll();
                               ref
                                   .read(routeProvider)
                                   .changePage(context, "/add_expense");
@@ -133,6 +135,7 @@ class _PopupExpense extends ConsumerWidget {
                                   .then((value) {
                                 EasyLoading.dismiss();
                                 Navigator.pop(context);
+                                ref.read(addExpenseProvider).resetAll();
                                 ref
                                     .read(routeProvider)
                                     .changePage(context, "/add_expense");

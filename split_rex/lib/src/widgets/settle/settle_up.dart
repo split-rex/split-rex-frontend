@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter/services.dart';
@@ -18,10 +19,7 @@ class SettleUpBody extends ConsumerWidget {
     UnsettledPayment curr = ref.watch(paymentProvider).currUnsettledPayment;
     TextEditingController amountController = TextEditingController();
 
-    final double screenHeight = MediaQuery.of(context).size.height - 360;
-    final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     return SizedBox(
-        height:  screenHeight - keyboardHeight,
         width: MediaQuery.of(context).size.width,
         child: SingleChildScrollView(
             child: Column(
@@ -111,7 +109,7 @@ class SettleUpBody extends ConsumerWidget {
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly
-                ], // Only numbers can be entered
+                ],
                 decoration: InputDecoration(
                     filled: true,
                     border: OutlineInputBorder(
@@ -135,7 +133,7 @@ class SettleUpBody extends ConsumerWidget {
                         children: [
                           const TextSpan(text: "out of "),
                           TextSpan(
-                              text: mFormat(curr.totalUnpaid.toDouble()),
+                              text: mFormat(curr.totalUnpaid),
                               style: const TextStyle(
                                   color: Color(0xffFF0000),
                                   fontWeight: FontWeight.bold)),
@@ -151,16 +149,11 @@ class SettleUpBody extends ConsumerWidget {
                         children: [
                           const TextSpan(text: "out of "),
                           TextSpan(
-                              text: mFormat(curr.totalUnpaid.toDouble() * -1),
+                              text: mFormat(curr.totalUnpaid * -1),
                               style: const TextStyle(
                                   color: Color(0xFF6DC7BD),
                                   fontWeight: FontWeight.bold)),
-                          TextSpan(
-                              text: curr.name,
-                              style: const TextStyle(
-                                  color: Color(0xFF6DC7BD),
-                                  fontWeight: FontWeight.bold)),
-                          const TextSpan(text: " lent"),
+                          const TextSpan(text: " you lent"),
                         ]),
                   ),
             const SizedBox(height: 20),
@@ -184,14 +177,81 @@ class SettleUpButton extends ConsumerWidget {
         if (amountController.text.isEmpty) {
           return;
         }
-
-        int amount = int.parse(amountController.text);
+        EasyLoading.instance
+          ..displayDuration = const Duration(seconds: 3)
+          ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+          ..loadingStyle = EasyLoadingStyle.custom
+          ..indicatorSize = 45.0
+          ..radius = 16.0
+          ..textColor = Colors.white
+          ..progressColor = const Color(0xFF4F9A99)
+          ..backgroundColor = const Color(0xFF4F9A99)
+          ..indicatorColor = Colors.white
+          ..maskType = EasyLoadingMaskType.custom
+          ..maskColor = const Color.fromARGB(155, 255, 255, 255);
+        EasyLoading.show(
+            status: 'Loading...', maskType: EasyLoadingMaskType.custom);
+        double amount = double.parse(amountController.text);
         if (curr.totalUnpaid > 0) {
           await PaymentServices()
-              .settlePaymentOwed(ref, curr.paymentId, amount, context);
+              .settlePaymentOwed(ref, curr.paymentId, amount, context).then((value) {
+                EasyLoading.dismiss();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Container(
+                    padding: const EdgeInsets.all(16),
+                    height: 70,
+                    decoration: const BoxDecoration(
+                        color: Color(0xFF6DC7BD),
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          "Payment settled! Waiting for friend's confirmation.",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                ));
+              });
         } else {
           await PaymentServices()
-              .settlePaymentLent(ref, curr.paymentId, amount, context);
+              .settlePaymentLent(ref, curr.paymentId, amount, context).then((value) {
+                EasyLoading.dismiss();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Container(
+                    padding: const EdgeInsets.all(16),
+                    height: 70,
+                    decoration: const BoxDecoration(
+                        color: Color(0xFF6DC7BD),
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          "Payment settled!",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                ));
+              });
         }
       },
       child: Container(

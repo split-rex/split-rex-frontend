@@ -81,7 +81,7 @@ class ScheduledNotificationServices {
     BuildContext context,
     WidgetRef ref,
     String userId,
-    int amount,
+    double amount,
     DateTime date,
   ) async {
     String groupId = ref.watch(groupListProvider).currGroup.groupId;

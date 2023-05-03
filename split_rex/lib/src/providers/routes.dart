@@ -27,6 +27,14 @@ class RouteProvider extends ChangeNotifier {
         (Route<dynamic> route) => false,
         arguments: ModalRoute.of(context)?.settings.name
       );
+    } else if (value == "/group_detail" && ModalRoute.of(context)?.settings.name == "/settle_up") {
+      Navigator.pushNamedAndRemoveUntil(
+        context, 
+        value, 
+        ModalRoute.withName("/group_detail"),
+        arguments: ModalRoute.of(context)?.settings.name
+      );
+      Navigator.pop(context);
     } else if (ModalRoute.of(context)?.settings.name == "/scan_bill") {
       if (value == "/home") {
         Navigator.pop(context);

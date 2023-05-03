@@ -76,7 +76,7 @@ class GroupServices {
               currActivity["date"],
               currActivity["name1"],
               currActivity["name2"],
-              currActivity["amount"],
+              currActivity["amount"] * 1.0,
             );
             newActivityList.add(tempActivity);
           }

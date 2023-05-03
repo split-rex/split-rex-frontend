@@ -29,7 +29,7 @@ class ActivityProvider extends ChangeNotifier {
           paymentActivityId: modelList[i]['detail']['payment_activity_id'],
           name: modelList[i]['detail']['name'],
           status: modelList[i]['detail']['status'],
-          amount: modelList[i]['detail']['amount'],
+          amount: modelList[i]['detail']['amount'] * 1.0,
           groupName: modelList[i]['detail']['group_name'],
         ));
         } else {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
@@ -191,16 +192,32 @@ Widget summarySplit(WidgetRef ref, String title) => Column(children: [
 ],); 
 
 Widget splitButton(WidgetRef ref, BuildContext context) => GestureDetector(
-  onTap: () {
+  onTap: () async {
     if (ref.watch(addExpenseProvider).newGroup.name == "" && ref.watch(addExpenseProvider).isNewGroup) {
       null;
     } else {
+      EasyLoading.instance
+          ..displayDuration = const Duration(seconds: 3)
+          ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+          ..loadingStyle = EasyLoadingStyle.custom
+          ..indicatorSize = 45.0
+          ..radius = 16.0
+          ..textColor = Colors.white
+          ..progressColor = const Color(0xFF4F9A99)
+          ..backgroundColor = const Color(0xFF4F9A99)
+          ..indicatorColor = Colors.white
+          ..maskType = EasyLoadingMaskType.custom
+          ..maskColor = const Color.fromARGB(155, 255, 255, 255);
+      EasyLoading.show(
+            status: 'Loading...', maskType: EasyLoadingMaskType.custom);
       if (ref.watch(addExpenseProvider).isNewGroup) {
-        AddExpenseServices().createGroup(ref).then((value) {
-          AddExpenseServices().createTransaction(ref, context);
+        AddExpenseServices().createGroup(ref).then((value) async {
+          await AddExpenseServices().createTransaction(ref, context);
+          EasyLoading.dismiss();
         });
       } else {
-        AddExpenseServices().createTransaction(ref, context);
+        await AddExpenseServices().createTransaction(ref, context);
+        EasyLoading.dismiss();
       }
     }
   },

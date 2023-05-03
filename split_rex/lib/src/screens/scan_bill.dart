@@ -11,6 +11,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 
+import '../providers/add_expense.dart';
 import '../providers/camera.dart';
 import '../providers/routes.dart';
 import '../services/scan_bill.dart';
@@ -179,6 +180,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                               ref.read(cameraProvider).setPicture(imagePath);
                               ScanBillServices().postBill(ref, imagePath).then((value) {
                                 EasyLoading.dismiss();
+                                ref.read(addExpenseProvider).resetAll();
                                 ref.read(routeProvider).changePage(context, "/add_expense");
                               });
                             }

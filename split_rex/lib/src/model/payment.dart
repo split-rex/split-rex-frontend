@@ -3,7 +3,7 @@ class ConfirmationPayment {
   String userId;
   String name;
   int color;
-  int totalPaid;
+  double totalPaid;
 
   ConfirmationPayment({
     this.paymentId = "",
@@ -19,7 +19,7 @@ class UnsettledPayment {
   String userId;
   String name;
   int color;
-  int totalUnpaid;
+  double totalUnpaid;
 
   UnsettledPayment({
     this.paymentId = "",

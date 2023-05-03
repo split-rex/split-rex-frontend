@@ -38,7 +38,7 @@ class PaymentServices {
             tempPayment.userId = payment["user_id"];
             tempPayment.name = payment["fullname"];
             tempPayment.color = payment["color"];
-            tempPayment.totalUnpaid = (payment["total_unpaid"]).round();
+            tempPayment.totalUnpaid = (payment["total_unpaid"]) * 1.0;
             ref.read(paymentProvider).addUnsettledPayment(tempPayment);
           }
         } catch (error) {
@@ -69,7 +69,7 @@ class PaymentServices {
             tempPayment.userId = payment["user_id"];
             tempPayment.name = payment["fullname"];
             tempPayment.color = payment["color"];
-            tempPayment.totalPaid = payment["total_paid"];
+            tempPayment.totalPaid = payment["total_paid"] * 1.0;
             ref.read(paymentProvider).addUnconfirmedPayment(tempPayment);
           }
         } catch (error) {
@@ -82,7 +82,7 @@ class PaymentServices {
   }
 
   Future<void> settlePaymentOwed(
-      WidgetRef ref, String paymentId, int totalPaid, BuildContext context) async {
+      WidgetRef ref, String paymentId, double totalPaid, BuildContext context) async {
     Response resp = await post(Uri.parse("$endpoint/settlePaymentOwed"),
         headers: <String, String>{
           'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ class PaymentServices {
   }
 
   Future<void> settlePaymentLent(
-      WidgetRef ref, String paymentId, int totalPaid, BuildContext context) async {
+      WidgetRef ref, String paymentId, double totalPaid, BuildContext context) async {
     Response resp = await post(Uri.parse("$endpoint/settlePaymentLent"),
         headers: <String, String>{
           'Content-Type': 'application/json',

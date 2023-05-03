@@ -68,7 +68,7 @@ class GroupListProvider extends ChangeNotifier {
     currGroup.startDate = groupDetail["start_date"].toString();
     currGroup.endDate = groupDetail["end_date"].toString();
     currGroup.type = groupDetail["type"];
-    currGroup.totalUnpaid = groupDetail["total_unpaid"];
+    currGroup.totalUnpaid = groupDetail["total_unpaid"] * 1.0;
     currGroup.totalExpense = groupDetail["total_expense"];
     var dataMemberList = groupDetail["list_memberr"];
 
@@ -119,7 +119,7 @@ class GroupListProvider extends ChangeNotifier {
             modelList[i]["start_date"],
             modelList[i]["end_date"],
             modelList[i]["type"],
-            (modelList[i]["total_unpaid"]).toInt(),
+            (modelList[i]["total_unpaid"]) * 1.0,
             modelList[i]["total_expense"]);
 
         var dataMemberList = modelList[i]["list_memberr"];

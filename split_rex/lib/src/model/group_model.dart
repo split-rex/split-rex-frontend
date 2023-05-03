@@ -7,7 +7,7 @@ class GroupListModel {
   String startDate;
   String endDate;
   String type;
-  int totalUnpaid;
+  double totalUnpaid;
   int totalExpense;
   List<Transaction> transactions = [];
   List<GroupActivity> groupActivities = [];
@@ -21,7 +21,7 @@ class GroupActivity {
   String date;
   String name1;
   String name2;
-  int amount;
+  double amount;
 
   GroupActivity(this.activityId, this.date, this.name1, this.name2,
       this.amount);

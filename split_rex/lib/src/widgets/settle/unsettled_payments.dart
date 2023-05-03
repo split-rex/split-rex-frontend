@@ -88,7 +88,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
   final String userId;
   final int color;
   final int index;
-  final int oweOrLent;
+  final double oweOrLent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -132,7 +132,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                             children: [
                               const TextSpan(text: "You owe "),
                               TextSpan(
-                                  text: mFormat(oweOrLent.toDouble()),
+                                  text: mFormat(oweOrLent),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w700,
                                       color: Color(0xffFF0000))),
@@ -148,7 +148,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                             children: [
                               const TextSpan(text: "owes "),
                               TextSpan(
-                                  text: mFormat(oweOrLent.toDouble() * -1),
+                                  text: mFormat(oweOrLent),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w700,
                                       color: Color(0xFF6DC7BD))),
@@ -238,7 +238,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
     );
   }
 
-  void _setReminder(String name, String userId, int oweOrLent, DateTime destinedTime, DateTime curTime, BuildContext context, WidgetRef ref) async {
+  void _setReminder(String name, String userId, double oweOrLent, DateTime destinedTime, DateTime curTime, BuildContext context, WidgetRef ref) async {
     if (oweOrLent > 0) {
       logger.d(destinedTime);
       logger.d(curTime);
@@ -256,7 +256,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
         await flutterLocalNotificationsPlugin.zonedSchedule(
           reminderID.microsecond,
           "Let's settle up!",
-          "Don't forget to pay ${mFormat(oweOrLent.toDouble())} to $name in group '${ref.watch(groupListProvider).currGroup.name}'",
+          "Don't forget to pay ${mFormat(oweOrLent)} to $name in group '${ref.watch(groupListProvider).currGroup.name}'",
           tz.TZDateTime.now(tz.local).add(Duration(seconds: intervalSeconds)),
           NotificationDetails(
             android: AndroidNotificationDetails(
@@ -322,7 +322,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
       }
     } else {
       ScheduledNotificationServices().insertScheduledNotifation(
-        context, ref, userId, (-1 * oweOrLent), destinedTime
+        context, ref, userId, (oweOrLent), destinedTime
       );
     }
   }

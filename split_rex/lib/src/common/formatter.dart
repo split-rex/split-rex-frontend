@@ -2,7 +2,7 @@ import 'package:money_formatter/money_formatter.dart';
 
 String mFormat(double amount) {
   MoneyFormatter fmf = MoneyFormatter(
-      amount: amount,
+      amount: (amount).abs(),
       settings: MoneyFormatterSettings(
         symbol: 'IDR',
         thousandSeparator: '.',
@@ -15,7 +15,7 @@ String mFormat(double amount) {
 
 String homeMFormat(double amount) {
   MoneyFormatter fmf = MoneyFormatter(
-      amount: amount,
+      amount: (amount).abs(),
       settings: MoneyFormatterSettings(
         symbol: 'IDR',
         thousandSeparator: '.',
@@ -32,7 +32,7 @@ String homeMFormat(double amount) {
 
 String tFormat(double amount) {
   MoneyFormatter fmf = MoneyFormatter(
-      amount: amount,
+      amount: (amount).abs(),
       settings: MoneyFormatterSettings(
         thousandSeparator: '.',
         decimalSeparator: ',',

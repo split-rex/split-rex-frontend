@@ -6,7 +6,7 @@ class ActivityModel {
   String? paymentActivityId;
   String? name;
   String? status;
-  int? amount;
+  double? amount;
   String? groupName;
   String? transactionActivityId;
 

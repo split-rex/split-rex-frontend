@@ -16,11 +16,9 @@ class SettleUp extends ConsumerWidget {
         ref,
         "Settle Up",
         "/unsettled_payments",
-        Column(
-          children: const [
-            SettleUpBody()
-          ],
-        ),
+        const SingleChildScrollView(
+          child: SettleUpBody()
+        )
       ),
     );
   }

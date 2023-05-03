@@ -37,6 +37,8 @@ class DateTimeField extends ConsumerWidget {
                     children: [
                     const Text("Select transaction date"),
                     SfDateRangePicker(
+                      initialDisplayDate: DateTime.now(),
+                      initialSelectedDate: DateTime.now(),
                       controller: dateController,
                       view: DateRangePickerView.month,
                       selectionMode: DateRangePickerSelectionMode.single,
@@ -293,7 +295,7 @@ class _SummaryFieldState extends ConsumerState<SummaryField> {
                 padding: const EdgeInsets.only(right: 8.0),
                 alignment: Alignment.centerRight,
                 child: Text(
-                ref.watch(addExpenseProvider).newBill.subtotal.toString(),
+                tFormat(ref.watch(addExpenseProvider).newBill.subtotal * 1.0),
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/bubble_member.dart';
 import 'package:split_rex/src/common/functions.dart';
@@ -102,6 +103,20 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                   .groupId),
                               child: InkWell(
                                 onTap: () {
+                                  EasyLoading.instance
+                                    ..displayDuration = const Duration(seconds: 3)
+                                    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+                                    ..loadingStyle = EasyLoadingStyle.custom
+                                    ..indicatorSize = 45.0
+                                    ..radius = 16.0
+                                    ..textColor = Colors.white
+                                    ..progressColor = const Color(0xFF4F9A99)
+                                    ..backgroundColor = const Color(0xFF4F9A99)
+                                    ..indicatorColor = Colors.white
+                                    ..maskType = EasyLoadingMaskType.custom
+                                    ..maskColor = const Color.fromARGB(155, 255, 255, 255);
+                                  EasyLoading.show(
+                                      status: 'Loading...', maskType: EasyLoadingMaskType.custom);
                                   var currGroup = ref
                                       .watch(groupListProvider)
                                       .groups[index];
@@ -117,6 +132,7 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                     GroupServices()
                                         .getGroupActivity(ref)
                                         .then((value) {
+                                          EasyLoading.dismiss();
                                       ref
                                           .read(routeProvider)
                                           .changePage(context, "/group_detail");

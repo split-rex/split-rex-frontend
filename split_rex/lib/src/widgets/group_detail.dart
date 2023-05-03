@@ -112,7 +112,7 @@ class GroupInfo extends ConsumerWidget {
 
 class BalanceInfo extends ConsumerWidget {
   const BalanceInfo({super.key, required this.totalUnpaid});
-  final int totalUnpaid;
+  final double totalUnpaid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

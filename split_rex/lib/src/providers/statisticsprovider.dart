@@ -8,8 +8,8 @@ class StatisticsProvider extends ChangeNotifier {
   String endSettleDate = '';
   String startUnsettledDate = '';
   String endUnsettledDate = '';
-  int totalOwed = 0;
-  int totalLent = 0;
+  double totalOwed = 0;
+  double totalLent = 0;
   int owedPercentage = 0;
   int lentPercentage = 0;
   List<SpendingBuddy> spendingBuddies = [];
@@ -97,8 +97,8 @@ class StatisticsProvider extends ChangeNotifier {
     logger.d(percentageData);
     owedPercentage = percentageData['owed_percentage'];
     lentPercentage = percentageData['lent_percentage'];
-    totalOwed = percentageData["total_owed"];
-    totalLent = percentageData["total_lent"];
+    totalOwed = percentageData["total_owed"] * 1.0;
+    totalLent = percentageData["total_lent"] * 1.0;
     notifyListeners();
   }
 

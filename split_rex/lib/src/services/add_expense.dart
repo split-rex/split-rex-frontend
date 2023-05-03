@@ -80,11 +80,11 @@ class AddExpenseServices {
         "bill_owner": newBill.billOwner,
         "items": itemsObj
       })
-    ).then((Response resp) {
+    ).then((Response resp) async {
       var data = jsonDecode(resp.body);
       logger.d(data);
       if (data["message"] == "SUCCESS") {
-        updatePayment(ref, context);
+        await updatePayment(ref, context);
       } else {
         ref.read(errorProvider).changeError(data["message"]);
       }
@@ -136,11 +136,11 @@ class AddExpenseServices {
         "group_id": currGroupId,
         "list_payment": listPayment
       })
-    ).then((Response resp) {
+    ).then((Response resp) async {
       var data = jsonDecode(resp.body);
       logger.d(data);
       if (data["message"] == "SUCCESS") {
-        resolveTransaction(ref, context);
+        await resolveTransaction(ref, context);
       } else {
         ref.read(errorProvider).changeError(data["message"]);
       } 
@@ -158,12 +158,12 @@ class AddExpenseServices {
       body: jsonEncode(<String, dynamic>{
         "group_id": currGroupId,
       })
-    ).then((Response resp) {
+    ).then((Response resp) async {
       var data = jsonDecode(resp.body);
       logger.d(data);
       if (data["message"] == "SUCCESS") {
         ref.watch(addExpenseProvider).resetAll();      
-        GroupServices().getGroupTransactions(ref).then((value) {
+        await GroupServices().getGroupTransactions(ref).then((value) {
           ref.read(routeProvider).changeNavbarIdx(context, 1);
           ref.read(routeProvider).changePage(context, "/group_detail");
         });

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+import '../../common/formatter.dart';
 import '../../services/group.dart';
 
 class DateTimeField extends ConsumerWidget {
@@ -186,8 +186,8 @@ class _ItemCardState extends ConsumerState<ItemCard> {
                       ),
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16.0),
-                        prefixIcon: const Padding(padding: EdgeInsets.all(15), child: Text('Rp ')),
-                        hintText: "${ref.watch(addExpenseProvider).items[index].price}",
+                        prefixIcon: const Padding(padding: EdgeInsets.all(15), child: Text('IDR ')),
+                        hintText: tFormat(ref.watch(addExpenseProvider).items[index].price.toDouble()),
                         filled: true,
                         fillColor: const Color(0XFFF6F6F6),
                         border: OutlineInputBorder(
@@ -210,7 +210,7 @@ class _ItemCardState extends ConsumerState<ItemCard> {
                     padding: const EdgeInsets.all(8.0), 
                     alignment: Alignment.centerRight, 
                     child: Text(
-                      "Total: Rp. ${ref.watch(addExpenseProvider).items[index].total.toString()}", 
+                      "Total: ${mFormat(ref.watch(addExpenseProvider).items[index].total.toDouble())}", 
                       textAlign: TextAlign.right,
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
@@ -322,8 +322,8 @@ class _SummaryFieldState extends ConsumerState<SummaryField> {
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8.0),
                 hintText: widget.title == "Tax"
-                ? ref.watch(addExpenseProvider).newBill.tax.toString()
-                : ref.watch(addExpenseProvider).newBill.service.toString()
+                ? tFormat(ref.watch(addExpenseProvider).newBill.tax.toDouble())
+                : tFormat(ref.watch(addExpenseProvider).newBill.service.toDouble())
                 ,
                 filled: true,
                 fillColor: const Color(0XFFF6F6F6),

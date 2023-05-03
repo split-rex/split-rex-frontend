@@ -5,6 +5,8 @@ import 'package:split_rex/src/providers/add_expense.dart';
 
 import 'package:split_rex/src/widgets/expense/edit_items.dart';
 
+import '../../common/formatter.dart';
+
 
 class EditItems extends ConsumerWidget {
   const EditItems({super.key});
@@ -70,7 +72,7 @@ class EditItems extends ConsumerWidget {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text("Total amount", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
-                                    Text(ref.watch(addExpenseProvider).newBill.total.toString(), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                                    Text(tFormat(ref.watch(addExpenseProvider).newBill.total.toDouble()), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                                   ],
                                 ),
                               ),

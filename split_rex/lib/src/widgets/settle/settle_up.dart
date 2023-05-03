@@ -6,6 +6,7 @@ import 'package:split_rex/src/model/payment.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/payment.dart';
 
+import '../../common/formatter.dart';
 import '../../common/functions.dart';
 import '../../services/payment.dart';
 
@@ -116,7 +117,7 @@ class SettleUpBody extends ConsumerWidget {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    prefixText: "Rp ",
+                    prefixText: "IDR ",
                     hintText: 'Enter amount to settle',
                     hintStyle: const TextStyle(fontSize: 16)),
               ),
@@ -134,7 +135,7 @@ class SettleUpBody extends ConsumerWidget {
                         children: [
                           const TextSpan(text: "out of "),
                           TextSpan(
-                              text: "Rp.${(curr.totalUnpaid).toString()}",
+                              text: mFormat(curr.totalUnpaid.toDouble()),
                               style: const TextStyle(
                                   color: Color(0xffFF0000),
                                   fontWeight: FontWeight.bold)),
@@ -150,7 +151,7 @@ class SettleUpBody extends ConsumerWidget {
                         children: [
                           const TextSpan(text: "out of "),
                           TextSpan(
-                              text: "Rp.${(-1 * curr.totalUnpaid).toString()} ",
+                              text: mFormat(curr.totalUnpaid.toDouble() * -1),
                               style: const TextStyle(
                                   color: Color(0xFF6DC7BD),
                                   fontWeight: FontWeight.bold)),

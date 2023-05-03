@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:money_formatter/money_formatter.dart';
+import 'package:split_rex/src/common/formatter.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/friend.dart';
 import 'package:split_rex/src/providers/group_list.dart';
@@ -145,6 +147,9 @@ class HomeReport extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var lent = homeMFormat(ref.read(statisticsProvider).totalLent.toDouble());
+    var owed = homeMFormat(ref.read(statisticsProvider).totalOwed.toDouble());
+
     return Transform.translate(
       offset: const Offset(0, -22),
       child: Container(
@@ -168,34 +173,35 @@ class HomeReport extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Text("Total Lent"),
-                      // TODO update total lent and owed here
+                    children: [
+                      const Text("Total Lent"),
                       SizedBox(
                         width: 100,
                         child: Text(
-                          "Rp. 10.000",
-                          style: TextStyle(
+                          lent,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       )
                     ],
                   ),
                   VerticalDivider(
-                      width: MediaQuery.of(context).size.width - 340,
+                      width: MediaQuery.of(context).size.width - 350,
                       thickness: 1.5,
                       color: const Color(0xFFE0E0E0)),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Text("Total Owed"),
-                      // TODO update total lent and owed here
+                    children: [
+                      const Text("Total Owed"),
                       SizedBox(
-                        width: 100,
+                        width: 120,
                         child: Text(
-                          "Rp. 1000",
-                          style: TextStyle(
+                          owed,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       )
@@ -223,19 +229,17 @@ class HomeReport extends ConsumerWidget {
                     await StatisticsServices()
                         .owedLentPercentage(ref)
                         .then((value) async {
-                      
+                      await StatisticsServices()
+                          .expenseChart(ref)
+                          .then((value) async {
                         await StatisticsServices()
-                            .expenseChart(ref)
+                            .spendingBuddies(ref)
                             .then((value) async {
-                          await StatisticsServices()
-                              .spendingBuddies(ref)
-                              .then((value) async {
-                            ref
-                                .read(routeProvider)
-                                .changePage(context, "/statistics");
-                          });
+                          ref
+                              .read(routeProvider)
+                              .changePage(context, "/statistics");
                         });
-                      
+                      });
                     });
                   },
                   child: const Text(

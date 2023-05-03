@@ -7,6 +7,7 @@ import 'package:split_rex/src/common/logger.dart';
 import 'package:split_rex/src/providers/payment.dart';
 import 'package:split_rex/src/providers/routes.dart';
 import 'package:split_rex/src/services/scheduled_notification.dart';
+import '../../common/formatter.dart';
 import '../../providers/group_list.dart';
 import '../../services/notification.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -131,7 +132,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                             children: [
                               const TextSpan(text: "You owe "),
                               TextSpan(
-                                  text: "Rp.${oweOrLent.toString()}",
+                                  text: mFormat(oweOrLent.toDouble()),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w700,
                                       color: Color(0xffFF0000))),
@@ -147,7 +148,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                             children: [
                               const TextSpan(text: "owes "),
                               TextSpan(
-                                  text: "Rp.${(-1 * oweOrLent).toString()}",
+                                  text: mFormat(oweOrLent.toDouble() * -1),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w700,
                                       color: Color(0xFF6DC7BD))),
@@ -255,7 +256,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
         await flutterLocalNotificationsPlugin.zonedSchedule(
           reminderID.microsecond,
           "Let's settle up!",
-          "Don't forget to pay Rp.${oweOrLent.toString()} to $name in group '${ref.watch(groupListProvider).currGroup.name}'",
+          "Don't forget to pay ${mFormat(oweOrLent.toDouble())} to $name in group '${ref.watch(groupListProvider).currGroup.name}'",
           tz.TZDateTime.now(tz.local).add(Duration(seconds: intervalSeconds)),
           NotificationDetails(
             android: AndroidNotificationDetails(

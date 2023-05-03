@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:timezone/timezone.dart' as tz;
 import '../common/const.dart';
+import '../common/formatter.dart';
 import '../common/logger.dart';
 import '../providers/auth.dart';
 import '../providers/error.dart';
@@ -43,7 +44,7 @@ class ScheduledNotificationServices {
             await flutterLocalNotificationsPlugin.zonedSchedule(
               currNotif["amount"].round(),
               "Let's settle up!",
-              "Don't forget to pay Rp.${currNotif["amount"].toString()} to ${currNotif["name"]} in group '${currNotif["group_name"]}'",
+              "Don't forget to pay ${mFormat(currNotif["amount"].toDouble())} to ${currNotif["name"]} in group '${currNotif["group_name"]}'",
               tz.TZDateTime.now(tz.local).add(Duration(seconds: intervalSeconds)),
               NotificationDetails(
                 android: AndroidNotificationDetails(

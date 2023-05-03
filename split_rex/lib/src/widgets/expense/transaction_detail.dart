@@ -5,6 +5,8 @@ import 'package:split_rex/src/common/bubble_member.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/providers/transaction.dart';
 
+import '../../common/formatter.dart';
+
 
 Widget transactionInfo(WidgetRef ref) => Container(
   decoration: BoxDecoration(
@@ -202,13 +204,13 @@ Widget itemsList(WidgetRef ref, int index, BuildContext context) =>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Total: Rp${ref.watch(transactionProvider).currTrans.items[index].total}",
+                    "Total: ${mFormat(ref.watch(transactionProvider).currTrans.items[index].total.toDouble())}",
                   ),
                   Row(
                     children: [
                       Text("${ref.watch(transactionProvider).currTrans.items[index].qty} x"),
                       const SizedBox(width: 36),
-                      Text("Rp ${ref.watch(transactionProvider).currTrans.items[index].price}"),
+                      Text(mFormat(ref.watch(transactionProvider).currTrans.items[index].price.toDouble())),
                     ]
                   ),
                 ],
@@ -251,10 +253,10 @@ Widget summaryItems(WidgetRef ref, String title) => Column(children: [
       Text(title, textAlign: TextAlign.left, style: const TextStyle(fontWeight: FontWeight.w600)),
       Text(
         title == "Subtotal"
-        ? ref.watch(transactionProvider).currTrans.subtotal.toString()
+        ? tFormat(ref.watch(transactionProvider).currTrans.subtotal.toDouble())
         : title == "Tax"
-          ? ref.watch(transactionProvider).currTrans.tax.toString()
-          : ref.watch(transactionProvider).currTrans.service.toString()
+          ? tFormat(ref.watch(transactionProvider).currTrans.tax.toDouble())
+          : tFormat(ref.watch(transactionProvider).currTrans.service.toDouble())
         , 
         style: const TextStyle(
           fontWeight: FontWeight.w600

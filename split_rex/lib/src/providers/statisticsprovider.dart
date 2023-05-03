@@ -8,6 +8,8 @@ class StatisticsProvider extends ChangeNotifier {
   String endSettleDate = '';
   String startUnsettledDate = '';
   String endUnsettledDate = '';
+  int totalOwed = 0;
+  int totalLent = 0;
   int owedPercentage = 0;
   int lentPercentage = 0;
   List<SpendingBuddy> spendingBuddies = [];
@@ -37,27 +39,25 @@ class StatisticsProvider extends ChangeNotifier {
     logger.d(spendingBuddiesSource);
     spendingBuddies.clear();
 
-    if (spendingBuddies != null) {
-      SpendingBuddy buddy1 = SpendingBuddy();
-      SpendingBuddy buddy2 = SpendingBuddy();
-      SpendingBuddy buddy3 = SpendingBuddy();
+    SpendingBuddy buddy1 = SpendingBuddy();
+    SpendingBuddy buddy2 = SpendingBuddy();
+    SpendingBuddy buddy3 = SpendingBuddy();
 
-      buddy1.name = spendingBuddiesSource["buddy1"]["name"];
-      buddy2.name = spendingBuddiesSource['buddy2']["name"];
-      buddy3.name = spendingBuddiesSource['buddy3']["name"];
+    buddy1.name = spendingBuddiesSource["buddy1"]["name"];
+    buddy2.name = spendingBuddiesSource['buddy2']["name"];
+    buddy3.name = spendingBuddiesSource['buddy3']["name"];
 
-      buddy1.color = spendingBuddiesSource['buddy1']["color"];
-      buddy2.color = spendingBuddiesSource['buddy2']["color"];
-      buddy3.color = spendingBuddiesSource['buddy3']["color"];
+    buddy1.color = spendingBuddiesSource['buddy1']["color"];
+    buddy2.color = spendingBuddiesSource['buddy2']["color"];
+    buddy3.color = spendingBuddiesSource['buddy3']["color"];
 
-      buddy1.count = spendingBuddiesSource['buddy1']["count"];
-      buddy2.count = spendingBuddiesSource['buddy2']["count"];
-      buddy3.count = spendingBuddiesSource['buddy3']["count"];
+    buddy1.count = spendingBuddiesSource['buddy1']["count"];
+    buddy2.count = spendingBuddiesSource['buddy2']["count"];
+    buddy3.count = spendingBuddiesSource['buddy3']["count"];
 
-      spendingBuddies.add(buddy1);
-      spendingBuddies.add(buddy2);
-      spendingBuddies.add(buddy3);
-    }
+    spendingBuddies.add(buddy1);
+    spendingBuddies.add(buddy2);
+    spendingBuddies.add(buddy3);
 
     notifyListeners();
   }
@@ -94,8 +94,11 @@ class StatisticsProvider extends ChangeNotifier {
   }
 
   void loadPercentageData(dynamic percentageData) {
+    logger.d(percentageData);
     owedPercentage = percentageData['owed_percentage'];
     lentPercentage = percentageData['lent_percentage'];
+    totalOwed = percentageData["total_owed"];
+    totalLent = percentageData["total_lent"];
     notifyListeners();
   }
 

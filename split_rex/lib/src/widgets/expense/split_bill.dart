@@ -4,6 +4,7 @@ import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/providers/add_expense.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 
+import '../../common/formatter.dart';
 import '../../common/functions.dart';
 import '../../model/friends.dart';
 import '../../providers/auth.dart';
@@ -142,13 +143,13 @@ Widget itemSplitCard(WidgetRef ref, int index) => Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Total: Rp${ref.watch(addExpenseProvider).items[index].total}"
+                "Total: ${mFormat(ref.watch(addExpenseProvider).items[index].total.toDouble())}"
               ),
               Row(
                 children: [
                   Text("${ref.watch(addExpenseProvider).items[index].qty} x"),
                   const SizedBox(width: 36),
-                  Text("Rp ${ref.watch(addExpenseProvider).items[index].price}", style: const TextStyle(fontWeight: FontWeight.w700)),
+                  Text(mFormat(ref.watch(addExpenseProvider).items[index].price.toDouble()), style: const TextStyle(fontWeight: FontWeight.w700)),
                 ]
               ),
             ],
@@ -175,10 +176,10 @@ Widget summarySplit(WidgetRef ref, String title) => Column(children: [
       Text(title, textAlign: TextAlign.left, style: const TextStyle(fontWeight: FontWeight.w600)),
       Text(
         title == "Subtotal"
-        ? ref.watch(addExpenseProvider).newBill.subtotal.toString()
+        ? tFormat(ref.watch(addExpenseProvider).newBill.subtotal.toDouble())
         : title == "Tax"
-          ? ref.watch(addExpenseProvider).newBill.tax.toString()
-          : ref.watch(addExpenseProvider).newBill.service.toString()
+          ? tFormat(ref.watch(addExpenseProvider).newBill.tax.toDouble())
+          : tFormat(ref.watch(addExpenseProvider).newBill.service.toDouble())
         , 
         style: const TextStyle(
           fontWeight: FontWeight.w600

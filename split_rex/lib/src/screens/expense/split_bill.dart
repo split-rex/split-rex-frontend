@@ -4,6 +4,7 @@ import 'package:split_rex/src/common/header.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/widgets/expense/split_bill.dart';
 
+import '../../common/formatter.dart';
 import '../../providers/add_expense.dart';
 
 
@@ -62,7 +63,7 @@ class SplitBill extends ConsumerWidget {
                             children: [
                               const Text("Total amount", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
                               Text(
-                                ref.watch(addExpenseProvider).newBill.total.toString(), 
+                                tFormat(ref.watch(addExpenseProvider).newBill.total.toDouble()), 
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600

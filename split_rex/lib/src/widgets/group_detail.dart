@@ -10,6 +10,7 @@ import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:split_rex/src/services/add_expense.dart';
 import 'package:split_rex/src/services/payment.dart';
 
+import '../common/formatter.dart';
 import '../providers/group_list.dart';
 
 class GroupInfo extends ConsumerWidget {
@@ -38,8 +39,8 @@ class GroupInfo extends ConsumerWidget {
             children: [
               InkWell(
                   onTap: () => {
-                    Navigator.pop(context),
-                  },
+                        Navigator.pop(context),
+                      },
                   child: const Icon(Icons.navigate_before,
                       color: Colors.white, size: 35)),
               Text(
@@ -53,7 +54,9 @@ class GroupInfo extends ConsumerWidget {
               const Spacer(),
               InkWell(
                 onTap: () {
-                  ref.read(routeProvider).changePage(context, "/group_settings");
+                  ref
+                      .read(routeProvider)
+                      .changePage(context, "/group_settings");
                 },
                 child:
                     const Icon(Icons.settings, color: Colors.white, size: 30),
@@ -65,7 +68,11 @@ class GroupInfo extends ConsumerWidget {
             child: Row(
               children: [
                 Text(
-                  "Rp${ref.watch(groupListProvider).currGroup.totalExpense}",
+                  mFormat(ref
+                      .watch(groupListProvider)
+                      .currGroup
+                      .totalExpense
+                      .toDouble()),
                   style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 20,
@@ -111,7 +118,7 @@ class BalanceInfo extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 10.0),
         decoration: const BoxDecoration(
           color: Color(0X25FFFFFF),
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
@@ -126,7 +133,7 @@ class BalanceInfo extends ConsumerWidget {
                     text: TextSpan(
                         style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 12,
+                            fontSize: 13,
                             fontWeight: FontWeight.w400),
                         children: [
                           TextSpan(
@@ -142,13 +149,16 @@ class BalanceInfo extends ConsumerWidget {
                                           ? "You lent "
                                           : "You owe "),
                           TextSpan(
-                              text: ref
-                                          .watch(groupListProvider)
-                                          .currGroup
-                                          .type ==
-                                      "EQUAL"
-                                  ? ""
-                                  : "Rp${ref.watch(groupListProvider).currGroup.totalUnpaid.toString().replaceAll('-', '')}",
+                              text:
+                                  ref.watch(groupListProvider).currGroup.type ==
+                                          "EQUAL"
+                                      ? ""
+                                      : mFormat(ref
+                                              .watch(groupListProvider)
+                                              .currGroup
+                                              .totalUnpaid
+                                              .toDouble() *
+                                          -1),
                               style: TextStyle(
                                 color: ref
                                             .watch(groupListProvider)
@@ -156,7 +166,7 @@ class BalanceInfo extends ConsumerWidget {
                                             .type ==
                                         "OWED"
                                     ? const Color(0xFFFFFFFF)
-                                    : const Color(0xFF4F9A99),
+                                    : const Color(0xFFFFFFFF),
                                 fontWeight: FontWeight.w800,
                               )),
                           TextSpan(
@@ -212,19 +222,13 @@ class GroupDetailHeader extends ConsumerWidget {
 }
 
 class GroupDetailContent extends ConsumerWidget {
-  
   const GroupDetailContent({super.key, required this.group});
 
   final GroupListModel group;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    log(ref
-                                    .watch(groupListProvider)
-                                    .currGroup
-                                    .transactions
-                                     
-.toString());
+    log(ref.watch(groupListProvider).currGroup.transactions.toString());
     return Material(
         type: MaterialType.transparency,
         child: Container(
@@ -246,14 +250,16 @@ class GroupDetailContent extends ConsumerWidget {
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
                   children: [
                     Flexible(
                       flex: 7,
                       child: InkWell(
                         onTap: () {
-                          PaymentServices().getUnsettledPayment(ref).then((value) {
+                          PaymentServices()
+                              .getUnsettledPayment(ref)
+                              .then((value) {
                             ref
                                 .read(routeProvider)
                                 .changePage(context, "/unsettled_payments");
@@ -272,7 +278,7 @@ class GroupDetailContent extends ConsumerWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                               color: Color(0xFF4F9A99),
-                              fontSize: 11,
+                              fontSize: 12,
                             ),
                           ),
                         ),
@@ -282,8 +288,10 @@ class GroupDetailContent extends ConsumerWidget {
                     Flexible(
                       flex: 7,
                       child: InkWell(
-                       onTap: () {
-                          PaymentServices().getUnconfirmedPayment(ref).then((value) {
+                        onTap: () {
+                          PaymentServices()
+                              .getUnconfirmedPayment(ref)
+                              .then((value) {
                             ref
                                 .read(routeProvider)
                                 .changePage(context, "/confirm_payment");
@@ -302,7 +310,7 @@ class GroupDetailContent extends ConsumerWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                               color: Color(0xFF4F9A99),
-                              fontSize: 11,
+                              fontSize: 12,
                             ),
                           ),
                         ),
@@ -314,27 +322,27 @@ class GroupDetailContent extends ConsumerWidget {
               Expanded(
                   child: ListView.builder(
                       padding: EdgeInsets.zero,
-                      itemCount: 
-                      // ref
-                      //     .watch(groupListProvider)
-                      //     .currGroup
-                      //     .groupActivities
-                      //     .length,
-                       ref
-                          .watch(groupListProvider)
-                          .currGroup
-                          .transactions
-                          .length,  
-
+                      itemCount:
+                          // ref
+                          //     .watch(groupListProvider)
+                          //     .currGroup
+                          //     .groupActivities
+                          //     .length,
+                          ref
+                              .watch(groupListProvider)
+                              .currGroup
+                              .transactions
+                              .length,
                       itemBuilder: (BuildContext context, int index) {
                         return TransactionItem(
                             key: UniqueKey(),
-                            listIdx: 
-                                ref
-                          .watch(groupListProvider)
-                          .currGroup
-                          .transactions
-                          .length-1-index);
+                            listIdx: ref
+                                    .watch(groupListProvider)
+                                    .currGroup
+                                    .transactions
+                                    .length -
+                                1 -
+                                index);
                       })),
             ],
           ),
@@ -381,11 +389,8 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.listIdx ==
-                ref
-                          .watch(groupListProvider)
-                          .currGroup
-                          .transactions
-                          .length-1 ||
+                ref.watch(groupListProvider).currGroup.transactions.length -
+                    1 ||
             currentMonth !=
                 extractMonth(ref
                     .watch(groupListProvider)
@@ -396,10 +401,12 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
         InkWell(
             onTap: () {
               AddExpenseServices()
-                  .getTransactionDetail(ref, activity.transactionId, context).then((value) {
-              ref.read(routeProvider).changePage(context, "/transaction_detail");
-
-                  });
+                  .getTransactionDetail(ref, activity.transactionId, context)
+                  .then((value) {
+                ref
+                    .read(routeProvider)
+                    .changePage(context, "/transaction_detail");
+              });
             },
             child: Container(
               decoration: BoxDecoration(
@@ -447,59 +454,54 @@ class TransactionItemState extends ConsumerState<TransactionItem> {
                       )),
                   const SizedBox(
                     width: 20,
-                  ), 
+                  ),
                   Expanded(
-                      child: RichText(
-                        softWrap: true,
-                        text: TextSpan(
-                            style: const TextStyle(
-                                fontSize: 12,
+                    child: RichText(
+                      softWrap: true,
+                      text: TextSpan(
+                          style: const TextStyle(
+                              fontSize: 12,
+                              color: Color(0XFF9A9AB0),
+                              fontWeight: FontWeight.w400),
+                          children: [
+                            // TextSpan(
+                            //   text: activity.name1,
+                            //   style: const TextStyle(
+                            //     color: Color(0XFF9A9AB0),
+                            //     fontWeight: FontWeight.bold,
+                            //   ),
+                            // ),
+                            const TextSpan(
+                              text: "Added new transaction ",
+                              style: TextStyle(
                                 color: Color(0XFF9A9AB0),
-                                fontWeight: FontWeight.w400),
-                            children: [
-                              // TextSpan(
-                              //   text: activity.name1,
-                              //   style: const TextStyle(
-                              //     color: Color(0XFF9A9AB0),
-                              //     fontWeight: FontWeight.bold,
-                              //   ),
-                              // ),
-                              const TextSpan(
-                                text: "Added new transaction ",
-                                style: TextStyle(
-                                  color: Color(0XFF9A9AB0),
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                fontWeight: FontWeight.w400,
                               ),
-                              TextSpan(
-                                text: activity.name,
-                                style: const TextStyle(
-                                  color: Color(0XFF9A9AB0),
+                            ),
+                            TextSpan(
+                              text: activity.name,
+                              style: const TextStyle(
+                                color: Color(0XFF9A9AB0),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const TextSpan(
+                              text: "\nView details ",
+                              style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const TextSpan(
-                                text: "\nView details ",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF4F9A99)
-                                ),
-                              ),
-                              // TextSpan(
-                              //   text:
-                              //       " Rp.${formatNumber(activity.amount)}",
-                              //   style: const TextStyle(
-                              //     color: Color(0XFF9A9AB0),
-                              //     fontWeight: FontWeight.bold,
-                              //   ),
-                              // ),
-                              
-                            ]),
-                      ),
-                    )
-
-
-                
+                                  color: Color(0xFF4F9A99)),
+                            ),
+                            // TextSpan(
+                            //   text:
+                            //       " Rp.${formatNumber(activity.amount)}",
+                            //   style: const TextStyle(
+                            //     color: Color(0XFF9A9AB0),
+                            //     fontWeight: FontWeight.bold,
+                            //   ),
+                            // ),
+                          ]),
+                    ),
+                  )
                 ],
               ),
             ))

@@ -16,7 +16,6 @@ import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/model/user.dart';
 import 'package:split_rex/src/providers/statisticsprovider.dart';
-import 'package:split_rex/src/screens/statistics.dart';
 import 'package:split_rex/src/providers/transaction.dart';
 import 'package:split_rex/src/services/group.dart';
 import 'package:split_rex/src/services/statistics.dart';
@@ -27,8 +26,6 @@ import '../providers/add_expense.dart';
 import '../providers/friend.dart';
 import 'activity.dart';
 import 'friend.dart';
-
-
 
 class ApiServices {
   String endpoint = getUrl();

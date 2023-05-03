@@ -3,6 +3,7 @@ import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/services/payment.dart';
+import '../../common/formatter.dart';
 import '../../common/functions.dart';
 import '../../providers/payment.dart';
 
@@ -140,7 +141,7 @@ class UnconfirmedPaymentDetail extends ConsumerWidget {
                             )
                           ),
                           Text(
-                            "Rp${totalPaid.toString().replaceAll('-', '')}",
+                            mFormat(totalPaid.toDouble()),
                             style: const TextStyle(
                               fontSize: 15.0,
                               color: Color(0XFF6DC7BD),
@@ -283,7 +284,7 @@ confirmationDialog(BuildContext context, WidgetRef ref, UnconfirmedPaymentDetail
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                   Text(
-                    "Rp${widget.totalPaid.toString().replaceAll('-', '')}",
+                    mFormat(widget.totalPaid.toDouble()),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 16,

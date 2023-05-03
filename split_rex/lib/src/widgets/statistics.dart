@@ -2,14 +2,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logger/logger.dart';
 import 'package:split_rex/src/common/functions.dart';
 import 'package:split_rex/src/providers/statisticsprovider.dart';
 import 'package:split_rex/src/services/statistics.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:split_rex/src/common/globals.dart' as globals;
 
-import '../services/statistics.dart';
+import '../common/formatter.dart';
 
 class StatisticsHeader extends ConsumerWidget {
   const StatisticsHeader({super.key});
@@ -181,7 +179,7 @@ class ChartTotalExpenses extends ConsumerWidget {
               style: TextStyle(fontSize: 13),
             ),
             Text(
-              "Rp${formatDouble(ref.watch(statisticsProvider).expenseChart.totalExpense)}",
+              mFormat(ref.watch(statisticsProvider).expenseChart.totalExpense),
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
@@ -455,7 +453,7 @@ class TopSpendingBuddies extends ConsumerWidget {
 }
 
 Widget getTitles(double value, TitleMeta meta) {
-  final style = const TextStyle(
+  var style = const TextStyle(
     color: Color(0XFF4f4f4f),
     fontWeight: FontWeight.bold,
     fontSize: 14,
@@ -961,7 +959,7 @@ class MutationSettled extends ConsumerWidget {
                     )),
                 const SizedBox(width: 10),
                 Text(
-                    "Rp.${formatDouble(ref.watch(statisticsProvider).paymentMutation.totalPaid)}",
+                    mFormat(ref.watch(statisticsProvider).paymentMutation.totalPaid),
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
@@ -977,7 +975,7 @@ class MutationSettled extends ConsumerWidget {
                     )),
                 const SizedBox(width: 10),
                 Text(
-                    "Rp.${formatDouble(ref.watch(statisticsProvider).paymentMutation.totalReceived)}",
+                  mFormat(ref.watch(statisticsProvider).paymentMutation.totalReceived),
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
@@ -1039,7 +1037,7 @@ class MutationSettled extends ConsumerWidget {
                       RichText(
                         text: TextSpan(
                           text:
-                              "Rp.${formatDouble(ref.watch(statisticsProvider).paymentMutation.listMutation[index].amount)}",
+                              mFormat(ref.watch(statisticsProvider).paymentMutation.listMutation[index].amount),
                           style: TextStyle(
                             fontSize: 14,
                             color: ref

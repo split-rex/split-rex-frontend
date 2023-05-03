@@ -10,6 +10,8 @@ import 'package:split_rex/src/services/add_expense.dart';
 import 'package:split_rex/src/services/group.dart';
 import 'package:split_rex/src/services/payment.dart';
 
+import '../common/formatter.dart';
+
 Widget activityListWidget(BuildContext context, WidgetRef ref) {
   return SizedBox(
       width: MediaQuery.of(context).size.width - 40.0,
@@ -97,7 +99,7 @@ Widget activityListWidget(BuildContext context, WidgetRef ref) {
                                         ),
                                         TextSpan(
                                           text:
-                                              "Rp.${formatNumber(ref.watch(activityProvider).activities[index].amount!)}",
+                                              mFormat(ref.watch(activityProvider).activities[index].amount!.toDouble()),
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -197,7 +199,7 @@ Widget activityListWidget(BuildContext context, WidgetRef ref) {
                                         ),
                                         TextSpan(
                                           text:
-                                              "Rp.${formatNumber(ref.watch(activityProvider).activities[index].amount!)}",
+                                              mFormat(ref.watch(activityProvider).activities[index].amount!.toDouble()),
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: ref

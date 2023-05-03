@@ -4,6 +4,8 @@ import 'package:split_rex/src/common/header.dart';
 import 'package:split_rex/src/providers/transaction.dart';
 import 'package:split_rex/src/widgets/expense/transaction_detail.dart';
 
+import '../../common/formatter.dart';
+
 class TransactionDetail extends ConsumerWidget {
   const TransactionDetail({super.key});
 
@@ -60,7 +62,7 @@ class TransactionDetail extends ConsumerWidget {
                         children: [
                           const Text("Total amount", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
                           Text(
-                            ref.watch(transactionProvider).currTrans.total.toString(), 
+                            tFormat(ref.watch(transactionProvider).currTrans.total.toDouble()), 
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600

@@ -15,6 +15,7 @@ import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/error.dart';
 import 'package:split_rex/src/model/auth.dart';
 import 'package:split_rex/src/model/user.dart';
+import 'package:split_rex/src/providers/statisticsprovider.dart';
 import 'package:split_rex/src/screens/statistics.dart';
 import 'package:split_rex/src/providers/transaction.dart';
 import 'package:split_rex/src/services/group.dart';
@@ -150,6 +151,7 @@ class ApiServices {
           ref.read(groupSettingsProvider).resetAll();
           ref.read(paymentProvider).resetAll();
           ref.read(transactionProvider).clearTransProvider();
+          ref.read(statisticsProvider).clearStatisticsProvider();
           EasyLoading.dismiss();
           ref.read(routeProvider).changePage(context, "/home");
         });

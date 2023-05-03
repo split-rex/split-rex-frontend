@@ -17,6 +17,22 @@ class StatisticsProvider extends ChangeNotifier {
   bool showUnsettled = false;
   bool showSettled = false;
 
+  void clearStatisticsProvider(){
+    startSettleDate = '';
+    endSettleDate = '';
+    startUnsettledDate = '';
+    endUnsettledDate = '';
+    owedPercentage = 0;
+    lentPercentage = 0;
+    spendingBuddies = [];
+    paymentMutation = PaymentMutation(0, 0, []);
+    expenseChart = ExpenseChart("", 0, []);
+
+    showUnsettled = false;
+    showSettled = false;
+    notifyListeners();
+  }
+
   void loadSpendingBuddies(dynamic spendingBuddiesSource) {
     logger.d(spendingBuddiesSource);
     spendingBuddies.clear();

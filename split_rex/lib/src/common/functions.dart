@@ -43,6 +43,9 @@ String formatNumber(int number) {
 }
 
 double nearestTenMultiple(double number) {
+  if (number < 10000){
+    return 10000;
+  }
   double result = 10;
 
   while (result < number) {
@@ -69,13 +72,16 @@ String abbreviateNumber(double number) {
 
   int suffixIndex = 0;
   while (number >= 1000 && suffixIndex < suffixes.length - 1) {
-    log('suffixIndex: $suffixIndex');
-    log('number: $number');
     number /= 1000;
     suffixIndex++;
   }
-
-  final suffix = suffixes[suffixIndex * 3];
+  String? suffix;
+  
+  if (suffixIndex == 0) {
+    suffix = suffixes[suffixIndex * 3];
+  } else {
+    suffix = suffixes[suffixIndex * 3];
+  }
   return '${number.toInt().toString()} $suffix';
 }
 

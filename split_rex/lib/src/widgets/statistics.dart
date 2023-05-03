@@ -77,8 +77,8 @@ class PercentageChart extends ConsumerWidget {
               height: 10,
             ),
             SizedBox(
-              width: 200,
-              height: 200,
+              width: 150,
+              height: 150,
               child: PieChart(PieChartData(
                   borderData: FlBorderData(show: false),
                   sectionsSpace: 1,
@@ -181,7 +181,7 @@ class ChartTotalExpenses extends ConsumerWidget {
               style: TextStyle(fontSize: 13),
             ),
             Text(
-              "Rp${formatDouble(nearestTenMultiple(globals.maxExpense))}",
+              "Rp${formatDouble(ref.watch(statisticsProvider).expenseChart.totalExpense)}",
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
@@ -315,9 +315,10 @@ class TopSpendingBuddies extends ConsumerWidget {
             const SizedBox(
               height: 30,
             ),
-            SizedBox(
-              width: 300,
-              height: 300,
+            Center(
+              child:SizedBox(
+              width: 200,
+              height: 200,
               child: BarChart(BarChartData(
                   alignment: BarChartAlignment.spaceAround,
                   barTouchData: BarTouchData(
@@ -445,6 +446,8 @@ class TopSpendingBuddies extends ConsumerWidget {
                     ),
                   ])),
             )
+            ),
+            
             // TODO: update chart here
           ],
         ));

@@ -115,11 +115,11 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                 alignment: Alignment.centerRight,
                                 padding: const EdgeInsets.only(right: 20),
                                 child: InkWell(
-                                  onTap: () {
+                                  onTap: () async {
                                     if (FirebaseAuth.instance.currentUser !=
                                         null) {
                                       log("firebase logout");
-                                      ref
+                                      await ref
                                         .watch(googleSignInProvider)
                                         .googleLogout();
                                     }

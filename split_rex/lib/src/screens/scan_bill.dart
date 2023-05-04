@@ -26,7 +26,6 @@ class CameraPage extends ConsumerStatefulWidget {
 
 class _CameraPageState extends ConsumerState<CameraPage> {
   CameraController? _cameraController;
-  bool _isRearCameraSelected = true;
   bool _isFlashOn = false;
 
   //Create an instance of ScreenshotController

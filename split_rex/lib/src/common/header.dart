@@ -121,9 +121,12 @@ Widget header(BuildContext context, WidgetRef ref, String pagename,
                                       log("firebase logout");
                                       await ref
                                         .watch(googleSignInProvider)
-                                        .googleLogout();
+                                        .googleLogout().then((value) {
+                                           _signOut(context, ref);
+                                        });
+                                    } else {
+                                       _signOut(context, ref);
                                     }
-                                    _signOut(context, ref);
                                   },
                                   child: const Icon(Icons.logout,
                                       color: Color(0XFF4F4F4F), size: 24),

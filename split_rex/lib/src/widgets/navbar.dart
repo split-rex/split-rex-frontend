@@ -83,7 +83,7 @@ class _PopupExpense extends ConsumerWidget {
                           children: [
                         const Divider(
                             thickness: 0, height: 2, color: Colors.white),
-                        GestureDetector(
+                        InkWell(
                           onTap: () {
                             GroupServices().userGroupList(ref).then((value) {
                               Navigator.pop(context);
@@ -93,11 +93,11 @@ class _PopupExpense extends ConsumerWidget {
                                   .changePage(context, "/add_expense");
                             });
                           },
-                          child: const Text("Manual Input"),
+                          child: const SizedBox(width: double.infinity, child: Text("Manual Input")),
                         ),
                         const Divider(
                             thickness: 1, height: 24, color: Color(0XFFDCDCDC)),
-                        GestureDetector(
+                        InkWell(
                           onTap: () async {
                             XFile? pickedFile = await ImagePicker().pickImage(
                               source: ImageSource.gallery,
@@ -142,12 +142,12 @@ class _PopupExpense extends ConsumerWidget {
                               });
                             }
                           },
-                          child: const Text(
-                              "Upload from Photo Library\t\t\t\t\t\t\t\t"),
+                          child: const SizedBox(width: double.infinity, child: Text(
+                              "Upload from Photo Library\t\t\t\t\t\t\t\t")),
                         ),
                         const Divider(
                             thickness: 1, height: 24, color: Color(0XFFDCDCDC)),
-                        GestureDetector(
+                        InkWell(
                           onTap: () {
                             // take photo
                             Navigator.pop(context);
@@ -164,7 +164,7 @@ class _PopupExpense extends ConsumerWidget {
                                   .changePage(context, "/scan_bill");
                             }
                           },
-                          child: const Text("Take Photo"),
+                          child: const SizedBox(width: double.infinity, child: Text("yoyo")),
                         ),
                         const Divider(
                             thickness: 0, height: 2, color: Colors.white)

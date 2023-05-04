@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:money_formatter/money_formatter.dart';
 import 'package:split_rex/src/common/formatter.dart';
 import 'package:split_rex/src/providers/auth.dart';
 import 'package:split_rex/src/providers/friend.dart';

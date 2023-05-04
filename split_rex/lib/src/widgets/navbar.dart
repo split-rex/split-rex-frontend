@@ -164,7 +164,7 @@ class _PopupExpense extends ConsumerWidget {
                                   .changePage(context, "/scan_bill");
                             }
                           },
-                          child: const SizedBox(width: double.infinity, child: Text("yoyo")),
+                          child: const SizedBox(width: double.infinity, child: Text("Take Photo")),
                         ),
                         const Divider(
                             thickness: 0, height: 2, color: Colors.white)

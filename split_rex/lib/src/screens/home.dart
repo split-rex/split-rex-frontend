@@ -58,7 +58,7 @@ class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       bottomNavigationBar: const Navbar(),
       body: RefreshIndicator(
         onRefresh: () => _pullRefresh(context, ref),

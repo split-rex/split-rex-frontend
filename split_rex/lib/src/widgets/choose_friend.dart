@@ -105,10 +105,10 @@ Widget addFriendToGroup(BuildContext context, WidgetRef ref) {
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12.0),
-                    topRight: Radius.circular(12.0),
-                    bottomLeft: Radius.circular(4.0),
-                    bottomRight: Radius.circular(4.0)),
+                  topLeft: Radius.circular(12.0),
+                  topRight: Radius.circular(12.0),
+                  bottomLeft: Radius.circular(4.0),
+                  bottomRight: Radius.circular(4.0)),
               ),
               child: ListView.separated(
                 padding: EdgeInsets.zero,

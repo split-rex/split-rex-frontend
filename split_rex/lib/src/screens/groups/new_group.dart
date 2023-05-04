@@ -69,7 +69,6 @@ class _CreateNewGroupState extends ConsumerState<CreateNewGroup> {
                           )),
                           const SizedBox(height: 8.0,),
                           TextField(
-                            key: UniqueKey(),
                             controller: nameController,
                             cursorColor: const Color(0xFF59C4B0),
                             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

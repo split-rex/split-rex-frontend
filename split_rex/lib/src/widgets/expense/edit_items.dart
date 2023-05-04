@@ -106,16 +106,14 @@ class _ItemCardState extends ConsumerState<ItemCard> {
   @override
   Widget build(BuildContext context) {
     final index = widget.index;
-    return Row(
-      children: [
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 340,
-              margin: const EdgeInsets.only(bottom: 8.0),
-              child: 
-                TextField(
+    return Column(
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(bottom: 8.0),
+                child: TextField(
                   onChanged: (val) {
                     ref.read(addExpenseProvider).changeItemName(index, val);
                   },
@@ -133,10 +131,7 @@ class _ItemCardState extends ConsumerState<ItemCard> {
                     ),
                   ),
                 ),
-            ),
-            SizedBox(
-              width: 340,
-              child: 
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -146,85 +141,87 @@ class _ItemCardState extends ConsumerState<ItemCard> {
                     },
                     child: const Icon(
                       Icons.delete, 
-                      color: Color(0XFF6DC7BD
-                    )),
+                      color: Color(0XFF6DC7BD)
+                    ),
                   ),
-                  Container(
-                    width: 65,
-                    margin: const EdgeInsets.only(left: 8.0),
-                    child: 
-                    TextField(
-                      onChanged: (val) {
-                        ref.read(addExpenseProvider).changeItemQty(index, val);
-                      },
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.zero,
-                        hintText: "${ref.watch(addExpenseProvider).items[index].qty}",
-                        filled: true,
-                        fillColor: const Color(0XFFF6F6F6),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide.none
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 8.0),
+                      child: TextField(
+                        onChanged: (val) {
+                          ref.read(addExpenseProvider).changeItemQty(index, val);
+                        },
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
                         ),
-                      ),
-                    ), 
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.zero,
+                          hintText: "${ref.watch(addExpenseProvider).items[index].qty}",
+                          filled: true,
+                          fillColor: const Color(0XFFF6F6F6),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: BorderSide.none
+                          ),
+                        ),
+                      ), 
+                    ),
                   ),
                   const Text(" x "),
-                  Container(
-                    width: 150, 
-                    margin: const EdgeInsets.only(left: 8.0),
-                    child: 
-                    TextField(
-                      onChanged: (val) {
-                        ref.read(addExpenseProvider).changeItemPrice(index, val);
-                      },
-                      textAlign: TextAlign.end,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16.0),
-                        prefixIcon: const Padding(padding: EdgeInsets.all(15), child: Text('IDR ')),
-                        hintText: tFormat(ref.watch(addExpenseProvider).items[index].price.toDouble()),
-                        filled: true,
-                        fillColor: const Color(0XFFF6F6F6),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide.none
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 8.0),
+                      child: TextField(
+                        onChanged: (val) {
+                          ref.read(addExpenseProvider).changeItemPrice(index, val);
+                        },
+                        textAlign: TextAlign.end,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                        ),
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16.0),
+                          prefixIcon: const Padding(padding: EdgeInsets.all(15), child: Text('IDR ')),
+                          hintText: tFormat(ref.watch(addExpenseProvider).items[index].price.toDouble()),
+                          filled: true,
+                          fillColor: const Color(0XFFF6F6F6),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: BorderSide.none
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ],
-              )
-            ),
-            SizedBox(
-              width: 340,
-              child: Row(
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 4.0),
-                    padding: const EdgeInsets.all(8.0), 
-                    alignment: Alignment.centerRight, 
-                    child: Text(
-                      "Total: ${mFormat(ref.watch(addExpenseProvider).items[index].total.toDouble())}", 
-                      textAlign: TextAlign.right,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 4.0),
+                      padding: const EdgeInsets.all(8.0), 
+                      alignment: Alignment.centerRight, 
+                      child: Text(
+                        "Total: ${mFormat(ref.watch(addExpenseProvider).items[index].total.toDouble())}", 
+                        textAlign: TextAlign.right,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                        )
                       )
-                    )
-                  )
+                    ),
+                  ),
                 ],
-              )
-            )
-        ],)
-      ],
-    );
+              ),
+            ],
+          ),
+        ],
+      );
+
   }
 }
 

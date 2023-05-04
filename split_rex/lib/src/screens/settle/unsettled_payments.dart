@@ -27,7 +27,9 @@ class UnsettledPayments extends ConsumerWidget {
               height: MediaQuery.of(context).size.height - 120,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [UnsettledPaymentsBody()],
+                  children: [
+                    UnsettledPaymentsBody()
+                  ],
                 ),
               ),
             )

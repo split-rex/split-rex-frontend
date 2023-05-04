@@ -244,11 +244,14 @@ class FriendRequestDetail extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 18),
-            Column(
+            Expanded(
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       fontSize: 19.0,
                       color: Color(0xFF4F4F4F),
@@ -256,12 +259,13 @@ class FriendRequestDetail extends ConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 Row(children: [
-                  InkWell(
+                  Expanded(
+                    child: InkWell(
                     onTap: () async =>
                         await FriendServices().rejectFriendRequest(ref, userId),
                     child: Container(
                       alignment: Alignment.center,
-                      width: 117,
+                      
                       height: 36,
                       decoration: const BoxDecoration(
                         color: Color(0xFFDFF2F0),
@@ -277,14 +281,18 @@ class FriendRequestDetail extends ConsumerWidget {
                       ),
                     ),
                   ),
+                  ),
+                  
                   const SizedBox(width: 12),
-                  InkWell(
+
+                  Expanded(
+                    child: InkWell(
                     onTap: () async {
                       await FriendServices().acceptFriendRequest(ref, userId);
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      width: 117,
+                     
                       height: 36,
                       decoration: const BoxDecoration(
                         color: Color(0xFF6DC7BD),
@@ -300,9 +308,13 @@ class FriendRequestDetail extends ConsumerWidget {
                       ),
                     ),
                   ),
+                  ),
+                  
                 ]),
               ],
             )
+            ),
+            
           ]),
     );
   }

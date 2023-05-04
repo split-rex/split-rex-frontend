@@ -30,12 +30,7 @@ Widget searchBar(BuildContext context, WidgetRef ref) => Container(
           Icons.search,
           color: Color(0XFF9A9AB0),
         ),
-        suffix: InkWell(
-          child: Icon(
-            Icons.filter_alt,
-            color: Colors.grey,
-          ),
-        ),
+        
         hintText: "Search for a group....",
         enabledBorder: InputBorder.none,
         focusedBorder: InputBorder.none,
@@ -254,7 +249,8 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                                   ]),
                                             ),
                                           ]),
-                                      Column(
+                                      Expanded(
+                                        child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.end,
                                           children: [
@@ -264,6 +260,8 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                                   .groups[index]
                                                   .totalExpense
                                                   .toDouble()),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.w900,
                                                 fontSize: 18,
@@ -274,6 +272,8 @@ Widget showGroups(BuildContext context, WidgetRef ref) {
                                                 .groups[index]
                                                 .members),
                                           ]),
+                                      ),
+                                      
                                     ]),
                               ))
                           : const SizedBox();

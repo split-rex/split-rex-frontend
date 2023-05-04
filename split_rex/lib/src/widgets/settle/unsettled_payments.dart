@@ -111,11 +111,14 @@ class UnsettlePaymentDetail extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 18),
-            Column(
+            Expanded(
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       fontSize: 19.0,
                       color: Color(0xFF4F4F4F),
@@ -162,7 +165,8 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                       ),
                 const SizedBox(height: 8),
                 Row(children: [
-                  InkWell(
+                  Expanded(
+                    child: InkWell(
                     onTap: () {
                       var currentDate = DateTime.now();
                       DatePicker.showDateTimePicker(
@@ -189,7 +193,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      width: 117,
+                      width:117,
                       height: 36,
                       decoration: const BoxDecoration(
                         color: Color(0xFFDFF2F0),
@@ -205,8 +209,11 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  InkWell(
+                  ),
+                  
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: InkWell(
                     onTap: () async {
                       ref
                           .watch(paymentProvider)
@@ -215,7 +222,7 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      width: 117,
+                      width:117,
                       height: 36,
                       decoration: const BoxDecoration(
                         color: Color(0xFF6DC7BD),
@@ -231,9 +238,13 @@ class UnsettlePaymentDetail extends ConsumerWidget {
                       ),
                     ),
                   ),
+                  ),
+                  
                 ]),
               ],
             )
+            ),
+            
           ]),
     );
   }

@@ -32,12 +32,7 @@ Widget searchBar(BuildContext context, WidgetRef ref) => Container(
                 ref.read(friendProvider.notifier).searchFriendName(text);
               },
               decoration: const InputDecoration(
-                suffix: InkWell(
-                  child: Icon(
-                    Icons.filter_alt,
-                    color: Colors.grey,
-                  ),
-                ),
+               
                 hintText: "Search for a friend....",
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -72,12 +67,7 @@ Widget searchBarInSettings(BuildContext context, WidgetRef ref) => Container(
                 ref.read(friendProvider.notifier).searchFriendNotInGroup(text);
               },
               decoration: const InputDecoration(
-                suffix: InkWell(
-                  child: Icon(
-                    Icons.filter_alt,
-                    color: Colors.grey,
-                  ),
-                ),
+                
                 hintText: "Search for a friend....",
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,

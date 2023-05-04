@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:split_rex/src/common/logger.dart';
+import 'package:split_rex/src/services/statistics.dart';
 import 'package:split_rex/src/widgets/navbar.dart';
 import '../providers/auth.dart';
 import '../services/friend.dart';
@@ -86,11 +87,13 @@ class _HomeState extends ConsumerState<Home> {
   }
 
   Future<void> _pullRefresh(BuildContext context, WidgetRef ref) async {
-    await GroupServices().userGroupList(ref).then((value) {
-      FriendServices().userFriendList(ref).then((value) {
-        FriendServices().friendRequestReceivedList(ref).then((value) {
-          FriendServices().friendRequestSentList(ref).then((value) {
-            getGroupOwedLent(ref);
+    await StatisticsServices().owedLentPercentage(ref).then((value) {
+      GroupServices().userGroupList(ref).then((value) {
+        FriendServices().userFriendList(ref).then((value) {
+          FriendServices().friendRequestReceivedList(ref).then((value) {
+            FriendServices().friendRequestSentList(ref).then((value) {
+              getGroupOwedLent(ref);
+            });
           });
         });
       });

@@ -75,8 +75,8 @@ class _CameraPageState extends ConsumerState<CameraPage> {
       statusBarColor: Color.fromARGB(195, 36, 54, 53)
     ));
     var camera = _cameraController?.value;
-    final widthScreen = MediaQuery.of(context).size.width + 40;
-    final heightScreen = MediaQuery.of(context).size.height + 40;
+    // final widthScreen = MediaQuery.of(context).size.width + 40;
+    // final heightScreen = MediaQuery.of(context).size.height + 40;
     final List<CameraDescription>? cameras = ref.watch(cameraProvider).cameras;
 
     return Scaffold(
@@ -90,18 +90,13 @@ class _CameraPageState extends ConsumerState<CameraPage> {
         Stack(
           children: [
           (_cameraController!.value.isInitialized)
-              ? Transform.scale(
-                scale: 
-                  (widthScreen / heightScreen) * camera!.aspectRatio < 1 
-                  ? 1 / (widthScreen / heightScreen) * camera.aspectRatio 
-                  : (widthScreen / heightScreen) * camera.aspectRatio,
-                child: Center(
+              ?  Center(
                   child: Screenshot(
                     controller: screenshotController,
                     child: CameraPreview(_cameraController!), 
                   )
                 )
-              )
+              
               : Container(
                   color: const Color.fromARGB(195, 36, 54, 53),
                   child: const Center(child: CircularProgressIndicator())),
@@ -177,8 +172,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                               final directory = await getApplicationDocumentsDirectory();
                               var imagePath = await File('${directory.path}/$filename.png').create();
                               await imagePath.writeAsBytes(image);
-                              ref.read(cameraProvider).setPicture(imagePath);
-                              ScanBillServices().postBill(ref, imagePath).then((value) {
+                              await ScanBillServices().postBill(ref, imagePath).then((value) {
                                 EasyLoading.dismiss();
                                 ref.read(addExpenseProvider).resetAll();
                                 ref.read(routeProvider).changePage(context, "/add_expense");
@@ -219,12 +213,13 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                     child: const Icon(Icons.navigate_before,
                       color: Colors.white, size: 36
                     )
-                  ),
-              )
-          ]
+                  
+                  )
+        )]
         ),
       ),
     );
+
   }
 }
 
@@ -233,16 +228,15 @@ class PreviewPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final picture = ref.watch(cameraProvider).picture;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Image.file(
-            File(picture.path), 
-            fit: BoxFit.cover, width: 250
-          ),
+          // Image.file(
+          //   File(picture.path), 
+          //   fit: BoxFit.cover, width: 250
+          // ),
           const SizedBox(height: 24),
           InkWell(
               onTap: () => ref

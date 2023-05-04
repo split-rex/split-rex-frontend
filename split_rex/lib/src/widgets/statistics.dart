@@ -306,7 +306,7 @@ class TopSpendingBuddies extends ConsumerWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const Text(
-              "Based on mutual groups",
+              "Based on mutual transactions",
               style: TextStyle(fontSize: 13),
             ),
 
@@ -355,11 +355,11 @@ class TopSpendingBuddies extends ConsumerWidget {
                               children: [
                                 TextSpan(
                                   text: rod.toY.round().toString() == "10"
-                                      ? "\n${ref.watch(statisticsProvider).spendingBuddies[2].count} groups"
+                                      ? "\n${ref.watch(statisticsProvider).spendingBuddies[2].count} transactions"
                                       : rod.toY.round().toString() == "30"
-                                          ? "\n${ref.watch(statisticsProvider).spendingBuddies[0].count} groups"
+                                          ? "\n${ref.watch(statisticsProvider).spendingBuddies[0].count} transactions"
                                           : rod.toY.round().toString() == "20"
-                                              ? "\n${ref.watch(statisticsProvider).spendingBuddies[1].count} groups"
+                                              ? "\n${ref.watch(statisticsProvider).spendingBuddies[1].count} transactions"
                                               : "",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.normal,

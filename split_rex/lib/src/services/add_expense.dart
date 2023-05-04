@@ -95,6 +95,8 @@ class AddExpenseServices {
     List<Items> items = ref.watch(addExpenseProvider).items;
     String currGroupId = ref.watch(groupListProvider).currGroup.groupId;
 
+    double ownerExpense = 0;
+
     // for every item, check its consumer
     // divide total price with number of consumer
     // check if uid is already in list payment
@@ -120,8 +122,10 @@ class AddExpenseServices {
           "total_unpaid": 
             value
             + ref.watch(addExpenseProvider).newBill.tax / listPaymentObj.length
-            + ref.watch(addExpenseProvider).newBill.service / listPaymentObj.length
+            + ref.watch(addExpenseProvider).newBill.service / listPaymentObj.length,
         });
+      } else {
+        ownerExpense = value;
       }
     });
 
@@ -134,6 +138,7 @@ class AddExpenseServices {
       },
       body: jsonEncode(<String, dynamic>{
         "group_id": currGroupId,
+        "owner_expense": ownerExpense,
         "list_payment": listPayment
       })
     ).then((Response resp) async {
@@ -162,8 +167,8 @@ class AddExpenseServices {
       var data = jsonDecode(resp.body);
       logger.d(data);
       if (data["message"] == "SUCCESS") {
-        ref.watch(addExpenseProvider).resetAll();      
-        await GroupServices().getGroupTransactions(ref).then((value) {
+        ref.watch(addExpenseProvider).resetAll();    
+        await GroupServices().getGroupDetail(ref, ref.watch(groupListProvider).currGroup.groupId).then((value) {
           ref.read(routeProvider).changeNavbarIdx(context, 1);
           ref.read(routeProvider).changePage(context, "/group_detail");
         });

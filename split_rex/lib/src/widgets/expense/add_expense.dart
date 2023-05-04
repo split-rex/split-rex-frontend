@@ -51,7 +51,7 @@ Widget addExistingGroup(BuildContext context, WidgetRef ref) {
           padding: const EdgeInsets.only(
               top: 0, left: 4.0, right: 4.0, bottom: 16.0),
           margin: const EdgeInsets.only(top: 8.0),
-          alignment: Alignment.center,
+          alignment: Alignment.topCenter,
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(12.0)),

@@ -57,7 +57,6 @@ class _EditAccountState extends ConsumerState<EditAccount> {
                                   const SizedBox(width: 16.0),
                                   Expanded(
                                       child: TextField(
-                                          key: UniqueKey(),
                                           controller: nameController,
                                           cursorColor: const Color(0xFF59C4B0),
                                           style: const TextStyle(

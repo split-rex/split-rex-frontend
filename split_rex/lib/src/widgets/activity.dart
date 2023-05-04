@@ -17,7 +17,9 @@ Widget activityListWidget(BuildContext context, WidgetRef ref) {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Expanded(
             child: ListView.builder(
-          padding: EdgeInsets.zero,
+          padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           // shrinkWrap: true,
           // padding: const EdgeInsets.symmetric(vertical: 8.0),
           itemCount: ref.watch(activityProvider).activities.length,

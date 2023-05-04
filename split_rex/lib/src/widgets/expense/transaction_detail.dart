@@ -92,8 +92,7 @@ Widget itemsList(WidgetRef ref, int index, BuildContext context) =>
           ),
           alignment: Alignment.topLeft,
           height: MediaQuery.of(context).size.height - 300.0,
-          child: SingleChildScrollView(
-            child: Column(
+          child:  Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,7 +175,7 @@ Widget itemsList(WidgetRef ref, int index, BuildContext context) =>
             )
           ))
         )
-      ));
+      );
     },
     child:
       Row(
@@ -238,6 +237,7 @@ Widget itemsList(WidgetRef ref, int index, BuildContext context) =>
 
 Widget listItems(WidgetRef ref) => ListView.separated(
   shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
   padding: const EdgeInsets.only(bottom: 12.0),
   itemCount: ref.watch(transactionProvider).currTrans.items.length,
   itemBuilder: (BuildContext context, int index) {

@@ -26,7 +26,7 @@ class Activity extends ConsumerWidget {
             SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: SizedBox(
-                height: MediaQuery.of(context).size.height - 120,
+                height: MediaQuery.of(context).size.height - kBottomNavigationBarHeight,
                 child: Container(
                   width: double.infinity,
                     padding: const EdgeInsets.only(top: 8.0),

@@ -64,7 +64,6 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
                         )
                       ),
                       PasswordField(
-                        key: UniqueKey(),
                         controller: oldPassController,
                         placeholderText: "Old Password"
                       ),
@@ -80,7 +79,6 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
                         )
                       ),
                       PasswordField(
-                        key: UniqueKey(),
                         controller: newPassController,
                         placeholderText: "New Password"
                       ),
@@ -96,12 +94,10 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
                         )
                       ),
                       PasswordField(
-                        key: UniqueKey(),
                         controller: confNewPassController,
                         placeholderText: "Confirm New Password"
                       ),
                       ChangeButton(
-                        key: UniqueKey(), 
                         oldPassController: oldPassController, 
                         newPassController: newPassController,
                         confNewPassController: confNewPassController
@@ -121,7 +117,7 @@ class ChangeButton extends ConsumerWidget {
   final TextEditingController confNewPassController;
 
   const ChangeButton({
-    required Key key,
+    Key? key,
     required this.oldPassController,
     required this.newPassController,
     required this.confNewPassController,

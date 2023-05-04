@@ -442,7 +442,7 @@ class PasswordField extends ConsumerWidget {
   final TextEditingController controller;
   final String placeholderText;
   const PasswordField({
-    required Key key,
+    Key? key,
     required this.controller,
     required this.placeholderText,
   }) : super(key: key);

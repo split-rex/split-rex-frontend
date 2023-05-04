@@ -26,7 +26,7 @@ class GroupList extends ConsumerWidget {
             physics: const AlwaysScrollableScrollPhysics(),
             child: SizedBox(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height - 120 - kBottomNavigationBarHeight,
+              height: MediaQuery.of(context).size.height - 150 - kBottomNavigationBarHeight,
               child: Container(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Column(

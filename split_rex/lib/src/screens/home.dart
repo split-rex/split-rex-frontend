@@ -64,7 +64,6 @@ class _HomeState extends ConsumerState<Home> {
         onRefresh: () => _pullRefresh(context, ref),
         child: (
           SingleChildScrollView(
-            key: UniqueKey(),
             physics: const AlwaysScrollableScrollPhysics(),
             child: SizedBox(
               height: MediaQuery.of(context).size.height -

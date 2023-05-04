@@ -32,6 +32,11 @@ class ErrorProvider extends ChangeNotifier {
     "ERROR_TOKEN": "Token is wrong"    
   };
 
+  void clearError() {
+    errorType = "";
+    errorMsg = "";
+  }
+
   void changeError(String value) {
     errorType = value;
     errorMsg = errorMap[value].toString();

@@ -172,6 +172,7 @@ class ResetButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () async {
+        ref.read(errorProvider).clearError();
         EasyLoading.instance
           ..displayDuration = const Duration(seconds: 3)
           ..indicatorType = EasyLoadingIndicatorType.fadingCircle
@@ -225,6 +226,7 @@ class ResetButton extends ConsumerWidget {
           backgroundColor: Colors.transparent,
           elevation: 0,
         ));
+        ref.read(errorProvider).clearError();
       },
       child: Container(
           padding: const EdgeInsets.all(16.0),

@@ -12,6 +12,7 @@ import 'package:split_rex/src/providers/group_list.dart';
 import 'package:split_rex/src/providers/routes.dart';
 
 import '../providers/activity.dart';
+import '../providers/error.dart';
 import '../providers/group_settings.dart';
 import '../providers/payment.dart';
 import '../providers/transaction.dart';
@@ -167,6 +168,7 @@ Future<void> _signOut(BuildContext context, WidgetRef ref) async {
   ref.read(groupSettingsProvider).resetAll();
   ref.read(paymentProvider).resetAll();
   ref.read(transactionProvider).clearTransProvider();
+  ref.read(errorProvider).clearError();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.remove('email');
   prefs.remove('password');

@@ -197,17 +197,17 @@ Widget splitButton(WidgetRef ref, BuildContext context) => GestureDetector(
       null;
     } else {
       EasyLoading.instance
-          ..displayDuration = const Duration(seconds: 3)
-          ..indicatorType = EasyLoadingIndicatorType.fadingCircle
-          ..loadingStyle = EasyLoadingStyle.custom
-          ..indicatorSize = 45.0
-          ..radius = 16.0
-          ..textColor = Colors.white
-          ..progressColor = const Color(0xFF4F9A99)
-          ..backgroundColor = const Color(0xFF4F9A99)
-          ..indicatorColor = Colors.white
-          ..maskType = EasyLoadingMaskType.custom
-          ..maskColor = const Color.fromARGB(155, 255, 255, 255);
+        ..displayDuration = const Duration(seconds: 3)
+        ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+        ..loadingStyle = EasyLoadingStyle.custom
+        ..indicatorSize = 45.0
+        ..radius = 16.0
+        ..textColor = Colors.white
+        ..progressColor = const Color(0xFF4F9A99)
+        ..backgroundColor = const Color(0xFF4F9A99)
+        ..indicatorColor = Colors.white
+        ..maskType = EasyLoadingMaskType.custom
+        ..maskColor = const Color.fromARGB(155, 255, 255, 255);
       EasyLoading.show(
             status: 'Loading...', maskType: EasyLoadingMaskType.custom);
       if (ref.watch(addExpenseProvider).isNewGroup) {

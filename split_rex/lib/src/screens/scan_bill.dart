@@ -74,10 +74,8 @@ class _CameraPageState extends ConsumerState<CameraPage> {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Color.fromARGB(195, 36, 54, 53)
     ));
-    var camera = _cameraController?.value;
     // final widthScreen = MediaQuery.of(context).size.width + 40;
     // final heightScreen = MediaQuery.of(context).size.height + 40;
-    final List<CameraDescription>? cameras = ref.watch(cameraProvider).cameras;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -119,7 +117,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                     child: 
                     Container(
                       margin: const EdgeInsets.only(top: 80),
-                      height: 450,
+                      height: MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height * 0.20) - 60,
                       width: 300,
                       decoration: BoxDecoration(
                         color: Colors.red,
@@ -141,25 +139,27 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                 ),
                 child:
                   Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                    Expanded(
-                      child: IconButton(
-                      padding: EdgeInsets.zero,
-                      iconSize: 30,
-                      icon: Icon(
-                          _isRearCameraSelected
-                              ? Icons.switch_camera_outlined
-                              : Icons.switch_camera,
-                          color: Colors.white),
-                      onPressed: () {
-                        setState(
-                            () => _isRearCameraSelected = !_isRearCameraSelected);
-                        initCamera(cameras![_isRearCameraSelected ? 0 : 1]);
-                      })
+                    const Expanded(
+                      child: SizedBox(width: 30)
                     ),
                     Expanded(
                       child: IconButton(
-                        onPressed: () {
-                          _cameraController!.pausePreview();
+                        onPressed: () async {
+                          await _cameraController!.setFlashMode(FlashMode.off);
+                          await Future.delayed(const Duration(milliseconds: 400));
+                          await _cameraController!.pausePreview();
+                          EasyLoading.instance
+                          ..displayDuration = const Duration(seconds: 3)
+                          ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+                          ..loadingStyle = EasyLoadingStyle.custom
+                          ..indicatorSize = 45.0
+                          ..radius = 16.0
+                          ..textColor = Colors.white
+                          ..progressColor = const Color(0xFF4F9A99)
+                          ..backgroundColor = const Color(0xFF4F9A99)
+                          ..indicatorColor = Colors.white
+                          ..maskType = EasyLoadingMaskType.custom
+                          ..maskColor = const Color.fromARGB(155, 255, 255, 255);
                           EasyLoading.show(
                             status: 'Scanning...',
                             maskType: EasyLoadingMaskType.custom
@@ -191,9 +191,13 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                     Expanded(
                       child: IconButton(
                         onPressed: () async {
-                          await _cameraController!.setFlashMode(_isFlashOn ? FlashMode.off : FlashMode.always);
-                          setState(
-                            () => _isFlashOn = !_isFlashOn);
+                          if (_isFlashOn) {
+                            await _cameraController!.setFlashMode(FlashMode.off);
+                            setState(() {_isFlashOn = false;});
+                          } else {
+                            await _cameraController!.setFlashMode(FlashMode.torch);
+                            setState(() {_isFlashOn = true;});
+                          }
                         },
                         iconSize: 30,
                         padding: EdgeInsets.zero,

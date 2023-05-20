@@ -25,7 +25,7 @@ String formatDateJson(String dateString) {
   return formattedDate;
 }
 
-String formatNumber(int number) {
+String formatNumber(double number) {
   String str = number.toString();
   String formatted = '';
   int len = str.length;
@@ -69,8 +69,6 @@ String abbreviateNumber(double number) {
 
   int suffixIndex = 0;
   while (number >= 1000 && suffixIndex < suffixes.length - 1) {
-    log('suffixIndex: $suffixIndex');
-    log('number: $number');
     number /= 1000;
     suffixIndex++;
   }

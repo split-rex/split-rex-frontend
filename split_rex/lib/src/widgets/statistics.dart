@@ -846,18 +846,27 @@ class MutationSettled extends ConsumerWidget {
                     onTap: () async {
                       DateTime? pickeddate = await showDatePicker(
                           context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101));
+                          initialDate: ref.watch(statisticsProvider).startSettleDate == "" ? DateTime.now() : DateTime.parse(ref.watch(statisticsProvider).startSettleDate),
+                          firstDate: DateTime(2010),
+                          lastDate: DateTime(2110)
+                        );
 
                       if (pickeddate != null) {
                         ref
                             .read(statisticsProvider)
                             .changeStartSettleDate(pickeddate.toString());
+                        if (DateTime.parse(ref
+                            .watch(statisticsProvider)
+                            .endSettleDate).isBefore(pickeddate)) {
+                              ref
+                                .read(statisticsProvider)
+                                .changeEndSettleDate(pickeddate.toString());
+                            }
                       }
 
                       if (ref.watch(statisticsProvider).endSettleDate != "" &&
                           ref.watch(statisticsProvider).startSettleDate != "") {
+                        await StatisticsServices().paymentMutation(ref);
                         ref.read(statisticsProvider).changeShowSettled(true);
                       }
                     },
@@ -896,9 +905,10 @@ class MutationSettled extends ConsumerWidget {
               onTap: () async {
                 DateTime? pickeddate = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2101));
+                    initialDate: ref.watch(statisticsProvider).endSettleDate == "" ? DateTime.now() : DateTime.parse(ref.watch(statisticsProvider).endSettleDate),
+                    firstDate: DateTime.parse(ref.watch(statisticsProvider).startSettleDate),
+                    lastDate: DateTime(2110)
+                  );
 
                 if (pickeddate != null) {
                   ref
@@ -986,78 +996,93 @@ class MutationSettled extends ConsumerWidget {
         ),
         Visibility(
           visible: ref.watch(statisticsProvider).showSettled,
-          child: ListView.builder(
-            key: UniqueKey(),
-            shrinkWrap: true,
-            itemCount: ref
-                .watch(statisticsProvider)
-                .paymentMutation
-                .listMutation
-                .length, // specify the number of items in the list
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: SizedBox(
+            height: 150,
+            child: Container(
+              padding: const EdgeInsets.only(top: 16),
+              alignment: ref
+                    .watch(statisticsProvider)
+                    .paymentMutation
+                    .listMutation.isEmpty ? Alignment.center : Alignment.topCenter,
+              child: ref
+                    .watch(statisticsProvider)
+                    .paymentMutation
+                    .listMutation.isEmpty ?
+                    const Text("No settled payments on this duration")
+                : ListView.builder(
+                key: UniqueKey(),
+                shrinkWrap: true,
+                itemCount: ref
+                    .watch(statisticsProvider)
+                    .paymentMutation
+                    .listMutation
+                    .length, // specify the number of items in the list
+                itemBuilder: (context, index) {
+                  return Column(
                     children: [
-                      Row(children: [
-                        Initicon(
-                          text: ref
-                              .watch(statisticsProvider)
-                              .paymentMutation
-                              .listMutation[index]
-                              .name,
-                          size: 40,
-                          backgroundColor: getProfileBgColor(ref
-                              .watch(statisticsProvider)
-                              .paymentMutation
-                              .listMutation[index]
-                              .color),
-                          style: TextStyle(
-                              color: getProfileTextColor(ref
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(children: [
+                            Initicon(
+                              text: ref
                                   .watch(statisticsProvider)
                                   .paymentMutation
                                   .listMutation[index]
-                                  .color)),
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                            ref
-                                .watch(statisticsProvider)
-                                .paymentMutation
-                                .listMutation[index]
-                                .name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: Color(0XFF4F4F4F),
-                            ))
-                      ]),
-                      RichText(
-                        text: TextSpan(
-                          text:
-                              "Rp.${formatDouble(ref.watch(statisticsProvider).paymentMutation.listMutation[index].amount)}",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: ref
-                                        .watch(statisticsProvider)
-                                        .paymentMutation
-                                        .listMutation[index]
-                                        .mutationType ==
-                                    "RECEIVED"
-                                ? const Color(0xFF4F9A99)
-                                : const Color(0xffFF0000),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      )
+                                  .name,
+                              size: 40,
+                              backgroundColor: getProfileBgColor(ref
+                                  .watch(statisticsProvider)
+                                  .paymentMutation
+                                  .listMutation[index]
+                                  .color),
+                              style: TextStyle(
+                                  color: getProfileTextColor(ref
+                                      .watch(statisticsProvider)
+                                      .paymentMutation
+                                      .listMutation[index]
+                                      .color)),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                                ref
+                                    .watch(statisticsProvider)
+                                    .paymentMutation
+                                    .listMutation[index]
+                                    .name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: Color(0XFF4F4F4F),
+                                ))
+                          ]),
+                          RichText(
+                            text: TextSpan(
+                              text:
+                                  "Rp.${formatDouble(ref.watch(statisticsProvider).paymentMutation.listMutation[index].amount)}",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: ref
+                                            .watch(statisticsProvider)
+                                            .paymentMutation
+                                            .listMutation[index]
+                                            .mutationType ==
+                                        "RECEIVED"
+                                    ? const Color(0xFF4F9A99)
+                                    : const Color(0xffFF0000),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 15),
                     ],
-                  ),
-                  const SizedBox(height: 15),
-                ],
-              );
-            },
-          ),
+                  );
+                },
+              ),
+            )
+          )
         ),
       ]),
     );
